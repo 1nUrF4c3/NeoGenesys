@@ -171,10 +171,7 @@ namespace NeoGenesys
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
 		if (bCopyToClipboard)
-		{
 			ImGui::LogToClipboard();
-			bWriteLog = true;
-		}
 
 		ImVec4 cDefaultText = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 

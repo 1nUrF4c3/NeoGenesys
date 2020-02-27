@@ -184,7 +184,8 @@ namespace NeoGenesys
 	*/
 	void cMathematics::MakeVector(Vector3 angles, Vector3 out)
 	{
-		float flPitch = DegreesToRadians(angles[0]), flYaw = DegreesToRadians(angles[1]);
+		float flPitch = DegreesToRadians(angles[0]), 
+			flYaw = DegreesToRadians(angles[1]);
 
 		out[0] = -cosf(flPitch) * -cosf(flYaw);
 		out[1] = sinf(flYaw) * cosf(flPitch);
@@ -228,6 +229,31 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	bool cMathematics::WorldToScreen(Vector3 world, ImVec2& screen)
+	{
+		float flCenterX = RefDef->iWidth / 2.0f,
+			flCenterY = RefDef->iHeight / 2.0f;
+
+		Vector3 vLocal,
+			vTransForm;
+
+		VectorSubtract(world, RefDef->vViewOrg, vLocal);
+
+		vTransForm[0] = DotProduct(vLocal, RefDef->vViewAxis[1]);
+		vTransForm[1] = DotProduct(vLocal, RefDef->vViewAxis[2]);
+		vTransForm[2] = DotProduct(vLocal, RefDef->vViewAxis[0]);
+
+		if (vTransForm[2] < 0.01f)
+			return false;
+
+		screen.x = flCenterX * (1.0f - (vTransForm[0] / RefDef->flFovX / vTransForm[2]));
+		screen.y = flCenterY * (1.0f - (vTransForm[1] / RefDef->flFovY / vTransForm[2]));
+
+		return true;
+	}
+	/*
+	//=====================================================================================
+	*/
 	void cMathematics::WorldToCompass(Vector3 world, ImVec2 compasspos, float compasssize, ImVec2& screen)
 	{
 		float flAngle;
@@ -245,10 +271,8 @@ namespace NeoGenesys
 
 		flAngle = ((vAngles[1] + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
 
-		compasssize /= 2.0f;
-
-		screen.x = compasspos.x + (cosf(flAngle) * compasssize);
-		screen.y = compasspos.y + (sinf(flAngle) * compasssize);
+		screen.x = compasspos.x + (cosf(flAngle) * (compasssize / 2.0f));
+		screen.y = compasspos.y + (sinf(flAngle) * (compasssize / 2.0f));
 	}
 	/*
 	//=====================================================================================
