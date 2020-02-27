@@ -8,37 +8,31 @@ namespace NeoGenesys
 {
 	cPackets _packets;
 
-	void cPackets::ModifyCommands()
-	{
-		sUserCMD* pOldCMD = ClientActive->GetUserCMD(ClientActive->iCurrentCMD);
-		++ClientActive->iCurrentCMD;
-
-		sUserCMD* pNewCMD = ClientActive->GetUserCMD(ClientActive->iCurrentCMD);
-		*pNewCMD = *pOldCMD;
-		--pOldCMD->iServerTime;
-
-		OldCommand(pOldCMD);
-		NewCommand(pNewCMD);
-	}
-	/*
-	//=====================================================================================
-	*/
-	void cPackets::OldCommand(sUserCMD* usercmd)
-	{
-		_aimBot.SilentAim(usercmd);
-
-		if (_profiler.gSilentAim->Custom.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
-			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & BUTTON_FIRELEFT);
-
-		else
-			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & BUTTON_FIRELEFT);
-	}
-	/*
-	//=====================================================================================
-	*/
-	void cPackets::NewCommand(sUserCMD* usercmd)
+	void cPackets::WritePacket(sUserCmd* usercmd)
 	{
 		_antiAim.AntiAim(usercmd);
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cPackets::PredictPlayerState(sUserCmd* oldcmd, sUserCmd* newcmd)
+	{
+		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
+		{
+			_aimBot.SilentAim(oldcmd);
+
+			if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
+				_aimBot.AutoFire(oldcmd);
+
+			else
+				_aimBot.AutoFire(newcmd);
+		}
+
+		if (_profiler.gSilentAim->Custom.bValue)
+			_removals.SpreadCompensationSilentAim(oldcmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && oldcmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+
+		else
+			_removals.SpreadCompensationStandardAim(oldcmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && oldcmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 	}
 }
 

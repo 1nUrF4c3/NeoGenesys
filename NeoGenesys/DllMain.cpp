@@ -21,17 +21,13 @@ void HOOKCALL hRefresh(int localnum);
 typedef void(HOOKCALL* tRefresh)(int localnum);
 tRefresh oRefresh = (tRefresh)OFF_REFRESH;
 
-void HOOKCALL hCreateNewCommands(int localnum);
-typedef void(HOOKCALL* tCreateNewCommands)(int localnum);
-tCreateNewCommands oCreateNewCommands = (tCreateNewCommands)OFF_CREATENEWCOMMANDS;
-
 void HOOKCALL hWritePacket(int localnum);
 typedef void(HOOKCALL* tWritePacket)(int localnum);
 tWritePacket oWritePacket = (tWritePacket)OFF_WRITEPACKET;
 
-void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
-typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
-tBulletFirePenetrate oBulletFirePenetrate = (tBulletFirePenetrate)OFF_BULLETFIREPENETRATE;
+void HOOKCALL hPredictPlayerState(int localnum);
+typedef void(HOOKCALL* tPredictPlayerState)(int localnum);
+tPredictPlayerState oPredictPlayerState = (tPredictPlayerState)OFF_PREDICTPLAYERSTATE;
 
 void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon);
 typedef void(HOOKCALL* tObituary)(int localnum, sEntityState* entitystate, int weapon);
@@ -60,16 +56,7 @@ void HOOKCALL hRefresh(int localnum)
 {
 	_hooks.Refresh(localnum);
 
-	oRefresh(localnum);
-}
-
-//=====================================================================================
-
-void HOOKCALL hCreateNewCommands(int localnum)
-{
-	oCreateNewCommands(localnum);
-
-	_hooks.CreateNewCommands(localnum);
+	return oRefresh(localnum);
 }
 
 //=====================================================================================
@@ -78,16 +65,16 @@ void HOOKCALL hWritePacket(int localnum)
 {
 	_hooks.WritePacket(localnum);
 
-	oWritePacket(localnum);
+	return oWritePacket(localnum);
 }
 
 //=====================================================================================
 
-void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime)
+void HOOKCALL hPredictPlayerState(int localnum)
 {
-	_hooks.BulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
+	_hooks.PredictPlayerState(localnum);
 
-	oBulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
+	return oPredictPlayerState(localnum);
 }
 
 //=====================================================================================
@@ -96,7 +83,7 @@ void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon)
 {
 	_hooks.Obituary(localnum, entitystate, weapon);
 
-	oObituary(localnum, entitystate, weapon);
+	return oObituary(localnum, entitystate, weapon);
 }
 
 //=====================================================================================
@@ -105,7 +92,7 @@ void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, floa
 {
 	_hooks.AddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
 
-	oAddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
+	return oAddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
 }
 
 //=====================================================================================
@@ -114,7 +101,7 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 {
 	_hooks.ClientFrame(entity);
 
-	oClientFrame(entity);
+	return oClientFrame(entity);
 }
 
 //=====================================================================================
@@ -123,9 +110,8 @@ void Initialize()
 {
 	Hook(oPresent, hPresent);
 	Hook(oRefresh, hRefresh);
-	Hook(oCreateNewCommands, hCreateNewCommands);
 	Hook(oWritePacket, hWritePacket);
-	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
+	Hook(oPredictPlayerState, hPredictPlayerState);
 	Hook(oObituary, hObituary);
 	Hook(oAddCmdDrawText, hAddCmdDrawText);
 	Hook(oClientFrame, hClientFrame);
@@ -137,9 +123,8 @@ void Deallocate()
 {
 	UnHook(oPresent, hPresent);
 	UnHook(oRefresh, hRefresh);
-	UnHook(oCreateNewCommands, hCreateNewCommands);
 	UnHook(oWritePacket, hWritePacket);
-	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
+	UnHook(oPredictPlayerState, hPredictPlayerState);
 	UnHook(oObituary, hObituary);
 	UnHook(oAddCmdDrawText, hAddCmdDrawText);
 	UnHook(oClientFrame, hClientFrame);
@@ -147,19 +132,17 @@ void Deallocate()
 	_mainGui.pDevice->Release();
 	_mainGui.pDeviceContext->Release();
 
-	SetWindowLongPtr(_mainGui.hWindow, GWLP_WNDPROC, (LONG_PTR)_mainGui.oWindowProcess);
-
 	ImGui_ImplWin32_Shutdown();
 	ImGui_ImplDX11_Shutdown();
 	ImGui::DestroyContext();
+
+	SetWindowLongPtr(_mainGui.hWindow, GWLP_WNDPROC, (LONG_PTR)_mainGui.oWindowProcess);
 }
 
 //=====================================================================================
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)
 {
-	DisableThreadLibraryCalls(hinstDLL);
-
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
@@ -169,9 +152,10 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	case DLL_PROCESS_DETACH:
 		Deallocate();
 		return TRUE;
-	}
 
-	return FALSE;
+	default:
+		return FALSE;
+	}
 }
 
 //=====================================================================================

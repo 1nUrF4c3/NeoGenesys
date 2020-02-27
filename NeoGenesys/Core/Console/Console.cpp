@@ -33,8 +33,8 @@ namespace NeoGenesys
 			vCommands.push_back("quit");
 
 			vCommands.push_back("neo_name");
-			vCommands.push_back("neo_endround");
-			vCommands.push_back("neo_crashgame");
+			vCommands.push_back("neo_end");
+			vCommands.push_back("neo_crash");
 			vCommands.push_back("neo_minimap");
 			vCommands.push_back("neo_thirdperson");
 			vCommands.push_back("neo_hostawall");
@@ -50,6 +50,8 @@ namespace NeoGenesys
 			vCommands.push_back("neo_message");
 			vCommands.push_back("neo_spawnbot");
 			vCommands.push_back("neo_infinite");
+			vCommands.push_back("neo_memread");
+			vCommands.push_back("neo_memwrite");
 
 			AddLog("Ready.");
 
@@ -86,6 +88,12 @@ namespace NeoGenesys
 	*/
 	void cConsole::Draw(LPCSTR title, bool* open)
 	{
+		if (bWriteLog)
+		{
+			ImGui::LogToFile();
+			bWriteLog = false;
+		}
+
 		ImGui::SetNextWindowSize(ImVec2(510.0f, 350.0f));
 
 		if (!ImGui::Begin(title, open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
@@ -97,20 +105,24 @@ namespace NeoGenesys
 		if (ImGui::BeginPopupContextItem())
 		{
 			if (ImGui::MenuItem("Close"))
-				* open = false;
+			{
+				*open = false;
+				bWriteLog = true;
+			}
 
 			ImGui::EndPopup();
+			bWriteLog = true;
 		}
 
-		ImGui::TextWrapped("\t\t\tNeoGenesys");
+		ImGui::TextWrapped("\t\t\t%s", PROGRAM_NAME);
 		ImGui::Spacing();
 		ImGui::TextWrapped("Press Help for details, press Tab to use text completion.");
 
 		if (ImGui::Button("Help", ImVec2(50, 0)))
 		{
 			AddLog("1. neo_name <name>\n\t\tChange your name.");
-			AddLog("2. neo_endround\n\t\tForce the current match to end.");
-			AddLog("3. neo_crashgame\n\t\tCrash everyone in the lobby except yourself.");
+			AddLog("2. neo_end\n\t\tForce the current match to end.");
+			AddLog("3. neo_crash\n\t\tCrash everyone in the lobby except yourself.");
 			AddLog("4. neo_minimap <on|off>\n\t\tEnable/disable enemy blips on the minimap.");
 			AddLog("5. neo_thirdperson <on|off>\n\t\tEnable/disable thirdperson view.");
 			AddLog("6. neo_hostawall <on|off>\n\t\tEnable/disable host autowall (as host).");
@@ -126,11 +138,16 @@ namespace NeoGenesys
 			AddLog("16. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
 			AddLog("17. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
 			AddLog("18. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
+			AddLog("19. neo_memread <address> <byte|word|dword|qword>\n\t\tRead value of the specified type from memory.");
+			AddLog("20. neo_memwrite <address> <byte|word|dword|qword> <value>\n\t\tWrite value of the specified type to memory.");
+
+			bWriteLog = true;
 		} ImGui::SameLine();
 
 		if (ImGui::Button("Clear", ImVec2(50, 0)))
 		{
 			ClearLog();
+			bWriteLog = true;
 		} ImGui::SameLine();
 
 		bool bCopyToClipboard = ImGui::Button("Copy", ImVec2(50, 0));
@@ -142,15 +159,22 @@ namespace NeoGenesys
 		if (ImGui::BeginPopupContextWindow())
 		{
 			if (ImGui::Selectable("Clear"))
+			{
 				ClearLog();
+				bWriteLog = true;
+			}
 
 			ImGui::EndPopup();
+			bWriteLog = true;
 		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
 		if (bCopyToClipboard)
+		{
 			ImGui::LogToClipboard();
+			bWriteLog = true;
+		}
 
 		ImVec4 cDefaultText = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
@@ -189,7 +213,7 @@ namespace NeoGenesys
 		{
 			LPSTR szInputEnd = szInput + strlen(szInput);
 
-			while (szInputEnd > szInput && szInputEnd[-1] == ' ')
+			while (szInputEnd > szInput&& szInputEnd[-1] == ' ')
 			{
 				szInputEnd--;
 			} *szInputEnd = 0;
@@ -199,6 +223,8 @@ namespace NeoGenesys
 
 			ZeroMemory(szInput, sizeof(szInput));
 			bReclaimFocus = true;
+
+			bWriteLog = true;
 		}
 
 		ImGui::PopItemWidth();
@@ -307,7 +333,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_endround"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_end"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -317,7 +343,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_crashgame"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_crash"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -717,7 +743,7 @@ namespace NeoGenesys
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-			for (int i = 0; i < 0x2D0; i++)
+			for (int i = 0; i < OFF_CHALLENGESIZE; i++)
 				*(BYTE*)(OFF_CHALLENGES + i) = 0xFF;
 
 			AddLog("All challenges have been unlocked.");
@@ -1208,6 +1234,138 @@ namespace NeoGenesys
 
 			AddLog("Score/time limit has been set to unlimited.");
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_memread"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) >= (QWORD)hIw6mp64_ship.lpBaseOfDll && _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) <= ((QWORD)hIw6mp64_ship.lpBaseOfDll + hIw6mp64_ship.SizeOfImage))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "byte"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+						AddLog("%s at 0x%llX is 0x%hhX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(BYTE*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "word"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+						AddLog("%s at 0x%llX is 0x%hX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(WORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "dword"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+						AddLog("%s at 0x%llX is 0x%lX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(DWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "qword"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+						AddLog("%s at 0x%llX is 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(QWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("[ERROR] Invalid argument(s).");
+					}
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
+			}
+
+			else
+			{
+				AddLog("[ERROR] Missing argument(s).");
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_memwrite"))
+		{
+			if (CmdLine.iArgNum > 2)
+			{
+				if (_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) >= (QWORD)hIw6mp64_ship.lpBaseOfDll && _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) <= ((QWORD)hIw6mp64_ship.lpBaseOfDll + hIw6mp64_ship.SizeOfImage))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "byte"))
+					{
+						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
+
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(BYTE), dwProtection, &dwProtection);
+						*(BYTE*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(BYTE), dwProtection, &dwProtection);
+
+						AddLog("%s 0x%hhX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "word"))
+					{
+						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
+
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(WORD), dwProtection, &dwProtection);
+						*(WORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(WORD), dwProtection, &dwProtection);
+
+						AddLog("%s 0x%hX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "dword"))
+					{
+						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
+
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(DWORD), dwProtection, &dwProtection);
+						*(DWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(DWORD), dwProtection, &dwProtection);
+
+						AddLog("%s 0x%lX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (!Stricmp(CmdLine.szCmdArgs[1], "qword"))
+					{
+						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
+
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(QWORD), dwProtection, &dwProtection);
+						*(QWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
+						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(QWORD), dwProtection, &dwProtection);
+
+						AddLog("%s 0x%llX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("[ERROR] Invalid argument(s).");
+					}
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
+			}
+
+			else
+			{
+				AddLog("[ERROR] Missing argument(s).");
+			}
 		}
 
 		else

@@ -72,7 +72,7 @@ namespace NeoGenesys
 				_mainGui.Menu.HostMenu.PlayerMod[i].bSuperSpeed = false;
 				_mainGui.Menu.HostMenu.PlayerMod[i].bFreezePosition = false;
 
-				_targetList.vIsTarget[i] = FALSE;
+				_targetList.vIsTarget[i] = TRUE;
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace NeoGenesys
 			DWORD dwProtection = PAGE_EXECUTE_READWRITE;
 
 			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
-			*(float*)OFF_ALTJUMPHEIGHT = 200.0f;
+			*(float*)OFF_ALTJUMPHEIGHT = 3000.0f;
 			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
 
 			bSuperJump = true;
@@ -162,7 +162,7 @@ namespace NeoGenesys
 					PlayerKill(&GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? NULL : &GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PlayerState.iClientNum] : &GEntity[iTargetNum],
-						_targetList.EntityIsEnemy(iTargetNum) ? 0 : 14,
+						_targetList.EntityIsEnemy(iTargetNum) ? 9 : 14,
 						_targetList.EntityIsEnemy(iTargetNum) ? GetViewmodelWeapon(&CG->PlayerState) : 0);
 				}
 			}

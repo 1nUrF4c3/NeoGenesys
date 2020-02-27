@@ -21,15 +21,15 @@ namespace NeoGenesys
 		ImGui_ImplWin32_Init(hWindow);
 		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
 
-		Menu.szIniFileName = acut::GetExeDirectory() + DEFAULT_INI;
-		Menu.szLogFileName = acut::GetExeDirectory() + DEFAULT_LOG;
+		Menu.szIniFileName = acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_INI, " ", "");
+		Menu.szLogFileName = acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_LOG, " ", "");
 
 		ImGui::GetIO().IniFilename = Menu.szIniFileName.c_str();
 		ImGui::GetIO().LogFilename = Menu.szLogFileName.c_str();
 
-		_profiler.gMenuColor->Custom.iValue = GetPrivateProfileInt("MenuStyle", "COLOR", cProfiler::MENU_COLOR_NEUTRAL, (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
-		_profiler.gMenuCursor->Custom.iValue = GetPrivateProfileInt("MenuStyle", "CURSOR", cProfiler::MENU_CURSOR_BLACK, (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
-		_profiler.gMenuFont->Custom.iValue = GetPrivateProfileInt("MenuStyle", "FONT", cProfiler::MENU_FONT_LIGHT, (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
+		_profiler.gMenuColor->Custom.iValue = GetPrivateProfileInt("MenuStyle", "COLOR", cProfiler::MENU_COLOR_NEUTRAL, (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
+		_profiler.gMenuCursor->Custom.iValue = GetPrivateProfileInt("MenuStyle", "CURSOR", cProfiler::MENU_CURSOR_BLACK, (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
+		_profiler.gMenuFont->Custom.iValue = GetPrivateProfileInt("MenuStyle", "FONT", cProfiler::MENU_FONT_LIGHT, (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
 
 		RefreshInterface(_profiler.gMenuColor->Custom.iValue, _profiler.gMenuCursor->Custom.iValue, _profiler.gMenuFont->Custom.iValue);
 
@@ -334,13 +334,11 @@ namespace NeoGenesys
 				_drawing.DrawCrosshair();
 			}
 
-			std::string szWatermark(VariadicText("NEOGENESYS for Call of Duty: Ghosts - Multiplayer | Ping: %s", LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
-			std::string szConnection(*(int*)OFF_ISCURRENTHOST ? "Hosting" : "Not Hosting");
-			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
+			std::string szWatermark(VariadicText("%s for Call of Duty: Ghosts | Frametime: %s, Ping: %s", acut::ToUpper(PROGRAM_NAME).c_str(),
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME).c_str() : "N/A",
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
 
 			ImVec2 vWatermark(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szWatermark.c_str()));
-			ImVec2 vConnection(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szConnection.c_str()));
-			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
 
 			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
 				ImVec2(vWatermark.y + 1.0f, flEurostile_Extended - vWatermark.y + 1.0f),
@@ -352,6 +350,9 @@ namespace NeoGenesys
 
 			if (LocalClientIsInGame())
 			{
+				std::string szConnection(*(int*)OFF_ISCURRENTHOST ? "Hosting" : "Not Hosting");
+				ImVec2 vConnection(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szConnection.c_str()));
+
 				ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
 					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f + 1.0f, flEurostile_Extended - vConnection.y + 1.0f),
 					0xFF000000, szConnection.c_str());
@@ -360,6 +361,9 @@ namespace NeoGenesys
 					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f, flEurostile_Extended - vConnection.y),
 					*(int*)OFF_ISCURRENTHOST ? 0xFF00FF00 : 0xFF0000FF, szConnection.c_str());
 			}
+
+			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
+			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
 
 			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
 				ImVec2(ImGui::GetIO().DisplaySize.x - vFramesPerSecond.x - vFramesPerSecond.y + 1.0f, flEurostile_Extended - vFramesPerSecond.y + 1.0f),
@@ -380,7 +384,7 @@ namespace NeoGenesys
 				}
 
 				ImGui::SetNextWindowSize(ImVec2(490.0f, 324.0f));
-				ImGui::Begin("NEOGENESYS", &Menu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+				ImGui::Begin(acut::ToUpper(PROGRAM_NAME).c_str(), &Menu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 				ImGui::SetColorEditOptions(ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
  
 				if (ImGui::TabLabels(_profiler.gMenuTabs->MaxValue.iMax, acut::StringVectorToCharPointerArray(_profiler.gMenuTabs->szItems), _profiler.gMenuTabs->Custom.iValue, NULL, false, NULL, NULL, false, false, NULL, NULL, &ImVec2(94.0f, 25.0f)))
@@ -399,12 +403,12 @@ namespace NeoGenesys
 					if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_OFF].c_str(), &_profiler.gAimBotMode->Custom.iValue, cProfiler::AIMBOT_MODE_OFF))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(147.0f);
+					} ImGui::SameLine(148.0f);
 
 					if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_MANUAL].c_str(), &_profiler.gAimBotMode->Custom.iValue, cProfiler::AIMBOT_MODE_MANUAL))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(294.0f);
+					} ImGui::SameLine(296.0f);
 
 					if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_AUTO].c_str(), &_profiler.gAimBotMode->Custom.iValue, cProfiler::AIMBOT_MODE_AUTO))
 					{
@@ -449,6 +453,11 @@ namespace NeoGenesys
 					if (ImGui::Combo(_profiler.gBoneScan->szLabel.c_str(), &_profiler.gBoneScan->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gBoneScan->szItems), _profiler.gBoneScan->MaxValue.iMax))
 					{
 						Menu.bWriteLog = true;
+					} ImGui::NewLine();
+
+					if (ImGui::Combo(_profiler.gSortMethod->szLabel.c_str(), &_profiler.gSortMethod->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gSortMethod->szItems), _profiler.gSortMethod->MaxValue.iMax))
+					{
+						Menu.bWriteLog = true;
 					}
 				} break;
 
@@ -457,12 +466,12 @@ namespace NeoGenesys
 					if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_AXIS].c_str(), &_profiler.gWallHackMode->Custom.iValue, cProfiler::WALLHACK_MODE_AXIS))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(147.0f);
+					} ImGui::SameLine(148.0f);
 
 					if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_ALLIES].c_str(), &_profiler.gWallHackMode->Custom.iValue, cProfiler::WALLHACK_MODE_ALLIES))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(294.0f);
+					} ImGui::SameLine(296.0f);
 
 					if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_ALL].c_str(), &_profiler.gWallHackMode->Custom.iValue, cProfiler::WALLHACK_MODE_ALL))
 					{
@@ -615,7 +624,7 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::SliderInt("Frames per Second", &FindVariable("com_maxfps")->Current.iValue, 0, 300, "%d fps"))
+					if (ImGui::SliderInt("Frames per Second", &FindVariable("com_maxfps")->Current.iValue, 0, 240, "%d fps"))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
@@ -673,7 +682,7 @@ namespace NeoGenesys
 					
 					if (ImGui::Combo(_profiler.gMenuColor->szLabel.c_str(), &_profiler.gMenuColor->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gMenuColor->szItems), _profiler.gMenuColor->MaxValue.iMax))
 					{
-						WritePrivateProfileString("MenuStyle", "COLOR", std::to_string(_profiler.gMenuColor->Custom.iValue).c_str(), (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
+						WritePrivateProfileString("MenuStyle", "COLOR", std::to_string(_profiler.gMenuColor->Custom.iValue).c_str(), (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
 
 						Menu.bStyleChanged = true;
 						Menu.bWriteLog = true;
@@ -681,7 +690,7 @@ namespace NeoGenesys
 
 					if (ImGui::Combo(_profiler.gMenuCursor->szLabel.c_str(), &_profiler.gMenuCursor->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gMenuCursor->szItems), _profiler.gMenuCursor->MaxValue.iMax))
 					{
-						WritePrivateProfileString("MenuStyle", "CURSOR", std::to_string(_profiler.gMenuCursor->Custom.iValue).c_str(), (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
+						WritePrivateProfileString("MenuStyle", "CURSOR", std::to_string(_profiler.gMenuCursor->Custom.iValue).c_str(), (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
 
 						Menu.bStyleChanged = true;
 						Menu.bWriteLog = true;
@@ -689,7 +698,7 @@ namespace NeoGenesys
 
 					if (ImGui::Combo(_profiler.gMenuFont->szLabel.c_str(), &_profiler.gMenuFont->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gMenuFont->szItems), _profiler.gMenuFont->MaxValue.iMax))
 					{
-						WritePrivateProfileString("MenuStyle", "FONT", std::to_string(_profiler.gMenuFont->Custom.iValue).c_str(), (acut::GetExeDirectory() + DEFAULT_CFG).c_str());
+						WritePrivateProfileString("MenuStyle", "FONT", std::to_string(_profiler.gMenuFont->Custom.iValue).c_str(), (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
 
 						Menu.bStyleChanged = true;
 						Menu.bWriteLog = true;
@@ -756,6 +765,12 @@ namespace NeoGenesys
 
 			if (Menu.bShowWindow && Menu.PlayerList.bShowWindow && LocalClientIsInGame())
 			{
+				if (Menu.PlayerList.bWriteLog)
+				{
+					ImGui::LogToFile();
+					Menu.PlayerList.bWriteLog = false;
+				}
+
 				ImGui::SetNextWindowSize(ImVec2(400.0f, 480.0f));
 				ImGui::Begin("PLAYER LIST", &Menu.PlayerList.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 				ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
@@ -764,17 +779,28 @@ namespace NeoGenesys
 				{
 					if (CharacterInfo[i].iInfoValid)
 					{
-						GetPlayerAddr(&Menu.PlayerList.NetAddr[i], ClientInfo[i].iClientNum);
+						GetPlayerAddr(&Menu.PlayerList.NetAddr[i], GetCurrentSession(), ClientInfo[i].iClientNum);
 
 						ImGui::PushID(i);
-						ImGui::Checkbox("", (bool*)&_targetList.vIsTarget[i]);
-						ImGui::SameLine();
+
+						if (ImGui::RadioButton("", &_targetList.iRiotShieldTarget, i))
+						{
+							Menu.PlayerList.bWriteLog = true;
+						} ImGui::PopID(); ImGui::SameLine();
+
+						ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue);
+						
+						if (ImGui::Checkbox("", (bool*)&_targetList.vIsTarget[i]))
+						{
+							Menu.PlayerList.bWriteLog = true;
+						} ImGui::PopID(); ImGui::SameLine();
 
 						if (*(int*)OFF_ISCURRENTHOST)
 						{
 							if (ImGui::Button("Crash", ImVec2(50.0f, 0.0f)))
 							{
 								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
+								Menu.PlayerList.bWriteLog = true;
 							} ImGui::SameLine();
 						}
 
@@ -787,7 +813,6 @@ namespace NeoGenesys
 								(BYTE)Menu.PlayerList.NetAddr[i].szIP[3]).c_str(),
 							1024, ImGuiInputTextFlags_ReadOnly);
 						ImGui::PopItemWidth();
-						ImGui::PopID();
 					}
 				}
 
@@ -795,54 +820,79 @@ namespace NeoGenesys
 				ImGui::End();
 			}
 
-			if (Menu.bShowWindow && Menu.HostMenu.bShowWindow && LocalClientIsInGame() && *(int*)OFF_ISCURRENTHOST)
+			if (Menu.bShowWindow && Menu.HostMenu.bShowWindow && LocalClientIsInGame() && *(int*)OFF_ISCURRENTHOST && !*(bool*)OFF_ISALIENSMODE)
 			{
+				if (Menu.HostMenu.bWriteLog)
+				{
+					ImGui::LogToFile();
+					Menu.HostMenu.bWriteLog = false;
+				}
+
 				ImGui::SetNextWindowSize(ImVec2(484.0f, 616.0f));
 				ImGui::Begin("HOST MENU", &Menu.HostMenu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 
 				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 					if (CharacterInfo[i].iInfoValid)
-						Menu.HostMenu.vPlayers.push_back(std::pair<int, LPSTR>(ClientInfo[i].iClientNum, ClientInfo[i].szName));
+						Menu.HostMenu.vPlayers.push_back(std::make_pair(ClientInfo[i].iClientNum, ClientInfo[i].szName));
 
 				ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 				if (ImGui::BeginCombo("", ClientInfo[Menu.HostMenu.iPlayer].szName))
 				{
 					Menu.HostMenu.GetPlayerSelection();
 					ImGui::EndCombo();
+
+					Menu.HostMenu.bWriteLog = true;
 				} ImGui::PopItemWidth();
 
 				ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
 				ImGui::Separator();
 				ImGui::NewLine();
 
-				ImGui::Checkbox("God Mode", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bGodMode);
-				ImGui::SameLine(292.0f);
-				ImGui::Checkbox("No Clip", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bNoClip);
-				ImGui::NewLine();
-				ImGui::Checkbox("Infinite Ammo", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInfiniteAmmo);
-				ImGui::SameLine(292.0f);
-				ImGui::Checkbox("Explosive Bullets", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bExplosiveBullets);
-				ImGui::NewLine();
-				ImGui::Checkbox("Super Speed", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bSuperSpeed);
-				ImGui::SameLine(292.0f);
-				ImGui::Checkbox("Freeze Position", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bFreezePosition);
+				if (ImGui::Checkbox("God Mode", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bGodMode))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(292.0f);
+				
+				if (ImGui::Checkbox("No Clip", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bNoClip))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine();
+				
+				if (ImGui::Checkbox("Infinite Ammo", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInfiniteAmmo))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(292.0f);
 
-				ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::NewLine();
+				if (ImGui::Checkbox("Explosive Bullets", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bExplosiveBullets))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine();
+				
+				if (ImGui::Checkbox("Super Speed", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bSuperSpeed))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(292.0f);
+				
+				if (ImGui::Checkbox("Freeze Position", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bFreezePosition))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-				ImGui::InputText("Name", PlayerState[Menu.HostMenu.iPlayer].ClientState.szName, 16);
+				if (ImGui::InputText("Name", PlayerState[Menu.HostMenu.iPlayer].ClientState.szName, 16))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				}
 
 				if (ImGui::Combo("Team", (int*)&PlayerState[Menu.HostMenu.iPlayer].ClientState.iTeam, Menu.HostMenu.szTeam, TEAM_MAX))
 				{
 					TeamChanged(ClientInfo[Menu.HostMenu.iPlayer].iClientNum);
+					Menu.HostMenu.bWriteLog = true;
 				}
 
-				ImGui::InputInt("Health", &GEntity[Menu.HostMenu.iPlayer].iHealth);
-
-				ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::NewLine();
+				if (ImGui::InputInt("Health", &GEntity[Menu.HostMenu.iPlayer].iHealth))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
 				for (auto& WeaponID : vWeaponIDs)
 				{
@@ -851,19 +901,14 @@ namespace NeoGenesys
 					GetWeaponNameComplete(WeaponID, false, szComplete, 1024);
 					GetWeaponDisplayName(WeaponID, false, szDisplay, 1024);
 
-					size_t iPosition;
-
-					while ((iPosition = std::string(szDisplay).find("^")) != std::string::npos)
-						strcpy_s(szDisplay, std::string(szDisplay).erase(iPosition, 2).c_str());
-
-					Menu.HostMenu.vWeaponCompleteNames.push_back(_strdup(szComplete));
-					Menu.HostMenu.vWeaponDisplayNames.push_back(_strdup(szDisplay));
+					Menu.HostMenu.vWeaponCompleteNames.push_back(_strdup(acut::StripColorCodes(szComplete).c_str()));
+					Menu.HostMenu.vWeaponDisplayNames.push_back(_strdup(acut::StripColorCodes(szDisplay).c_str()));
 				}
 
-				ImGui::Combo("Weapon", &Menu.HostMenu.iWeaponID, Menu.HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size());
-
-				Menu.HostMenu.vWeaponCompleteNames.clear();
-				Menu.HostMenu.vWeaponDisplayNames.clear();
+				if (ImGui::Combo("Weapon", &Menu.HostMenu.iWeaponID, Menu.HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size()))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} Menu.HostMenu.vWeaponCompleteNames.clear(); Menu.HostMenu.vWeaponDisplayNames.clear();
 
 				if (ImGui::Button("Give Weapon", ImVec2(150.0f, 25.0f)))
 				{
@@ -871,42 +916,45 @@ namespace NeoGenesys
 					GivePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, false, true);
 					GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", vWeaponIDs[Menu.HostMenu.iWeaponID]));
 					AddAmmo(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, 255, true);
-				}
 
-				ImGui::SameLine(0.0f, 4.0f);
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(0.0f, 4.0f);
 
 				if (ImGui::Button("Take Weapon", ImVec2(150.0f, 25.0f)))
 				{
 					TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
 					GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", 0));
+
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+				if (ImGui::SliderFloat3("Position", PlayerState[Menu.HostMenu.iPlayer].vOrigin, -8192.0f, 8192.0f, "%.0f"))
+				{
+					Menu.HostMenu.bWriteLog = true;
 				}
 
-				ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::NewLine();
-
-				ImGui::SliderFloat3("Position", PlayerState[Menu.HostMenu.iPlayer].vOrigin, -8192.0f, 8192.0f, "%.0f");
-
 				if (ImGui::Button("Teleport To", ImVec2(150.0f, 25.0f)))
+				{
 					VectorCopy(PlayerState[Menu.HostMenu.iPlayer].vOrigin, PlayerState[CG->PlayerState.iClientNum].vOrigin);
-
-				ImGui::SameLine(0.0f, 4.0f);
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(0.0f, 4.0f);
 
 				if (ImGui::Button("Teleport From", ImVec2(150.0f, 25.0f)))
+				{
 					VectorCopy(PlayerState[CG->PlayerState.iClientNum].vOrigin, PlayerState[Menu.HostMenu.iPlayer].vOrigin);
-
-				ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::NewLine();
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
 				if (ImGui::Button("Kick", ImVec2(304.0f, 25.0f)))
+				{
 					KickClient(ClientInfo[Menu.HostMenu.iPlayer].iClientNum, Menu.HostMenu.szKickReason);
+					Menu.HostMenu.bWriteLog = true;
+				}
 
-				ImGui::InputText("Reason", Menu.HostMenu.szKickReason, 64);
-
-				ImGui::NewLine();
-				ImGui::Separator();
-				ImGui::EndChild();
+				if (ImGui::InputText("Reason", Menu.HostMenu.szKickReason, 64))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::EndChild();
 
 				Menu.HostMenu.vPlayers.clear();
 

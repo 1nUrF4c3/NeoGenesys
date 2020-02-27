@@ -15,7 +15,6 @@ namespace NeoGenesys
 
 		_aimBot.AimState.iTargetNum = -1;
 
-		bool bW2SSuccess = false;
 		static int iCounter = 0;
 		int iBonescanNum = iCounter % FindVariable("sv_maxclients")->Current.iValue;
 
@@ -29,7 +28,7 @@ namespace NeoGenesys
 
 			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER || CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
-				LPVOID pDObj = GetEntityDObj(CEntity[i].NextEntityState.iEntityNum);
+				LPVOID pDObj = GetEntityDObj(i);
 
 				if (!pDObj)
 					continue;
@@ -40,23 +39,14 @@ namespace NeoGenesys
 				{
 					GetTagPosition(&CEntity[i], pDObj, RegisterTag(vBones[j].second), EntityList[i].vBones3D[j]);
 
-					if (EntityList[i].vBones3D[j][0] < vMinTemp[0])
-						vMinTemp[0] = EntityList[i].vBones3D[j][0];
+					for (int k = 0; k < 3; k++)
+					{
+						if (EntityList[i].vBones3D[j][k] < vMinTemp[k])
+							vMinTemp[k] = EntityList[i].vBones3D[j][k];
 
-					if (EntityList[i].vBones3D[j][0] > vMaxTemp[0])
-						vMaxTemp[0] = EntityList[i].vBones3D[j][0];
-
-					if (EntityList[i].vBones3D[j][1] < vMinTemp[1])
-						vMinTemp[1] = EntityList[i].vBones3D[j][1];
-
-					if (EntityList[i].vBones3D[j][1] > vMaxTemp[1])
-						vMaxTemp[1] = EntityList[i].vBones3D[j][1];
-
-					if (EntityList[i].vBones3D[j][2] < vMinTemp[2])
-						vMinTemp[2] = EntityList[i].vBones3D[j][2];
-
-					if (EntityList[i].vBones3D[j][2] > vMaxTemp[2])
-						vMaxTemp[2] = EntityList[i].vBones3D[j][2];
+						if (EntityList[i].vBones3D[j][k] > vMaxTemp[k])
+							vMaxTemp[k] = EntityList[i].vBones3D[j][k];
+					}
 				}
 
 				VectorAverage(vMinTemp, vMaxTemp, EntityList[i].vCenter3D);
@@ -65,7 +55,7 @@ namespace NeoGenesys
 			char szWeapon[1024] = { NULL };
 
 			GetWeaponDisplayName((BYTE)CEntity[i].NextEntityState.iWeapon, CEntity[i].NextEntityState.iInAltWeaponMode, szWeapon, sizeof(szWeapon));
-			EntityList[i].szWeapon = acut::StripColorCodes(szWeapon);
+			EntityList[i].szWeapon = szWeapon;
 
 			EntityList[i].bIsValid = true;
 
@@ -87,7 +77,6 @@ namespace NeoGenesys
 				if (!EntityIsEnemy(i))
 				{
 					EntityList[i].cColor = _profiler.gColorAllies->Custom.cValue;
-
 					continue;
 				}
 
@@ -97,7 +86,6 @@ namespace NeoGenesys
 			else if (CEntity[i].NextEntityState.iEntityType == ET_ITEM)
 			{
 				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, EntityList[i].vCenter2D);
-
 				continue;
 			}
 
@@ -231,49 +219,39 @@ namespace NeoGenesys
 			{
 				if (i < FindVariable("sv_maxclients")->Current.iValue)
 				{
-					if (!vIsTarget[CEntity[i].NextEntityState.iEntityNum])
+					if (!vIsTarget[i])
 						continue;
 				}
 
-				else if (!vIsTarget[CEntity[i].NextEntityState.iOtherEntityNum])
-					continue;
+				else
+				{
+					if (!vIsTarget[CEntity[i].NextEntityState.iOtherEntityNum])
+						continue;
+				}
 			}
 
 			if (EntityList[i].bIsVisible)
 			{
-				ImVec2 vTarget, vCenter = ImGui::GetIO().DisplaySize / 2.0f;
+				TargetInfo.iIndex = i;
 
-				if (WorldToScreen(GetScreenMatrix(), EntityList[i].vHitLocation, vTarget))
-				{
-					bW2SSuccess = true;
+				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin);
 
-					TargetInfo.iIndex = i;
-					TargetInfo.flDistance2D = GetDistance2D(vTarget, vCenter);
-
-					vTargetInfo.push_back(TargetInfo);
-				}
-
-				if (!bW2SSuccess)
-				{
-					TargetInfo.iIndex = i;
-					TargetInfo.flDistance3D = GetDistance3D(CEntity[i].vOrigin, CG->PlayerState.vOrigin);
-
-					vTargetInfo.push_back(TargetInfo);
-				}
+				vTargetInfo.push_back(TargetInfo);
 			}
 		}
 
 		if (!vTargetInfo.empty())
 		{
-			if (bW2SSuccess)
+			if (_profiler.gSortMethod->Custom.iValue == cProfiler::SORT_METHOD_FOV)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance2D < b.flDistance2D; });
+				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
 				_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
 			}
 
-			else
+			else if (_profiler.gSortMethod->Custom.iValue == cProfiler::SORT_METHOD_DISTANCE)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance3D < b.flDistance3D; });
+				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
 				_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
 			}
 
@@ -326,8 +304,12 @@ namespace NeoGenesys
 
 		if (_aimBot.AimState.bTargetAcquired)
 		{
+			Vector3 vViewOrigin;
+
+			GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+
 			VectorCopy(EntityList[_aimBot.AimState.iTargetNum].vHitLocation, _aimBot.AimState.vAimbotPosition);
-			_mathematics.CalculateAngles(_aimBot.AimState.vAimbotPosition, _aimBot.AimState.vAimbotAngles);
+			_mathematics.CalculateAngles(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, _aimBot.AimState.vAimbotPosition, _aimBot.AimState.vAimbotAngles);
 		}
 
 		iCounter++;
@@ -347,7 +329,19 @@ namespace NeoGenesys
 	*/
 	bool cTargetList::EntityIsValid(int index)
 	{
-		return (index != CG->PlayerState.iClientNum && CEntity[index].wValid && CEntity[index].iIsAlive & 1);
+		if (CEntity[index].NextEntityState.iEntityType == ET_PLAYER)
+		{
+			if (index != CG->PlayerState.iClientNum && CEntity[index].iIsAlive & 1 && CharacterInfo[index].iInfoValid)
+				return true;
+		}
+
+		else
+		{
+			if (index != CG->PlayerState.iClientNum && CEntity[index].iIsAlive & 1 && CEntity[index].wValid)
+				return true;
+		}
+
+		return false;
 	}
 	/*
 	//=====================================================================================
@@ -356,15 +350,13 @@ namespace NeoGenesys
 	{
 		if (CEntity[index].NextEntityState.iEntityType == ET_PLAYER)
 		{
-			if (CharacterInfo[index].iTeam == TEAM_FREE ||
-				CharacterInfo[index].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+			if (CharacterInfo[index].iTeam == TEAM_FREE || CharacterInfo[index].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
 				return true;
 		}
 
 		else
 		{
-			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam == TEAM_FREE ||
-				CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam == TEAM_FREE || CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
 				return true;
 		}
 
@@ -375,6 +367,9 @@ namespace NeoGenesys
 	*/
 	bool cTargetList::IsVisible(sCEntity* entity, Vector3 position, bool autowall, float* damage)
 	{
+		Vector3 vViewOrigin;
+
+		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
 		ApplyPrediction(entity, position);
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
@@ -387,7 +382,7 @@ namespace NeoGenesys
 
 		else if (autowall)
 		{
-			float flDamage = _autoWall.C_Autowall(RefDef->vViewOrg, position);
+			float flDamage = _autoWall.C_Autowall(vViewOrigin, position);
 
 			if (damage)
 				*damage = flDamage;
@@ -398,7 +393,7 @@ namespace NeoGenesys
 
 		else
 		{
-			bool bTraceHit = _autoWall.C_TraceBullet(RefDef->vViewOrg, position, entity->NextEntityState.iEntityNum);
+			bool bTraceHit = _autoWall.C_TraceBullet(vViewOrigin, position, entity->NextEntityState.iEntityNum);
 
 			if (bTraceHit)
 				return true;

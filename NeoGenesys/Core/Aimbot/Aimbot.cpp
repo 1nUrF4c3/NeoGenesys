@@ -38,7 +38,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cAimbot::SilentAim(sUserCMD* usercmd)
+	void cAimbot::SilentAim(sUserCmd* usercmd)
 	{
 		if (_profiler.gSilentAim->Custom.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) && AimState.bTargetAcquired)
 		{
@@ -58,7 +58,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cAimbot::AutoFire(sUserCMD* usercmd)
+	void cAimbot::AutoFire(sUserCmd* usercmd)
 	{
 		if (_profiler.gAutoFire->Custom.bValue && AimState.bTargetAcquired)
 		{
@@ -69,10 +69,10 @@ namespace NeoGenesys
 					if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)))
 					{
 						if (AimState.bAkimbo)
-							usercmd->iButtons |= BUTTON_FIRELEFT;
+							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT);
 
 						else
-							usercmd->iButtons |= BUTTON_FIRERIGHT;
+							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRELEFT : BUTTON_FIRERIGHT);
 					}
 
 					else

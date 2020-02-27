@@ -14,34 +14,13 @@ namespace NeoGenesys
 		{
 			_targetList.GetInformation();
 
-			if (!WeaponBothClipEmpty(&CG->PlayerState))
-			{
+			if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
 				_aimBot.StandardAim();
-				_removals.RecoilCompensation();
-			}
+
+			_removals.RecoilCompensation();
 		}
 
 		_host.PlayerModThread();
-	}
-	/*
-	//=====================================================================================
-	*/
-	void cHooks::CreateNewCommands(int localnum)
-	{
-		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
-		{
-			sUserCMD* pOldCMD = ClientActive->GetUserCMD(ClientActive->iCurrentCMD - 1);
-			sUserCMD* pNewCMD = ClientActive->GetUserCMD(ClientActive->iCurrentCMD);
-
-			*pOldCMD = *pNewCMD;
-			--pOldCMD->iServerTime;
-
-			if (!WeaponBothClipEmpty(&CG->PlayerState))
-			{
-				_packets.OldCommand(pOldCMD);
-				_aimBot.AutoFire(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? pNewCMD : pOldCMD);
-			}
-		}
 	}
 	/*
 	//=====================================================================================
@@ -50,35 +29,28 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
-			sUserCMD* pUserCMD = ClientActive->GetUserCMD(ClientActive->iCurrentCMD);
-			_packets.NewCommand(pUserCMD);
+			sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
+
+			_packets.WritePacket(pUserCmd);
 		}
 	}
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::BulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime)
+	void cHooks::PredictPlayerState(int localnum)
 	{
-		if (LocalClientIsInGame())
+		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
-			if (bp->iEntityNum == CG->PlayerState.iClientNum)
-			{
-				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && 
-					ClientActive->GetUserCMD(ClientActive->iCurrentCMD - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))->iButtons & BUTTON_FIRELEFT, 
-					ClientActive->GetUserCMD(ClientActive->iCurrentCMD - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))->iServerTime);
+			sUserCmd* pOldCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - 1);
+			sUserCmd* pNewCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
 
-				Vector3 vAngles, vForward, vRight, vUp;
-				VectorCopy(_aimBot.AimState.vAimbotAngles, vAngles);
+			if (_mainGui.GetKeyPress(VK_DELETE, true))
+				*pNewCmd = *pOldCmd;
 
-				vAngles[0] += FindVariable("camera_thirdPerson")->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vThirdPersonViewAngles[0] : CG->vRefDefViewAngles[0];
-				vAngles[1] += FindVariable("camera_thirdPerson")->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vThirdPersonViewAngles[1] : CG->vRefDefViewAngles[1];
+			*pOldCmd = *pNewCmd;
+			--pOldCmd->iServerTime;
 
-				AngleVectors(_profiler.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ?
-					vAngles : FindVariable("camera_thirdPerson")->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vThirdPersonViewAngles : CG->vRefDefViewAngles, vForward, vRight, vUp);
-
-				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * (1.0f - _profiler.gSpreadFactor->Custom.flValue), RefDef->vViewOrg,
-					bp->vEnd, bp->vDir, vForward, vRight, vUp);
-			}
+			_packets.PredictPlayerState(pOldCmd, pNewCmd);
 		}
 	}
 	/*
@@ -125,7 +97,7 @@ namespace NeoGenesys
 		LPSTR szInvalidText;
 
 		if (szInvalidText = strstr(text, "\x5E\x01\x3D\x3D\xFF"))
-			strcpy_s(szInvalidText, sizeof("crash"), "crash");
+			strcpy_s(szInvalidText, strlen("crash") + 1, "crash");
 	}
 	/*
 	//=====================================================================================

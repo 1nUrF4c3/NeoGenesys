@@ -8,10 +8,10 @@
 
 #define MAX_VIRTUALKEYS 0x100
 
-#define DEFAULT_CFG "\\NeoGenesys.cfg"
-#define DEFAULT_INI "\\NeoGenesys.ini"
-#define DEFAULT_LOG "\\NeoGenesys.log"
-#define DEFAULT_XML "\\NeoGenesys.xml"
+#define DEFAULT_CFG "\\" PROGRAM_NAME ".cfg"
+#define DEFAULT_INI "\\" PROGRAM_NAME ".ini"
+#define DEFAULT_LOG "\\" PROGRAM_NAME ".log"
+#define DEFAULT_XML "\\" PROGRAM_NAME ".xml"
 
 //=====================================================================================
 
@@ -41,14 +41,14 @@ namespace NeoGenesys
 
 			struct sPlayerList
 			{
-				bool bShowWindow = false;
+				bool bShowWindow = false, bWriteLog = false;
 				sNetAddr NetAddr[MAX_CLIENTS];
 			} PlayerList;
 
 			struct sHostMenu
 			{
 				char szKickReason[64] = { NULL };
-				bool bShowWindow = false, bSuperJump = false;
+				bool bShowWindow = false, bWriteLog = false, bSuperJump = false;
 
 				struct sPlayerMod
 				{

@@ -33,7 +33,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cRemovals::SpreadCompensationStandardAim(sUserCMD* usercmd, bool akimbo)
+	void cRemovals::SpreadCompensationStandardAim(sUserCmd* usercmd, bool akimbo)
 	{
 		FirstBulletFix();
 
@@ -41,13 +41,13 @@ namespace NeoGenesys
 
 		GetSpreadAngles(akimbo, usercmd->iServerTime, GetWeaponSpread(), vAngles);
 
-		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * _profiler.gSpreadFactor->Custom.flValue);
-		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * _profiler.gSpreadFactor->Custom.flValue);
+		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
 	}
 	/*
 	//=====================================================================================
 	*/
-	void cRemovals::SpreadCompensationSilentAim(sUserCMD* usercmd, bool akimbo)
+	void cRemovals::SpreadCompensationSilentAim(sUserCmd* usercmd, bool akimbo)
 	{
 		FirstBulletFix();
 
@@ -59,8 +59,8 @@ namespace NeoGenesys
 		flSpreadX *= flSpread;
 		flSpreadY *= flSpread;
 
-		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * _profiler.gSpreadFactor->Custom.flValue);
-		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * _profiler.gSpreadFactor->Custom.flValue);
+		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
 	}
 	/*
 	//=====================================================================================

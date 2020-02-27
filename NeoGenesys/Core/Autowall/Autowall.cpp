@@ -22,7 +22,7 @@ namespace NeoGenesys
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = CG->PlayerState.iClientNum;
 		FP_Enter.flPower = 1.0f;
-		FP_Enter.iBulletType = Weapons->WeaponDef[(BYTE)CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon]->bRifleBullet + 1;
+		FP_Enter.iBulletType = (IsRifleBullet(CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode) != 0) + 1;
 
 		VectorCopy(start, FP_Enter.vViewOrigin);
 		VectorCopy(start, FP_Enter.vStart);
@@ -70,16 +70,15 @@ namespace NeoGenesys
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
 
 				bool bExitHit = C_BulletTrace(&FP_Exit, &CEntity[CG->PlayerState.iClientNum], &TR_Exit, TR_Exit.iDepthSurfaceType);
-
 				bool bSolid = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
 
 				if (bExitHit || bSolid)
 				{
 					if (bSolid)
-						flSurfaceDepth = GetDistance3D(FP_Exit.vEnd, FP_Exit.vStart);
+						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
 
 					else
-						flSurfaceDepth = GetDistance3D(vHitPos, TR_Exit.vHitPos);
+						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
 
 					flSurfaceDepth = max(flSurfaceDepth, 1.0f);
 
@@ -134,7 +133,7 @@ namespace NeoGenesys
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = CG->PlayerState.iClientNum;
 		FP_Enter.flPower = 1.0f;
-		FP_Enter.iBulletType = Weapons->WeaponDef[(BYTE)CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon]->bRifleBullet + 1;
+		FP_Enter.iBulletType = (IsRifleBullet(CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode) != 0) + 1;
 
 		VectorCopy(start, FP_Enter.vViewOrigin);
 		VectorCopy(start, FP_Enter.vStart);
@@ -161,7 +160,7 @@ namespace NeoGenesys
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = CG->PlayerState.iClientNum;
 		FP_Enter.flPower = 1.0f;
-		FP_Enter.iBulletType = Weapons->WeaponDef[(BYTE)CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon]->bRifleBullet + 1;
+		FP_Enter.iBulletType = (IsRifleBullet(CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode) != 0) + 1;
 
 		VectorCopy(start, FP_Enter.vViewOrigin);
 		VectorCopy(start, FP_Enter.vStart);
@@ -215,7 +214,6 @@ namespace NeoGenesys
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
 
 				bool bExitHit = G_BulletTrace(&FP_Exit, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode, &GEntity[CG->PlayerState.iClientNum], &TR_Exit, TR_Exit.iDepthSurfaceType);
-
 				bool bSolid = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
 
 				if (TR_Exit.Trace.wPartGroup == 19)
@@ -224,10 +222,10 @@ namespace NeoGenesys
 				if (bExitHit || bSolid)
 				{
 					if (bSolid)
-						flSurfaceDepth = GetDistance3D(FP_Exit.vEnd, FP_Exit.vStart);
+						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
 
 					else
-						flSurfaceDepth = GetDistance3D(vHitPos, TR_Exit.vHitPos);
+						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
 
 					flSurfaceDepth = max(flSurfaceDepth, 1.0f);
 
@@ -282,7 +280,7 @@ namespace NeoGenesys
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = CG->PlayerState.iClientNum;
 		FP_Enter.flPower = 1.0f;
-		FP_Enter.iBulletType = Weapons->WeaponDef[(BYTE)CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon]->bRifleBullet + 1;
+		FP_Enter.iBulletType = (IsRifleBullet(CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode) != 0) + 1;
 
 		VectorCopy(start, FP_Enter.vViewOrigin);
 		VectorCopy(start, FP_Enter.vStart);
@@ -315,11 +313,11 @@ namespace NeoGenesys
 	*/
 	bool cAutowall::TraceLine(Vector3 start, Vector3 end, int entitynum)
 	{
-		sTrace Tr;
+		sTrace Trace;
 
-		LocationalTrace(&Tr, start, end, CG->PlayerState.iClientNum, MASK_CONTENTS);
+		LocationalTrace(&Trace, start, end, CG->PlayerState.iClientNum, MASK_CONTENTS);
 
-		return (Tr.wHitID == entitynum || Tr.flFraction == 1.0f);
+		return (Trace.wHitID == entitynum || Trace.flFraction == 1.0f);
 	}
 }
 

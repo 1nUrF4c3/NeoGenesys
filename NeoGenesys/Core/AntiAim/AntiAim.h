@@ -12,7 +12,7 @@ namespace NeoGenesys
 	{
 	public:
 
-		void AntiAim(sUserCMD* usercmd);
+		void AntiAim(sUserCmd* usercmd);
 	} extern _antiAim;
 }
 

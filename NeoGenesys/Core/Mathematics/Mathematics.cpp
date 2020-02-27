@@ -8,6 +8,42 @@ namespace NeoGenesys
 {
 	cMathematics _mathematics;
 
+	float cMathematics::CalculateFOV(Vector3 position)
+	{
+		Vector3 vViewOrigin, vDirection, vAngles, vAimAngles;
+
+		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+		VectorSubtract(position, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vDirection);
+
+		VectorNormalize(vDirection);
+		VectorAngles(vDirection, vAngles);
+
+		MakeVector(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vAimAngles);
+		MakeVector(vAngles, vAngles);
+
+		float flMag = sqrtf(DotProduct(vAimAngles, vAimAngles)),
+			flDot = DotProduct(vAimAngles, vAngles),
+			flReturn = RadiansToDegrees(acosf(flDot / powf(flMag, 2.0f)));
+
+		if (isnan(flReturn))
+			flReturn = 0.0f;
+
+		return flReturn;
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::CalculateDistance(Vector3 start, Vector3 end)
+	{
+		Vector3 vDirection;
+
+		VectorSubtract(start, end, vDirection);
+
+		return sqrtf(DotProduct(vDirection, vDirection));
+	}
+	/*
+	//=====================================================================================
+	*/
 	void cMathematics::VectorAngles(Vector3 direction, Vector3 angles)
 	{
 		float flTemp, flYaw, flPitch;
@@ -51,9 +87,11 @@ namespace NeoGenesys
 		flAngle = DegreesToRadians(angles[1]);
 		flSinYaw = sinf(flAngle);
 		flCosYaw = cosf(flAngle);
+		
 		flAngle = DegreesToRadians(angles[0]);
 		flSinPitch = sinf(flAngle);
 		flCosPitch = cosf(flAngle);
+		
 		flAngle = DegreesToRadians(angles[2]);
 		flSinRoll = sinf(flAngle);
 		flCosRoll = cosf(flAngle);
@@ -107,21 +145,29 @@ namespace NeoGenesys
 	*/
 	void cMathematics::NormalizeAngles(Vector3 angles)
 	{
-		while (angles[0] < -180.0f) angles[0] += 360.0f;
-		while (angles[0] > 180.0f) angles[0] -= 360.0f;
+		while (angles[0] < -180.0f) 
+			angles[0] += 360.0f;
 
-		while (angles[1] < -180.0f) angles[1] += 360.0f;
-		while (angles[1] > 180.0f) angles[1] -= 360.0f;
+		while (angles[0] > 180.0f) 
+			angles[0] -= 360.0f;
 
-		if (angles[2] != 0.0f) angles[2] = 0.0f;
+		while (angles[1] < -180.0f) 
+			angles[1] += 360.0f;
+
+		while (angles[1] > 180.0f) 
+			angles[1] -= 360.0f;
+
+		if (angles[2] != 0.0f) 
+			angles[2] = 0.0f;
 	}
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::CalculateAngles(Vector3 position, Vector3 angles)
+	void cMathematics::CalculateAngles(Vector3 start, Vector3 end, Vector3 angles)
 	{
 		Vector3 vDirection;
-		VectorSubtract(position, RefDef->vViewOrg, vDirection);
+
+		VectorSubtract(end, start, vDirection);
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, angles);
@@ -132,25 +178,6 @@ namespace NeoGenesys
 		angles[1] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1];
 
 		NormalizeAngles(angles);
-	}
-	/*
-	//=====================================================================================
-	*/
-	float cMathematics::CalculateFOV(Vector3 position)
-	{
-		Vector3 vDirection, vAngles, vAimAngles;
-		VectorSubtract(position, RefDef->vViewOrg, vDirection);
-
-		VectorNormalize(vDirection);
-		VectorAngles(vDirection, vAngles);
-
-		MakeVector(CG->vRefDefViewAngles, vAimAngles);
-		MakeVector(vAngles, vAngles);
-
-		float flMag = sqrtf(DotProduct(vAimAngles, vAimAngles)),
-			flDot = DotProduct(vAimAngles, vAngles);
-
-		return RadiansToDegrees(acosf(flDot / powf(flMag, 2.0f)));
 	}
 	/*
 	//=====================================================================================
@@ -166,7 +193,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::MovementFix(sUserCMD* usercmd, float yaw)
+	void cMathematics::MovementFix(sUserCmd* usercmd, float yaw)
 	{
 		if (usercmd->szForwardMove || usercmd->szRightMove)
 		{
@@ -205,9 +232,11 @@ namespace NeoGenesys
 	{
 		float flAngle;
 
-		Vector3 vDirection, vAngles;
+		Vector3 vViewOrigin, vDirection, vAngles;
 
-		VectorSubtract(RefDef->vViewOrg, world, vDirection);
+		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, world, vDirection);
+		
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
 
@@ -226,10 +255,14 @@ namespace NeoGenesys
 	*/
 	void cMathematics::WorldToRadar(Vector3 world, ImVec2 radarpos, float scale, float radarsize, float blipsize, ImVec2& screen)
 	{
+		Vector3 vViewOrigin;
+
+		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+
 		float flCosYaw = cosf(DegreesToRadians(CG->vRefDefViewAngles[1])),
 			flSinYaw = sinf(DegreesToRadians(CG->vRefDefViewAngles[1])),
-			flDeltaX = world[0] - RefDef->vViewOrg[0],
-			flDeltaY = world[1] - RefDef->vViewOrg[1],
+			flDeltaX = world[0] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[0] : vViewOrigin[0]),
+			flDeltaY = world[1] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[1] : vViewOrigin[1]),
 			flLocationX = (flDeltaY * flCosYaw - flDeltaX * flSinYaw) / scale,
 			flLocationY = (flDeltaX * flCosYaw + flDeltaY * flSinYaw) / scale;
 

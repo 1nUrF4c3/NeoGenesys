@@ -16,75 +16,76 @@ namespace NeoGenesys
 			std::wstring szFilePath;
 
 			if (path.empty())
-				szFilePath = acut::AnsiToWstring(acut::GetExeDirectory() + DEFAULT_XML, CP_ACP);
+				szFilePath = acut::AnsiToWstring(acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_XML, " ", ""), CP_ACP);
 
 			else
 				szFilePath = acut::AnsiToWstring(path, CP_ACP);
 
-			XML.set("NeoGenesys.AimBot.Mode", gAimBotMode->Custom.iValue);
-			XML.set("NeoGenesys.AimBot.AutoZoom", gAutoZoom->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.AutoFire", gAutoFire->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.AutoWall", gAutoWall->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.SilentAim", gSilentAim->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.TargetAgents", gTargetAgents->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.TargetMissiles", gTargetMissiles->Custom.bValue);
-			XML.set("NeoGenesys.AimBot.AntiAim", gAntiAim->Custom.iValue);
-			XML.set("NeoGenesys.AimBot.BoneScan", gBoneScan->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.Mode", gAimBotMode->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoZoom", gAutoZoom->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoFire", gAutoFire->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoWall", gAutoWall->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.SilentAim", gSilentAim->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.TargetAgents", gTargetAgents->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.TargetMissiles", gTargetMissiles->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AntiAim", gAntiAim->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.BoneScan", gBoneScan->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.SortMethod", gSortMethod->Custom.iValue);
 
-			XML.set("NeoGenesys.WallHack.Mode", gWallHackMode->Custom.iValue);
-			XML.set("NeoGenesys.WallHack.Boxes", gPlayerBoxes->Custom.iValue);
-			XML.set("NeoGenesys.WallHack.Bones", gPlayerBones->Custom.iValue);
-			XML.set("NeoGenesys.WallHack.SnapLines", gPlayerSnapLines->Custom.iValue);
-			XML.set("NeoGenesys.WallHack.Distances", gPlayerDistances->Custom.bValue);
-			XML.set("NeoGenesys.WallHack.Names", gPlayerNames->Custom.bValue);
-			XML.set("NeoGenesys.WallHack.Weapons", gPlayerWeapons->Custom.bValue);
-			XML.set("NeoGenesys.WallHack.Agents", gAgents->Custom.bValue);
-			XML.set("NeoGenesys.WallHack.Missiles", gMissiles->Custom.bValue);
-			XML.set("NeoGenesys.WallHack.Items", gItems->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Mode", gWallHackMode->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Boxes", gPlayerBoxes->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Bones", gPlayerBones->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.SnapLines", gPlayerSnapLines->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Distances", gPlayerDistances->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Names", gPlayerNames->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Weapons", gPlayerWeapons->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Agents", gAgents->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Missiles", gMissiles->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Items", gItems->Custom.bValue);
 
-			XML.set("NeoGenesys.Miscellaneous.KillSpam", gKillSpam->Custom.bValue);
-			XML.set("NeoGenesys.Miscellaneous.NameStealer", gNameStealer->Custom.bValue);
-			XML.set("NeoGenesys.Miscellaneous.CrossHair", gPlayerCrossHair->Custom.bValue);
-			XML.set("NeoGenesys.Miscellaneous.Compass", gPlayerCompass->Custom.bValue);
-			XML.set("NeoGenesys.Miscellaneous.Radar", gPlayerRadar->Custom.bValue);
-			XML.set("NeoGenesys.Miscellaneous.RiotShield", gRiotShield->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.KillSpam", gKillSpam->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.NameStealer", gNameStealer->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.CrossHair", gPlayerCrossHair->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.Compass", gPlayerCompass->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.Radar", gPlayerRadar->Custom.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.RiotShield", gRiotShield->Custom.iValue);
 
-			XML.set("NeoGenesys.Tweaks.AimBone", gAimBone->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.AimAngle", gAimAngle->Custom.flValue);
-			XML.set("NeoGenesys.Tweaks.AimPower", gAimPower->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.AutoAimTime", gAutoAimTime->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.AutoAimDelay", gAutoAimDelay->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.AutoZoomDelay", gAutoZoomDelay->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.AutoFireDelay", gAutoFireDelay->Custom.iValue);
-			XML.set("NeoGenesys.Tweaks.RecoilFactor", gRecoilFactor->Custom.flValue);
-			XML.set("NeoGenesys.Tweaks.SpreadFactor", gSpreadFactor->Custom.flValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimBone", gAimBone->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Custom.flValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimPower", gAimPower->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimTime", gAutoAimTime->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimDelay", gAutoAimDelay->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoZoomDelay", gAutoZoomDelay->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoFireDelay", gAutoFireDelay->Custom.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.RecoilFactor", gRecoilFactor->Custom.flValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.SpreadFactor", gSpreadFactor->Custom.flValue);
 
-			XML.set("NeoGenesys.Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
-			XML.set("NeoGenesys.Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
 
-			XML.set("NeoGenesys.Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
 
-			XML.set("NeoGenesys.Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
 
-			XML.set("NeoGenesys.Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
 
-			XML.set("NeoGenesys.Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
 
-			XML.set("NeoGenesys.Colors.Text.Red", gColorText->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.Text.Green", gColorText->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.Text.Blue", gColorText->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Red", gColorText->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Green", gColorText->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Blue", gColorText->Custom.cValue[2]);
 
-			XML.set("NeoGenesys.Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
-			XML.set("NeoGenesys.Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
-			XML.set("NeoGenesys.Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
 
 			XML.write_document(szFilePath);
 
@@ -108,7 +109,7 @@ namespace NeoGenesys
 			std::wstring szFilePath;
 
 			if (path.empty())
-				szFilePath = acut::AnsiToWstring(acut::GetExeDirectory() + DEFAULT_XML, CP_ACP);
+				szFilePath = acut::AnsiToWstring(acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_XML, " ", ""), CP_ACP);
 
 			else
 				szFilePath = acut::AnsiToWstring(path, CP_ACP);
@@ -118,70 +119,71 @@ namespace NeoGenesys
 
 			XML.read_from_file(szFilePath);
 
-			XML.get_if_present("NeoGenesys.AimBot.Mode", gAimBotMode->Custom.iValue);
-			XML.get_if_present("NeoGenesys.AimBot.AutoZoom", gAutoZoom->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.AutoFire", gAutoFire->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.AutoWall", gAutoWall->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.SilentAim", gSilentAim->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.TargetAgents", gTargetAgents->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.TargetMissiles", gTargetMissiles->Custom.bValue);
-			XML.get_if_present("NeoGenesys.AimBot.AntiAim", gAntiAim->Custom.iValue);
-			XML.get_if_present("NeoGenesys.AimBot.BoneScan", gBoneScan->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.Mode", gAimBotMode->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoZoom", gAutoZoom->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoFire", gAutoFire->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AutoWall", gAutoWall->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.SilentAim", gSilentAim->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.TargetAgents", gTargetAgents->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.TargetMissiles", gTargetMissiles->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.AntiAim", gAntiAim->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.BoneScan", gBoneScan->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".AimBot.SortMethod", gSortMethod->Custom.iValue);
 
-			XML.get_if_present("NeoGenesys.WallHack.Mode", gWallHackMode->Custom.iValue);
-			XML.get_if_present("NeoGenesys.WallHack.Boxes", gPlayerBoxes->Custom.iValue);
-			XML.get_if_present("NeoGenesys.WallHack.Bones", gPlayerBones->Custom.iValue);
-			XML.get_if_present("NeoGenesys.WallHack.SnapLines", gPlayerSnapLines->Custom.iValue);
-			XML.get_if_present("NeoGenesys.WallHack.Distances", gPlayerDistances->Custom.bValue);
-			XML.get_if_present("NeoGenesys.WallHack.Names", gPlayerNames->Custom.bValue);
-			XML.get_if_present("NeoGenesys.WallHack.Weapons", gPlayerWeapons->Custom.bValue);
-			XML.get_if_present("NeoGenesys.WallHack.Agents", gAgents->Custom.bValue);
-			XML.get_if_present("NeoGenesys.WallHack.Missiles", gMissiles->Custom.bValue);
-			XML.get_if_present("NeoGenesys.WallHack.Items", gItems->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Mode", gWallHackMode->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Boxes", gPlayerBoxes->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Bones", gPlayerBones->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.SnapLines", gPlayerSnapLines->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Distances", gPlayerDistances->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Names", gPlayerNames->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Weapons", gPlayerWeapons->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Agents", gAgents->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Missiles", gMissiles->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Items", gItems->Custom.bValue);
 
-			XML.get_if_present("NeoGenesys.Miscellaneous.KillSpam", gKillSpam->Custom.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.NameStealer", gNameStealer->Custom.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.CrossHair", gPlayerCrossHair->Custom.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.Compass", gPlayerCompass->Custom.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.Radar", gPlayerRadar->Custom.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.RiotShield", gRiotShield->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.KillSpam", gKillSpam->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.NameStealer", gNameStealer->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.CrossHair", gPlayerCrossHair->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.Compass", gPlayerCompass->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.Radar", gPlayerRadar->Custom.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.RiotShield", gRiotShield->Custom.iValue);
 
-			XML.get_if_present("NeoGenesys.Tweaks.AimBone", gAimBone->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AimAngle", gAimAngle->Custom.flValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AimPower", gAimPower->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AutoAimTime", gAutoAimTime->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AutoAimDelay", gAutoAimDelay->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AutoZoomDelay", gAutoZoomDelay->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.AutoFireDelay", gAutoFireDelay->Custom.iValue);
-			XML.get_if_present("NeoGenesys.Tweaks.RecoilFactor", gRecoilFactor->Custom.flValue);
-			XML.get_if_present("NeoGenesys.Tweaks.SpreadFactor", gSpreadFactor->Custom.flValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimBone", gAimBone->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Custom.flValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimPower", gAimPower->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimTime", gAutoAimTime->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimDelay", gAutoAimDelay->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoZoomDelay", gAutoZoomDelay->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoFireDelay", gAutoFireDelay->Custom.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.RecoilFactor", gRecoilFactor->Custom.flValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.SpreadFactor", gSpreadFactor->Custom.flValue);
 
-			XML.get_if_present("NeoGenesys.Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
-			XML.get_if_present("NeoGenesys.Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
 
-			XML.get_if_present("NeoGenesys.Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
 
-			XML.get_if_present("NeoGenesys.Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
 
-			XML.get_if_present("NeoGenesys.Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
 
-			XML.get_if_present("NeoGenesys.Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
 
-			XML.get_if_present("NeoGenesys.Colors.Text.Red", gColorText->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.Text.Green", gColorText->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.Text.Blue", gColorText->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Red", gColorText->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Green", gColorText->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Blue", gColorText->Custom.cValue[2]);
 
-			XML.get_if_present("NeoGenesys.Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
-			XML.get_if_present("NeoGenesys.Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
-			XML.get_if_present("NeoGenesys.Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
 
 			return true;
 		}
@@ -207,6 +209,7 @@ namespace NeoGenesys
 		gTargetMissiles->Custom.bValue = gTargetMissiles->Default.bValue;
 		gAntiAim->Custom.iValue = gAntiAim->Default.iValue;
 		gBoneScan->Custom.iValue = gBoneScan->Default.iValue;
+		gSortMethod->Custom.iValue = gSortMethod->Default.iValue;
 
 		gWallHackMode->Custom.iValue = gWallHackMode->Default.iValue;
 		gPlayerBoxes->Custom.iValue = gPlayerBoxes->Default.iValue;
@@ -225,7 +228,6 @@ namespace NeoGenesys
 		gPlayerCompass->Custom.bValue = gPlayerCompass->Default.bValue;
 		gPlayerRadar->Custom.bValue = gPlayerRadar->Default.bValue;
 		gRiotShield->Custom.iValue = gRiotShield->Default.iValue;
-
 		gMassKill->Custom.iValue = gMassKill->Default.iValue;
 	}
 }

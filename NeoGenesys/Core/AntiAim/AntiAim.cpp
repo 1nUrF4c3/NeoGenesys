@@ -8,7 +8,7 @@ namespace NeoGenesys
 {
 	cAntiAim _antiAim;
 
-	void cAntiAim::AntiAim(sUserCMD* usercmd)
+	void cAntiAim::AntiAim(sUserCmd* usercmd)
 	{
 		if (GetViewmodelWeapon(&CG->PlayerState) && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) &&
 			!(CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_PRONE) &&
@@ -70,16 +70,27 @@ namespace NeoGenesys
 
 			else if (_profiler.gAntiAim->Custom.iValue == cProfiler::ANTIAIM_REVERSED)
 			{
-				if (_aimBot.AimState.bIsAutoAiming)
+				if (_targetList.vIsTarget[_targetList.iRiotShieldTarget] && _targetList.iRiotShieldTarget != CG->PlayerState.iClientNum)
 				{
-					usercmd->iViewAngles[0] += AngleToShort(_aimBot.AimState.vAimbotAngles[0] - 5.7f);
-					usercmd->iViewAngles[1] += AngleToShort(_aimBot.AimState.vAimbotAngles[1] - 180.0f);
+					_mathematics.CalculateAngles(CG->PlayerState.vOrigin, CEntity[_targetList.iRiotShieldTarget].vOrigin, _targetList.vRiotShieldTarget);
+
+					usercmd->iViewAngles[0] += AngleToShort(_targetList.vRiotShieldTarget[0] - 5.7f);
+					usercmd->iViewAngles[1] += AngleToShort(_targetList.vRiotShieldTarget[1] - 180.0f);
 				}
 
 				else
 				{
-					usercmd->iViewAngles[0] += AngleToShort(-5.7f);
-					usercmd->iViewAngles[1] += AngleToShort(-180.0f);
+					if (_aimBot.AimState.bIsAutoAiming)
+					{
+						usercmd->iViewAngles[0] += AngleToShort(_aimBot.AimState.vAimbotAngles[0] - 5.7f);
+						usercmd->iViewAngles[1] += AngleToShort(_aimBot.AimState.vAimbotAngles[1] - 180.0f);
+					}
+
+					else
+					{
+						usercmd->iViewAngles[0] += AngleToShort(-5.7f);
+						usercmd->iViewAngles[1] += AngleToShort(-180.0f);
+					}
 				}
 			}
 		}

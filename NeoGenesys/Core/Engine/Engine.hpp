@@ -8,6 +8,8 @@
 
 //=====================================================================================
 
+#define PROGRAM_NAME "NeoGenesys"
+
 #define MAX_CLIENTS 18
 #define MAX_ENTITIES 2048
 #define MASK_CONTENTS 0x803003
@@ -50,8 +52,6 @@
 #define	VectorScale(a,b,c) ((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b))
 #define	VectorMA(a,b,c,d) ((d)[0]=(a)[0]+(c)[0]*(b),(d)[1]=(a)[1]+(c)[1]*(b),(d)[2]=(a)[2]+(c)[2]*(b))
 #define VectorAverage(a,b,c) ((c)[0]=((a)[0]+(b)[0])/2.0f,(c)[1]=((a)[1]+(b)[1])/2.0f,(c)[2]=((a)[2]+(b)[2])/2.0f)
-#define GetDistance2D(a,b) (sqrtf(((a)[0]-(b)[0])*((a)[0]-(b)[0])+((a)[1]-(b)[1])*((a)[1]-(b)[1])))
-#define GetDistance3D(a,b) (sqrtf(((a)[0]-(b)[0])*((a)[0]-(b)[0])+((a)[1]-(b)[1])*((a)[1]-(b)[1])+((a)[2]-(b)[2])*((a)[2]-(b)[2])))
 
 #define OFF_CHATHEIGHT_DVAR 0x1419A9788
 #define OFF_CHATHEIGHT_EXCEPTION 0x14025C709
@@ -64,8 +64,9 @@
 #define OFF_WINDOWHANDLE 0x147AD2640
 #define OFF_SWAPCHAIN 0x1480B1D70
 #define OFF_REFRESH 0x14025CC50
-#define OFF_CREATENEWCOMMANDS 0x1402BEE80
 #define OFF_WRITEPACKET 0x1402C1E70
+#define OFF_PREDICTPLAYERSTATE 0x1402830B0
+#define OFF_CREATENEWCOMMANDS 0x1402BEE80
 #define OFF_BULLETFIREPENETRATE 0x1402ACBF0
 #define OFF_OBITUARY 0x14026A010
 #define OFF_ADDCMDDRAWTEXT 0x140601070
@@ -84,6 +85,7 @@
 #define OFF_GETVARIABLEINDEX 0x1403E9BC0
 #define OFF_SAY 0x140393010
 #define OFF_SAYTO 0x1403931A0
+#define OFF_GETCURRENTSESSION 0x1404FDA70
 #define OFF_GETPLAYERADDR 0x14048D040
 #define OFF_GETCURRENTNAME 0x1404FDAA0
 #define OFF_GETCURRENTXUID 0x1404FDAB0
@@ -92,7 +94,9 @@
 #define OFF_GETWEAPONNAMECOMPLETE 0x140239370
 #define OFF_GETWEAPONDISPLAYNAME 0x1402A9B80
 #define OFF_GETWEAPONFORNAME 0x1403DA060
+#define OFF_ISPLAYERRELOADING 0x1402AA1A0
 #define OFF_WEAPONBOTHCLIPEMPTY 0x1402386A0
+#define OFF_ISRIFLEBULLET 0x1402423F0
 #define OFF_WORLDTOSCREEN 0x140262190
 #define OFF_ADDMESSAGEICON 0x1402BAAE0
 #define OFF_REGISTERFONT 0x1402C9AA0
@@ -104,6 +108,8 @@
 #define OFF_STRINGHEIGHT 0x1405DFAE0
 #define OFF_STRINGWIDTH 0x1405DFDB0
 #define OFF_GETPLAYERVIEWORIGIN 0x1402A9830
+#define OFF_ISTHIRDPERSONMODE 0x140219270
+#define OFF_GETTHIRDPERSONCROSSHAIROFFSET 0x140219090
 #define OFF_GETENTITYDOBJ 0x140416490
 #define OFF_GETTAGPOSITION 0x140263F50
 #define OFF_LOCATIONALTRACE 0x1402B6020
@@ -111,9 +117,11 @@
 #define OFF_ANGLEVECTORS 0x1404E39E0
 #define OFF_VECTORNORMALIZE 0x140147FE0
 #define OFF_EXECUTEKEY 0x1402BF0E0
+#define OFF_ISGAMEPADENABLED 0x1402C0DB0
 #define OFF_SETZOOMSTATE 0x1402B9D70
 #define OFF_CBULLETTRACE 0x1402A6EB0
 #define OFF_GBULLETTRACE 0x140378370
+#define OFF_GETTRACEHITTYPE 0x1403F3300
 #define OFF_ADVANCETRACE 0x14023B010
 #define OFF_GETSURFACEPENETRATIONDEPTH 0x140238FD0
 #define OFF_GETWEAPONHITLOCATIONMULTIPLIER 0x140395AE0
@@ -137,6 +145,7 @@
 #define OFF_PLAYERKILL 0x1403CE260
 #define OFF_SPREADMULTIPLIER 0x14187D43C
 #define OFF_ZOOMMULTIPLIER 0x140B31D4C
+#define OFF_FIREWEAPON 0x1402A8B00
 #define OFF_WEAPONRECOIL 0x1402472A0
 #define OFF_WEAPONSOUNDS 0x1402A8FA0
 #define OFF_WEAPONRUMBLE 0x1402A90A0
@@ -159,6 +168,7 @@
 #define OFF_VIEWMATRIX 0x1419E51E4
 #define OFF_PUNCH 0x141823E5C
 #define OFF_CHALLENGES 0x1445A2B40
+#define OFF_CHALLENGESIZE 0x2D0
 #define OFF_SQUADPOINTS 0x1445A34A0
 #define OFF_PRESTIGE 0x1445A3798
 #define OFF_CURRENTNAME 0x147AC9DD4
@@ -168,6 +178,7 @@
 #define OFF_STEAMAPI 0x147D4B048
 #define OFF_STEAMNAME 0x1D2
 #define OFF_ISCURRENTHOST 0x141734DD4
+#define OFF_ISALIENSMODE 0x147AD0B42
 #define OFF_ALTJUMPHEIGHT 0x140840088
 #define OFF_SERVERID 0x141D9BA3C
 #define OFF_SERVERSESSION 0x1474F0060
@@ -246,7 +257,7 @@ namespace NeoGenesys
 		TRACE_HITTYPE_ENTITY,
 		TRACE_HITTYPE_DYNENT_MODEL,
 		TRACE_HITTYPE_DYNENT_BRUSH,
-		TRACE_HITTYPE_DYNENT_GLASS,
+		TRACE_HITTYPE_GLASS,
 		TRACE_HITTYPE_MAX
 	} eTraceHitType;
 	/*
@@ -700,18 +711,18 @@ namespace NeoGenesys
 		char szForwardMove;
 		char szRightMove;
 		char _0x1E[0x1E];
-	} sUserCMD;
+	} sUserCmd;
 	/*
 	//=====================================================================================
 	*/
 	typedef struct
 	{
-		sUserCMD UserCMD[128];
-		int iCurrentCMD;
+		sUserCmd UserCmd[128];
+		int iCurrentCmd;
 
-		sUserCMD* GetUserCMD(int number)
+		sUserCmd* GetUserCmd(int number)
 		{
-			return &UserCMD[number & 0x7F];
+			return &UserCmd[number & 0x7F];
 		}
 	} sClientActive;
 	/*
@@ -781,8 +792,10 @@ namespace NeoGenesys
 	{
 		int iType;
 		char szIP[4];
-		int iPort;
+		short iPort;
+		char _0xA[0x2];
 		int iLocalNetID;
+		int iServerID;
 	} sNetAddr;
 	/*
 	//=====================================================================================
@@ -875,6 +888,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	static MODULEINFO hIw6mp64_ship = GetModuleInfo(NULL);
 	static MODULEINFO hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
 
 	static DWORD_PTR dwPresent = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage) ?
@@ -998,9 +1012,16 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	inline sNetAddr* GetPlayerAddr(sNetAddr* netaddr, int clientnum)
+	inline LPVOID GetCurrentSession()
 	{
-		return VariadicCall<sNetAddr*>(OFF_GETPLAYERADDR, netaddr, (LPVOID)OFF_SERVERSESSION, clientnum);
+		return VariadicCall<LPVOID>(OFF_GETCURRENTSESSION);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline sNetAddr* GetPlayerAddr(sNetAddr* netaddr, LPVOID session, int clientnum)
+	{
+		return VariadicCall<sNetAddr*>(OFF_GETPLAYERADDR, netaddr, session, clientnum);
 	}
 	/*
 	//=====================================================================================
@@ -1047,9 +1068,23 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	inline bool IsPlayerReloading()
+	{
+		return VariadicCall<bool>(OFF_ISPLAYERRELOADING, 0);
+	}
+	/*
+	//=====================================================================================
+	*/
 	inline bool WeaponBothClipEmpty(sPlayerState* playerstate)
 	{
 		return VariadicCall<bool>(OFF_WEAPONBOTHCLIPEMPTY, playerstate);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool IsRifleBullet(int weapon, bool alternate)
+	{
+		return VariadicCall<bool>(OFF_ISRIFLEBULLET, weapon, alternate);
 	}
 	/*
 	//=====================================================================================
@@ -1131,6 +1166,20 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	inline bool IsThirdPersonMode(sPlayerState* playerstate)
+	{
+		return VariadicCall<bool>(OFF_ISTHIRDPERSONMODE, playerstate);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline float GetThirdPersonCrosshairOffset(sPlayerState* playerstate)
+	{
+		return VariadicCall<float>(OFF_GETTHIRDPERSONCROSSHAIROFFSET, playerstate);
+	}
+	/*
+	//=====================================================================================
+	*/
 	inline LPVOID GetEntityDObj(int entitynum)
 	{
 		return VariadicCall<LPVOID>(OFF_GETENTITYDOBJ, entitynum);
@@ -1180,6 +1229,13 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	inline bool IsGamePadEnabled()
+	{
+		return VariadicCall<bool>(OFF_ISGAMEPADENABLED);
+	}
+	/*
+	//=====================================================================================
+	*/
 	inline void SetZoomState(bool enable)
 	{
 		return VariadicCall<void>(OFF_SETZOOMSTATE, 0, enable);
@@ -1197,6 +1253,13 @@ namespace NeoGenesys
 	inline bool G_BulletTrace(sBulletFireParams* fireparams, int weapon, bool alternate, sGEntity* entity, sBulletTraceResults* traceresults, int surfacetype)
 	{
 		return VariadicCall<bool>(OFF_GBULLETTRACE, fireparams, weapon, alternate, entity, traceresults, surfacetype);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline WORD GetTraceHitType(sBulletTraceResults* traceresults)
+	{
+		return VariadicCall<WORD>(OFF_GETTRACEHITTYPE, traceresults);
 	}
 	/*
 	//=====================================================================================
@@ -1344,6 +1407,13 @@ namespace NeoGenesys
 	inline void PlayerKill(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
 	{
 		return VariadicCall<void>(OFF_PLAYERKILL, target, inflictor, attacker, 100000, method, weapon, 0, 0, 0, 0, 0);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool EntityHasRiotShield(sCEntity* entity)
+	{
+		return ((BYTE)entity->NextEntityState.iWeapon == WEAPON_RIOT_SHIELD || (BYTE)entity->NextEntityState.LerpEntityState.iSecondaryWeapon == WEAPON_RIOT_SHIELD);
 	}
 	/*
 	//=====================================================================================

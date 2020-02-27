@@ -13,8 +13,8 @@ namespace NeoGenesys
 	public:
 
 		void RecoilCompensation();
-		void SpreadCompensationStandardAim(sUserCMD* usercmd, bool akimbo);
-		void SpreadCompensationSilentAim(sUserCMD* usercmd, bool akimbo);
+		void SpreadCompensationStandardAim(sUserCmd* usercmd, bool akimbo);
+		void SpreadCompensationSilentAim(sUserCmd* usercmd, bool akimbo);
 		void GetSpreadAngles(bool akimbo, int servertime, float spread, Vector3 angles);
 		void GetRandomFloats(int* seed, float* spreadx, float* spready);
 		int TransformSeed(bool akimbo, int servertime);

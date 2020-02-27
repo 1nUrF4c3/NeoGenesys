@@ -15,7 +15,7 @@ namespace NeoGenesys
 		typedef struct
 		{
 			int iIndex;
-			float flDistance2D = FLT_MAX, flDistance3D = FLT_MAX;
+			float flFOV = FLT_MAX, flDistance = FLT_MAX;
 		} sTargetInfo;
 
 		typedef struct
@@ -34,7 +34,10 @@ namespace NeoGenesys
 			ImVec4 cColor;
 		} EntityList[MAX_ENTITIES];
 
-		std::vector<BOOL> vIsTarget = std::vector<BOOL>(MAX_CLIENTS, FALSE);
+		int iRiotShieldTarget;
+		Vector3 vRiotShieldTarget;
+
+		std::vector<BOOL> vIsTarget = std::vector<BOOL>(MAX_CLIENTS, TRUE);
 
 		void GetInformation();
 		bool EntityIsValid(int index);

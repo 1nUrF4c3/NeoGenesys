@@ -12,9 +12,8 @@ namespace NeoGenesys
 	{
 	public:
 
-		void ModifyCommands();
-		void OldCommand(sUserCMD* usercmd);
-		void NewCommand(sUserCMD* usercmd);
+		void WritePacket(sUserCmd* usercmd);
+		void PredictPlayerState(sUserCmd* oldcmd, sUserCmd* newcmd);
 	} extern _packets;
 }
 
