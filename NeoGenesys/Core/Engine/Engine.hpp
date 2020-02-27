@@ -485,6 +485,7 @@ namespace NeoGenesys
 			float flValue;
 			DWORD dwValue;
 			ImVec4 cValue;
+			LPSTR szValue;
 		} Current, Latched, Reset;
 
 		char _0x40[0x20];
