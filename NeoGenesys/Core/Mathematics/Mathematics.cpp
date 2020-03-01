@@ -234,8 +234,7 @@ namespace NeoGenesys
 		float flCenterX = RefDef->iWidth / 2.0f,
 			flCenterY = RefDef->iHeight / 2.0f;
 
-		Vector3 vLocal,
-			vTransForm;
+		Vector3 vLocal, vTransForm;
 
 		VectorSubtract(world, RefDef->vViewOrg, vLocal);
 
