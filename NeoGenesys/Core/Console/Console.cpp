@@ -1293,13 +1293,9 @@ namespace NeoGenesys
 				{
 					if (!Stricmp(CmdLine.szCmdArgs[1], "byte"))
 					{
-						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(BYTE), dwProtection, &dwProtection);
-						*(BYTE*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(BYTE), dwProtection, &dwProtection);
+						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
 
 						AddLog("%s 0x%hhX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1307,13 +1303,9 @@ namespace NeoGenesys
 
 					else if (!Stricmp(CmdLine.szCmdArgs[1], "word"))
 					{
-						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(WORD), dwProtection, &dwProtection);
-						*(WORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(WORD), dwProtection, &dwProtection);
+						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
 
 						AddLog("%s 0x%hX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1321,13 +1313,9 @@ namespace NeoGenesys
 
 					else if (!Stricmp(CmdLine.szCmdArgs[1], "dword"))
 					{
-						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(DWORD), dwProtection, &dwProtection);
-						*(DWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(DWORD), dwProtection, &dwProtection);
+						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
 
 						AddLog("%s 0x%lX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1335,13 +1323,9 @@ namespace NeoGenesys
 
 					else if (!Stricmp(CmdLine.szCmdArgs[1], "qword"))
 					{
-						DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(QWORD), dwProtection, &dwProtection);
-						*(QWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) = (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10);
-						VirtualProtect((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), sizeof(QWORD), dwProtection, &dwProtection);
+						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
 
 						AddLog("%s 0x%llX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());

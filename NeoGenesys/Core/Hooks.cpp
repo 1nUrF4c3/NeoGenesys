@@ -20,7 +20,7 @@ namespace NeoGenesys
 			_removals.RecoilCompensation();
 		}
 
-		_host.PlayerModThread();
+		_host.PlayerMods();
 	}
 	/*
 	//=====================================================================================

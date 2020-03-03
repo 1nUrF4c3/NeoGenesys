@@ -12,7 +12,7 @@ namespace NeoGenesys
 	{
 	public:
 
-		void PlayerModThread();
+		void PlayerMods();
 		void StartMatch();
 		void MassKill();
 

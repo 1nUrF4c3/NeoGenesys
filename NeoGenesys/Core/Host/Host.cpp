@@ -8,7 +8,7 @@ namespace NeoGenesys
 {
 	cHost _host;
 
-	void cHost::PlayerModThread()
+	void cHost::PlayerMods()
 	{
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 		{
@@ -80,23 +80,13 @@ namespace NeoGenesys
 
 		if (_mainGui.Menu.HostMenu.bSuperJump && !bSuperJump)
 		{
-			DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
-			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
-			*(float*)OFF_ALTJUMPHEIGHT = 3000.0f;
-			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
-
+			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 			bSuperJump = true;
 		}
 
 		else if (!_mainGui.Menu.HostMenu.bSuperJump && bSuperJump)
 		{
-			DWORD dwProtection = PAGE_EXECUTE_READWRITE;
-
-			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
-			*(float*)OFF_ALTJUMPHEIGHT = 39.0f;
-			VirtualProtect((LPVOID)OFF_ALTJUMPHEIGHT, sizeof(float), dwProtection, &dwProtection);
-
+			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 			bSuperJump = false;
 		}
 	}
