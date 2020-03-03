@@ -29,6 +29,10 @@ void HOOKCALL hPredictPlayerState(int localnum);
 typedef void(HOOKCALL* tPredictPlayerState)(int localnum);
 tPredictPlayerState oPredictPlayerState = (tPredictPlayerState)OFF_PREDICTPLAYERSTATE;
 
+void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
+typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
+tBulletFirePenetrate oBulletFirePenetrate = (tBulletFirePenetrate)OFF_BULLETFIREPENETRATE;
+
 void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon);
 typedef void(HOOKCALL* tObituary)(int localnum, sEntityState* entitystate, int weapon);
 tObituary oObituary = (tObituary)OFF_OBITUARY;
@@ -75,6 +79,15 @@ void HOOKCALL hPredictPlayerState(int localnum)
 	_hooks.PredictPlayerState(localnum);
 
 	return oPredictPlayerState(localnum);
+}
+
+//=====================================================================================
+
+void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime)
+{
+	_hooks.BulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
+
+	return oBulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
 }
 
 //=====================================================================================

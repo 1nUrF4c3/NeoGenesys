@@ -67,11 +67,13 @@ namespace NeoGenesys
 	*/
 	void cRemovals::GetSpreadAngles(bool akimbo, int servertime, float spread, Vector3 angles)
 	{
-		Vector3 vForward, vRight, vUp, vEnd, vDir;
+		Vector3 vViewOrigin, vForward, vRight, vUp, vEnd, vDir;
+
+		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
 		int iSeed = TransformSeed(akimbo, servertime);
 
 		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-		BulletEndPosition(&iSeed, spread, RefDef->vViewOrg, vEnd, vDir, vForward, vRight, vUp);
+		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
 
 		VectorAngles(vDir, angles);
 		_mathematics.NormalizeAngles(angles);

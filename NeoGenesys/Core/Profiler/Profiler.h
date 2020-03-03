@@ -173,8 +173,8 @@ namespace NeoGenesys
 		{
 			PLAYER_SNAPLINES_OFF,
 			PLAYER_SNAPLINES_TOP,
-			PLAYER_SNAPLINES_CENTER,
 			PLAYER_SNAPLINES_BOTTOM,
+			PLAYER_SNAPLINES_CROSSHAIR,
 			PLAYER_SNAPLINES_MAX
 		} ePlayerSnapLines;
 
@@ -214,7 +214,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gWallHackMode = std::make_shared<sCvar>("Mode", std::vector<std::string>({ "Axis", "Allies", "All" }), WALLHACK_MODE_AXIS, WALLHACK_MODE_AXIS, WALLHACK_MODE_MAX);
 		std::shared_ptr<sCvar> gPlayerBoxes = std::make_shared<sCvar>("Boxes", std::vector<std::string>({ "Off", "Border", "Corner", "Border Filled", "Corner Filled", "Border 3D", "Corner 3D" }), PLAYER_BOXES_OFF, PLAYER_BOXES_OFF, PLAYER_BOXES_MAX);
 		std::shared_ptr<sCvar> gPlayerBones = std::make_shared<sCvar>("Bones", std::vector<std::string>({ "Off", "Dots", "Lines" }), PLAYER_BONES_OFF, PLAYER_BONES_OFF, PLAYER_BONES_MAX);
-		std::shared_ptr<sCvar> gPlayerSnapLines = std::make_shared<sCvar>("Snaplines", std::vector<std::string>({ "Off", "Top", "Center", "Bottom" }), PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_MAX);
+		std::shared_ptr<sCvar> gPlayerSnapLines = std::make_shared<sCvar>("Snaplines", std::vector<std::string>({ "Off", "Top", "Bottom", "Crosshair" }), PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_MAX);
 		std::shared_ptr<sCvar> gPlayerDistances = std::make_shared<sCvar>("Distances", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gPlayerNames = std::make_shared<sCvar>("Names", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gPlayerWeapons = std::make_shared<sCvar>("Weapons", std::vector<std::string>(), false, FALSE, TRUE);
