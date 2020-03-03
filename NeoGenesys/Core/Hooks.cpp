@@ -29,9 +29,9 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
-			sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
+			sUserCmd* pCurrentCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
 
-			_packets.WritePacket(pUserCmd);
+			_packets.WritePacket(pCurrentCmd);
 		}
 	}
 	/*
@@ -62,23 +62,17 @@ namespace NeoGenesys
 		{
 			if (bp->iEntityNum == CG->PlayerState.iClientNum)
 			{
-				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) &&
-					ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT),
-					ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))->iServerTime);
+				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)));
+				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
 
-				Vector3 vViewOrigin, vAngles, vForward, vRight, vUp;
-
-				GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+				Vector3 vAngles, vForward, vRight, vUp;
 				VectorCopy(_aimBot.AimState.vAimbotAngles, vAngles);
 
 				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : CG->vWeaponAngles[0];
 				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1];
 
-				AngleVectors(_profiler.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ?
-					vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-
-				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Custom.flValue, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin,
-					bp->vEnd, bp->vDir, vForward, vRight, vUp);
+				AngleVectors(_profiler.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
+				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Custom.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
 			}
 		}
 	}

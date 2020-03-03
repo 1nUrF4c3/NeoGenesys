@@ -125,6 +125,7 @@ void Initialize()
 	Hook(oRefresh, hRefresh);
 	Hook(oWritePacket, hWritePacket);
 	Hook(oPredictPlayerState, hPredictPlayerState);
+	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
 	Hook(oObituary, hObituary);
 	Hook(oAddCmdDrawText, hAddCmdDrawText);
 	Hook(oClientFrame, hClientFrame);
@@ -138,6 +139,7 @@ void Deallocate()
 	UnHook(oRefresh, hRefresh);
 	UnHook(oWritePacket, hWritePacket);
 	UnHook(oPredictPlayerState, hPredictPlayerState);
+	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
 	UnHook(oObituary, hObituary);
 	UnHook(oAddCmdDrawText, hAddCmdDrawText);
 	UnHook(oClientFrame, hClientFrame);
