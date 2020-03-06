@@ -25,12 +25,14 @@ namespace NeoGenesys
 				float flValue;
 				DWORD dwValue;
 				ImVec4 cValue;
+				LPSTR szValue;
 
 				uCvarValue(bool value) : bValue(value) {}
 				uCvarValue(int value) : iValue(value) {}
 				uCvarValue(float value) : flValue(value) {}
 				uCvarValue(DWORD value) : dwValue(value) {}
 				uCvarValue(ImVec4 value) : cValue(value) {}
+				uCvarValue(LPSTR value) : szValue() {}
 			} Custom, Default;
 
 			union uMinValue
@@ -60,6 +62,7 @@ namespace NeoGenesys
 			sCvar(std::string name, std::vector<std::string> items, float value, float min, float max) : szLabel(name), szItems(items), Custom(value), Default(value), MinValue(min), MaxValue(max) {}
 			sCvar(std::string name, std::vector<std::string> items, DWORD value, int min, int max) : szLabel(name), szItems(items), Custom(value), Default(value), MinValue(min), MaxValue(max) {}
 			sCvar(std::string name, std::vector<std::string> items, ImVec4 value, float min, float max) : szLabel(name), szItems(items), Custom(value), Default(value), MinValue(min), MaxValue(max) {}
+			sCvar(std::string name, std::vector<std::string> items, LPSTR value, float min, float max) : szLabel(name), szItems(items), Custom(value), Default(value), MinValue(min), MaxValue(max) {}
 		};
 
 		typedef enum
@@ -222,7 +225,6 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gMissiles = std::make_shared<sCvar>("Missiles", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gItems = std::make_shared<sCvar>("Items", std::vector<std::string>(), false, FALSE, TRUE);
 
-		std::shared_ptr<sCvar> gKillSpam = std::make_shared<sCvar>("Killspam", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gNameStealer = std::make_shared<sCvar>("Name Stealer", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gPlayerCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), false, FALSE, TRUE);
 		std::shared_ptr<sCvar> gPlayerCompass = std::make_shared<sCvar>("Compass", std::vector<std::string>(), false, FALSE, TRUE);
@@ -245,6 +247,12 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gColorCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(255), ByteToFloat(255)), 0.0f, 1.0f);
 		std::shared_ptr<sCvar> gColorText = std::make_shared<sCvar>("Text", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(255), ByteToFloat(255)), 0.0f, 1.0f);
 		std::shared_ptr<sCvar> gColorShadow = std::make_shared<sCvar>("Shadow", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)), 0.0f, 1.0f);
+
+		std::shared_ptr<sCvar> gNameSpam = std::make_shared<sCvar>("Namespam", std::vector<std::string>(), false, FALSE, TRUE);
+		std::shared_ptr<sCvar> gChatSpam = std::make_shared<sCvar>("Chatspam", std::vector<std::string>(), false, FALSE, TRUE);
+		std::shared_ptr<sCvar> gKillSpam = std::make_shared<sCvar>("Killspam", std::vector<std::string>(), false, FALSE, TRUE);
+		std::shared_ptr<sCvar> gChatSpamMessage = std::make_shared<sCvar>("Chatspam Message", std::vector<std::string>(), "", NULL, NULL);
+		std::shared_ptr<sCvar> gKillSpamMessage = std::make_shared<sCvar>("Killspam Message", std::vector<std::string>(), "", NULL, NULL);
 		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>(), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
 
 		acut::XmlDoc<char> XML;

@@ -87,18 +87,31 @@ namespace NeoGenesys
 			{
 				if (_profiler.gKillSpam->Custom.bValue)
 				{
-					int iWeapon = 0;
+					std::string szKillSpam = _profiler.gKillSpamMessage->Custom.szValue;
 
-					if ((BYTE)weapon >= 160)
-						iWeapon = (BYTE)weapon - 160;
+					if (!szKillSpam.empty())
+					{
+						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
+						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
 
-					char szIcon[64] = { NULL };
-					int iLength = AddMessageIcon(szIcon, 0, iWeapon == 9 ? RegisterShader("killiconheadshot") : RegisterShader("killicondied"), 1.4f, 1.4f, false);
+						Cbuf_AddText(VariadicText("say \"%s\"\n", szKillSpam.c_str()));
+					}
 
-					szIcon[iLength] = NULL;
+					else
+					{
+						int iWeapon = 0;
 
-					Cbuf_AddText(VariadicText("say \"^5%s ^7- Get ^6%s ^7courtesy of ^6Neo^0Genesys\"\n",
-						ClientInfo[entitystate->iOtherEntityNum].szName, szIcon));
+						if ((BYTE)weapon >= 160)
+							iWeapon = (BYTE)weapon - 160;
+
+						char szIcon[64] = { NULL };
+						int iLength = AddMessageIcon(szIcon, 0, iWeapon == 9 ? RegisterShader("killiconheadshot") : RegisterShader("killicondied"), 1.4f, 1.4f, false);
+
+						szIcon[iLength] = NULL;
+
+						Cbuf_AddText(VariadicText("say \"^5%s ^7- Get ^6%s ^7courtesy of ^6Neo^0Genesys\"\n",
+							ClientInfo[entitystate->iOtherEntityNum].szName, szIcon));
+					}
 				}
 
 				if (_profiler.gNameStealer->Custom.bValue)
@@ -107,7 +120,7 @@ namespace NeoGenesys
 						strlen(ClientInfo[entitystate->iOtherEntityNum].szName) + 1, 
 						ClientInfo[entitystate->iOtherEntityNum].szName, 32);
 					
-					Cbuf_AddText(VariadicText("name %s\n", ClientInfo[entitystate->iOtherEntityNum].szName));
+					Cbuf_AddText(VariadicText("name \"%s\"\n", ClientInfo[entitystate->iOtherEntityNum].szName));
 				}
 			}
 		}

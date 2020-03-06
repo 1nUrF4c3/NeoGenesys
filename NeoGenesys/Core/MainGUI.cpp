@@ -983,6 +983,26 @@ namespace NeoGenesys
 
 				bInitialized = false;
 			}
+
+			static int iTime = clock();
+
+			if (clock() - iTime > *(int*)OFF_PING)
+			{
+				if (_profiler.gNameSpam->Custom.bValue)
+				{
+					std::string szUserName = acut::RandomANString(0);
+
+					strncpy_s((LPSTR)(*(DWORD_PTR*)OFF_STEAMAPI + OFF_STEAMNAME), strlen(szUserName.c_str()) + 1, szUserName.c_str(), 32);
+					Cbuf_AddText(VariadicText("name \"%s\"\n", szUserName.c_str()));
+				}
+
+				if (_profiler.gChatSpam->Custom.bValue)
+				{
+					Cbuf_AddText(VariadicText("say \"%s\"\n", _profiler.gChatSpamMessage->Custom.szValue));
+				}
+
+				iTime = clock();
+			}
 		}
 	}
 }

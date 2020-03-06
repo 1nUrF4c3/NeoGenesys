@@ -222,12 +222,15 @@ namespace NeoGenesys
 		gMissiles->Custom.bValue = gMissiles->Default.bValue;
 		gItems->Custom.bValue = gItems->Default.bValue;
 
-		gKillSpam->Custom.bValue = gKillSpam->Default.bValue;
 		gNameStealer->Custom.bValue = gNameStealer->Default.bValue;
 		gPlayerCrossHair->Custom.bValue = gPlayerCrossHair->Default.bValue;
 		gPlayerCompass->Custom.bValue = gPlayerCompass->Default.bValue;
 		gPlayerRadar->Custom.bValue = gPlayerRadar->Default.bValue;
 		gRiotShield->Custom.iValue = gRiotShield->Default.iValue;
+
+		gNameSpam->Custom.bValue = gNameSpam->Default.bValue;
+		gChatSpam->Custom.bValue = gChatSpam->Default.bValue;
+		gKillSpam->Custom.bValue = gKillSpam->Default.bValue;
 		gMassKill->Custom.iValue = gMassKill->Default.iValue;
 	}
 }

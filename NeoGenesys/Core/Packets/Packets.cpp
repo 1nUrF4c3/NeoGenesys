@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cPackets::WritePacket(sUserCmd* currentcmd)
 	{
-		_antiAim.AntiAim(currentcmd);
+		_antiAim.ClientAntiAim(currentcmd);
 	}
 	/*
 	//=====================================================================================
