@@ -797,11 +797,13 @@ namespace NeoGenesys
 
 						if (*(int*)OFF_ISCURRENTHOST)
 						{
+							ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue * 2);
+
 							if (ImGui::Button("Crash", ImVec2(50.0f, 0.0f)))
 							{
 								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
 								Menu.PlayerList.bWriteLog = true;
-							} ImGui::SameLine();
+							} ImGui::PopID(); ImGui::SameLine();
 						}
 
 						ImGui::PushItemWidth(150.0f);

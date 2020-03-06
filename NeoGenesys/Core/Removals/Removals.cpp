@@ -41,8 +41,8 @@ namespace NeoGenesys
 
 		GetSpreadAngles(akimbo, usercmd->iServerTime, GetWeaponSpread(), vAngles);
 
-		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
-		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
 	}
 	/*
 	//=====================================================================================
@@ -72,7 +72,7 @@ namespace NeoGenesys
 		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
 		int iSeed = TransformSeed(akimbo, servertime);
 
-		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
+		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
 		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
 
 		VectorAngles(vDir, angles);

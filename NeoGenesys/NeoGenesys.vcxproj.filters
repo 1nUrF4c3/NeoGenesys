@@ -34,9 +34,6 @@
     <Filter Include="Core\TargetList">
       <UniqueIdentifier>{eade14f0-4948-4372-a426-43e1a7180244}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Detours">
-      <UniqueIdentifier>{a5eb9788-4d59-47a5-b02a-cfd4dd0bc687}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{0b0225ea-483f-4c94-b050-72efb18b3d1e}</UniqueIdentifier>
     </Filter>
@@ -178,9 +175,6 @@
     <ClInclude Include="Core\TargetList\TargetList.h">
       <Filter>Core\TargetList</Filter>
     </ClInclude>
-    <ClInclude Include="Detours\detours.h">
-      <Filter>Detours</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
@@ -256,10 +250,5 @@
     <ClInclude Include="Core\Engine\Helpers.hpp">
       <Filter>Core\Engine</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Detours\detours.lib">
-      <Filter>Detours</Filter>
-    </Library>
   </ItemGroup>
 </Project>

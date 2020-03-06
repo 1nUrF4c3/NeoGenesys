@@ -18,7 +18,7 @@ namespace NeoGenesys
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
 
-		MakeVector(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : CG->vWeaponAngles, vAimAngles);
+		MakeVector(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vAimAngles);
 		MakeVector(vAngles, vAngles);
 
 		float flMag = sqrtf(DotProduct(vAimAngles, vAimAngles)),
@@ -174,8 +174,8 @@ namespace NeoGenesys
 		
 		NormalizeAngles(angles);
 
-		angles[0] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : CG->vWeaponAngles[0];
-		angles[1] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : CG->vWeaponAngles[1];
+		angles[0] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
+		angles[1] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
 
 		NormalizeAngles(angles);
 	}
@@ -265,7 +265,7 @@ namespace NeoGenesys
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
 
-		VectorSubtract(CG->vRefDefViewAngles, vAngles, vAngles);
+		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vAngles, vAngles);
 		_mathematics.NormalizeAngles(vAngles);
 
 		flAngle = ((vAngles[1] + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
@@ -282,8 +282,8 @@ namespace NeoGenesys
 
 		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
 
-		float flCosYaw = cosf(DegreesToRadians(CG->vRefDefViewAngles[1])),
-			flSinYaw = sinf(DegreesToRadians(CG->vRefDefViewAngles[1])),
+		float flCosYaw = cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
+			flSinYaw = sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
 			flDeltaX = world[0] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[0] : vViewOrigin[0]),
 			flDeltaY = world[1] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[1] : vViewOrigin[1]),
 			flLocationX = (flDeltaY * flCosYaw - flDeltaX * flSinYaw) / scale,
