@@ -142,6 +142,7 @@
 #define OFF_TAKEPLAYERWEAPON 0x1402463F0
 #define OFF_GIVEPLAYERWEAPON 0x1403DA5E0
 #define OFF_ADDAMMO 0x140399E50
+#define OFF_ISMIGRATING 0x14047BAB0
 #define OFF_KICKCLIENT 0x14046F730
 #define OFF_PLAYERDIE 0x140396920
 #define OFF_PLAYERKILL 0x1403CE260
@@ -1388,6 +1389,13 @@ namespace NeoGenesys
 	inline int AddAmmo(sPlayerState* playerstate, int weapon, bool alternate, int count, bool fill)
 	{
 		return VariadicCall<int>(OFF_ADDAMMO, playerstate, weapon, alternate, count, fill);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool IsMigrating()
+	{
+		return VariadicCall<bool>(OFF_ISMIGRATING);
 	}
 	/*
 	//=====================================================================================

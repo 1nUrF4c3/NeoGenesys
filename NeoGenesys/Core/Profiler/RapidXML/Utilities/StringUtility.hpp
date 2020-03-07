@@ -12,6 +12,54 @@
 
 namespace acut
 {
+	static std::string ToLower(std::string str)
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+		return str;
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::string ToUpper(std::string str)
+	{
+		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+		return str;
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::wstring AnsiToWstring(const std::string& input, DWORD locale)
+	{
+		wchar_t buf[2048] = { NULL };
+		MultiByteToWideChar(locale, 0, input.c_str(), (int)input.length(), buf, ARRAYSIZE(buf));
+		return buf;
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::string WstringToAnsi(const std::wstring& input, DWORD locale)
+	{
+		char buf[2048] = { NULL };
+		WideCharToMultiByte(locale, 0, input.c_str(), (int)input.length(), buf, ARRAYSIZE(buf), nullptr, nullptr);
+		return buf;
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::wstring UTF8ToWstring(const std::string& str)
+	{
+		return AnsiToWstring(str, CP_UTF8);
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::string WstringToUTF8(const std::wstring& str)
+	{
+		return WstringToAnsi(str, CP_UTF8);
+	}
+	/*
+	//=====================================================================================
+	*/
 	static std::string StripPath(const std::string& path)
 	{
 		if (path.empty())
@@ -98,26 +146,10 @@ namespace acut
 	{
 		size_t iPosition;
 
-		while ((iPosition = text.find(find.c_str())) != std::string::npos)
-			text.replace(iPosition, find.length(), replace.c_str());
+		while ((iPosition = ToLower(text).find(ToLower(find))) != std::string::npos)
+			text.replace(iPosition, find.length(), replace);
 
 		return text;
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::string ToLower(std::string str)
-	{
-		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
-		return str;
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::string ToUpper(std::string str)
-	{
-		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-		return str;
 	}
 	/*
 	//=====================================================================================
@@ -131,38 +163,6 @@ namespace acut
 			buf.push_back(_strdup(str.c_str()));
 
 		return buf.data();
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::wstring AnsiToWstring(const std::string& input, DWORD locale)
-	{
-		wchar_t buf[2048] = { NULL };
-		MultiByteToWideChar(locale, 0, input.c_str(), (int)input.length(), buf, ARRAYSIZE(buf));
-		return buf;
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::string WstringToAnsi(const std::wstring& input, DWORD locale)
-	{
-		char buf[2048] = { NULL };
-		WideCharToMultiByte(locale, 0, input.c_str(), (int)input.length(), buf, ARRAYSIZE(buf), nullptr, nullptr);
-		return buf;
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::wstring UTF8ToWstring(const std::string& str)
-	{
-		return AnsiToWstring(str, CP_UTF8);
-	}
-	/*
-	//=====================================================================================
-	*/
-	static std::string WstringToUTF8(const std::wstring& str)
-	{
-		return WstringToAnsi(str, CP_UTF8);
 	}
 	/*
 	//=====================================================================================
