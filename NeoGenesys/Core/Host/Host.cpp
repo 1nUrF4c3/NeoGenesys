@@ -16,13 +16,13 @@ namespace NeoGenesys
 			{
 				if (_mainGui.Menu.HostMenu.PlayerMod[i].bGodMode)
 				{
-					if (GEntity[i].iHealth != -9999999)
-						GEntity[i].iHealth = -9999999;
+					if (GEntity[i].iHealth != -10000000)
+						GEntity[i].iHealth = -10000000;
 				}
 
 				else
 				{
-					if (GEntity[i].iHealth == -9999999)
+					if (GEntity[i].iHealth == -10000000)
 						GEntity[i].iHealth = 100;
 				}
 
@@ -34,7 +34,7 @@ namespace NeoGenesys
 
 				if (_mainGui.Menu.HostMenu.PlayerMod[i].bInfiniteAmmo)
 				{
-					for (int j = 0; j < 15; j++)
+					for (int j = 0; j < sizeof(PlayerState[i].AmmoNotInClip) / sizeof(sGlobalAmmo); j++)
 					{
 						if (PlayerState[i].AmmoNotInClip[j].iAmmoCount != 600)
 							PlayerState[i].AmmoNotInClip[j].iAmmoCount = 600;
@@ -47,11 +47,11 @@ namespace NeoGenesys
 					}
 				}
 
-				if (_mainGui.Menu.HostMenu.PlayerMod[i].bExplosiveBullets)
-					EnablePerk(ClientInfo[i].iClientNum, PERK_EXPLOSIVEBULLETS);
+				if (_mainGui.Menu.HostMenu.PlayerMod[i].bInvisibility)
+					PlayerState[i].iEntityFlags |= 0x20;
 
 				else
-					DisablePerk(ClientInfo[i].iClientNum, PERK_EXPLOSIVEBULLETS);
+					PlayerState[i].iEntityFlags &= ~0x20;
 
 				if (_mainGui.Menu.HostMenu.PlayerMod[i].bSuperSpeed)
 					PlayerState[i].flSpeedMultiplier = 3.0f;
@@ -68,7 +68,7 @@ namespace NeoGenesys
 				_mainGui.Menu.HostMenu.PlayerMod[i].bGodMode = false;
 				_mainGui.Menu.HostMenu.PlayerMod[i].bNoClip = false;
 				_mainGui.Menu.HostMenu.PlayerMod[i].bInfiniteAmmo = false;
-				_mainGui.Menu.HostMenu.PlayerMod[i].bExplosiveBullets = false;
+				_mainGui.Menu.HostMenu.PlayerMod[i].bInvisibility = false;
 				_mainGui.Menu.HostMenu.PlayerMod[i].bSuperSpeed = false;
 				_mainGui.Menu.HostMenu.PlayerMod[i].bFreezePosition = false;
 

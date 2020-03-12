@@ -833,7 +833,7 @@ namespace NeoGenesys
 					Menu.HostMenu.bWriteLog = false;
 				}
 
-				ImGui::SetNextWindowSize(ImVec2(484.0f, 616.0f));
+				ImGui::SetNextWindowSize(ImVec2(484.0f, 708.0f));
 				ImGui::Begin("HOST MENU", &Menu.HostMenu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 
 				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
@@ -868,7 +868,7 @@ namespace NeoGenesys
 					Menu.HostMenu.bWriteLog = true;
 				} ImGui::SameLine(292.0f);
 
-				if (ImGui::Checkbox("Explosive Bullets", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bExplosiveBullets))
+				if (ImGui::Checkbox("Invisibility", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInvisibility))
 				{
 					Menu.HostMenu.bWriteLog = true;
 				} ImGui::NewLine();
@@ -888,7 +888,7 @@ namespace NeoGenesys
 					Menu.HostMenu.bWriteLog = true;
 				}
 
-				if (ImGui::Combo("Team", (int*)&PlayerState[Menu.HostMenu.iPlayer].ClientState.iTeam, Menu.HostMenu.szTeam, TEAM_MAX))
+				if (ImGui::Combo("Team", (int*)&PlayerState[Menu.HostMenu.iPlayer].ClientState.iTeam, Menu.HostMenu.szTeam.data(), TEAM_MAX))
 				{
 					TeamChanged(ClientInfo[Menu.HostMenu.iPlayer].iClientNum);
 					Menu.HostMenu.bWriteLog = true;
@@ -929,6 +929,25 @@ namespace NeoGenesys
 				{
 					TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
 					GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", 0));
+
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+				if (ImGui::Combo("Perk", &Menu.HostMenu.iPerkID, szPerkIDs.data(), (int)vPerkIDs.size()))
+				{
+					Menu.HostMenu.bWriteLog = true;
+				}
+
+				if (ImGui::Button("Enable Perk", ImVec2(150.0f, 25.0f)))
+				{
+					EnablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
+
+					Menu.HostMenu.bWriteLog = true;
+				} ImGui::SameLine(0.0f, 4.0f);
+
+				if (ImGui::Button("Disable Perk", ImVec2(150.0f, 25.0f)))
+				{
+					DisablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
 
 					Menu.HostMenu.bWriteLog = true;
 				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();

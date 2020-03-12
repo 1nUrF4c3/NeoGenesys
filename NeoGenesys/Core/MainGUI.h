@@ -53,17 +53,17 @@ namespace NeoGenesys
 				struct sPlayerMod
 				{
 					bool bGodMode = false, bNoClip = false, bInfiniteAmmo = false, 
-						bExplosiveBullets = false, bSuperSpeed = false, bFreezePosition = false;
+						bInvisibility = false, bSuperSpeed = false, bFreezePosition = false;
 
 					Vector3 szPosition{ NULL };
 				} PlayerMod[MAX_CLIENTS];
 
 				std::vector<std::pair<int, LPSTR>> vPlayers;
-				LPCSTR szTeam[TEAM_MAX] = { "Free", "Federation", "Ghosts", "Spectator" };
+				std::vector<LPCSTR> szTeam = { "Free", "Federation", "Ghosts", "Spectator" };
 				std::vector<LPCSTR> vWeaponCompleteNames, vWeaponDisplayNames;
 				Vector3 vTeleport = { 0.0f };
 
-				int iPlayer = 0, iWeaponID = 0;
+				int iPlayer = 0, iWeaponID = 0, iPerkID = 0;
 
 				void GetPlayerSelection()
 				{

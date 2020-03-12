@@ -96,6 +96,8 @@
 #define OFF_GETWEAPONNAMECOMPLETE 0x140239370
 #define OFF_GETWEAPONDISPLAYNAME 0x1402A9B80
 #define OFF_GETWEAPONFORNAME 0x1403DA060
+#define OFF_GETPERKNAME 0x14021BB00
+#define OFF_GETPERKINDEX 0x14021BA90
 #define OFF_ISPLAYERRELOADING 0x1402AA1A0
 #define OFF_WEAPONBOTHCLIPEMPTY 0x1402386A0
 #define OFF_ISRIFLEBULLET 0x1402423F0
@@ -470,6 +472,40 @@ namespace NeoGenesys
 		WEAPON_SC_2010, WEAPON_SVU, WEAPON_USR, WEAPON_TAC_12, WEAPON_VEPR,
 		WEAPON_VKS, WEAPON_MAVERICK, WEAPON_RIPPER, WEAPON_MAVERICK_A2,
 		WEAPON_GOLD_KNIFE, WEAPON_GOLD_PDW
+	};
+	/*
+	//=====================================================================================
+	*/
+	static std::vector<LPCSTR> szPerkIDs =
+	{
+		"Accuracy", "Fast Reload", "Rate Of Fire", "Extra Breath", "Longer Sprint",
+		"Detect Explosive", "Expose Enemy", "Extra Ammo", "Two Primaries", "Armor Vest",
+		"Frag Grenade", "Special Grenade", "Extended Mags", "Lightweight", "Marathon",
+		"Quick Draw", "Improved Extra Breath", "Fast Sprint Recovery", "Extended Melee", "Fast Off Hand",
+		"Stalker", "Hold Breath While ADS", "Longer Range", "Faster Melee", "Reduced Sway",
+		"Jam Radar", "Extra BP", "Grenade Death", "Pistol Death", "Quiet Move",
+		"Parabolic", "Bullet DMG", "Sprint Reload", "Not Used", "Explosive Bullets",
+		"Scavenger", "Cold Blooded", "Blind Eye", "No Player Target", "Heartbreaker",
+		"Selective Hearing", "Fast Snipe", "Spy Game", "Auto Mantle", "Quick Swap",
+		"Low Profile", "Heartbreaker Pro", "Throw Back", "Radar Is Red Blip", "Radar Is Red Arrow",
+		"Radar Is Juggernaut", "Silent Kill", "No Scope Outline"
+	};
+	/*
+	//=====================================================================================
+	*/
+	static std::vector<ePerk> vPerkIDs =
+	{
+		PERK_ACCURACY, PERK_FASTRELOAD, PERK_RATEOFFIRE, PERK_EXTRABREATH, PERK_LONGERSPRINT,
+		PERK_DETECTEXPLOSIVE, PERK_EXPOSEENEMY, PERK_EXTRAAMMO, PERK_TWOPRIMARIES, PERK_ARMORVEST,
+		PERK_FRAGGRENADE, PERK_SPECIALGRENADE, PERK_EXTENDEDMAGS, PERK_LIGHTWEIGHT, PERK_MARATHON,
+		PERK_QUICKDRAW, PERK_IMPROVEDEXTRABREATH, PERK_FASTSPRINTRECOVERY, PERK_EXTENDEDMELEE, PERK_FASTOFFHAND,
+		PERK_STALKER, PERK_HOLDBREATHWHILEADS, PERK_LONGERRANGE, PERK_FASTERMELEE, PERK_REDUCEDSWAY,
+		PERK_JAMRADAR, PERK_EXTRABP, PERK_GRENADEDEATH, PERK_PISTOLDEATH, PERK_QUIETMOVE,
+		PERK_PARABOLIC, PERK_BULLETDMG, PERK_SPRINTRELOAD, PERK_NOT_USED, PERK_EXPLOSIVEBULLETS,
+		PERK_SCAVENGER, PERK_COLDBLOODED, PERK_BLINDEYE, PERK_NOPLAYERTARGET, PERK_HEARTBREAKER,
+		PERK_SELECTIVEHEARING, PERK_FASTSNIPE, PERK_SPYGAME, PERK_AUTOMANTLE, PERK_QUICKSWAP,
+		PERK_LOWPROFILE, PERK_HEARTBREAKER_PRO, PERK_THROWBACK, PERK_RADAR_ISREDBLIP, PERK_RADAR_ISREDARROW,
+		PERK_RADAR_ISJUGGERNAUT, PERK_SILENTKILL, PERK_NOSCOPEOUTLINE
 	};
 	/*
 	//=====================================================================================
@@ -1067,6 +1103,20 @@ namespace NeoGenesys
 	inline int GetWeaponForName(std::string name)
 	{
 		return VariadicCall<int>(OFF_GETWEAPONFORNAME, name.c_str());
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool GetPerkName(ePerk perk, LPSTR* name)
+	{
+		return VariadicCall<bool>(OFF_GETPERKNAME, perk, name);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool GetPerkIndex(LPSTR name, ePerk* perk)
+	{
+		return VariadicCall<bool>(OFF_GETPERKINDEX, name, perk);
 	}
 	/*
 	//=====================================================================================

@@ -39,7 +39,7 @@ namespace NeoGenesys
 				{
 					GetTagPosition(&CEntity[i], pDObj, RegisterTag(vBones[j].second), EntityList[i].vBones3D[j]);
 
-					for (int k = 0; k < 3; k++)
+					for (int k = 0; k < sizeof(Vector3) / sizeof(float); k++)
 					{
 						if (EntityList[i].vBones3D[j][k] < vMinTemp[k])
 							vMinTemp[k] = EntityList[i].vBones3D[j][k];
