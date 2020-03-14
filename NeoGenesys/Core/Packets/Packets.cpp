@@ -11,6 +11,26 @@ namespace NeoGenesys
 	void cPackets::WritePacket(sUserCmd* currentcmd)
 	{
 		_antiAim.ClientAntiAim(currentcmd);
+
+		if (_profiler.gBunnyHop->Custom.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
+		{
+			if (currentcmd->iButtons & BUTTON_JUMP)
+				currentcmd->iButtons &= ~BUTTON_JUMP;
+
+			else
+				currentcmd->iButtons |= BUTTON_JUMP;
+		}
+
+		if (clock() - iTeaBagTime < 3000)
+		{
+			VectorCopy(vTeaBagPos, PlayerState[CG->PlayerState.iClientNum].vOrigin);
+
+			if (currentcmd->iButtons & BUTTON_CROUCH)
+				currentcmd->iButtons &= ~BUTTON_CROUCH;
+
+			else
+				currentcmd->iButtons |= BUTTON_CROUCH;
+		}
 	}
 	/*
 	//=====================================================================================

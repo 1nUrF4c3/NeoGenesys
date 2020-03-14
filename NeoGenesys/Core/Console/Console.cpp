@@ -42,6 +42,8 @@ namespace NeoGenesys
 			vCommands.push_back("neo_rapidfire");
 			vCommands.push_back("neo_superjump");
 			vCommands.push_back("neo_masskill");
+			vCommands.push_back("neo_bhop");
+			vCommands.push_back("neo_tbag");
 			vCommands.push_back("neo_experience");
 			vCommands.push_back("neo_prestige");
 			vCommands.push_back("neo_squadpoints");
@@ -133,19 +135,21 @@ namespace NeoGenesys
 			AddLog("8. neo_rapidfire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
 			AddLog("9. neo_superjump <on|off>\n\t\tEnable/disable super high jump (as host).");
 			AddLog("10. neo_masskill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
-			AddLog("11. neo_experience <all|index> <max|experience>\n\t\tSet your experience.");
-			AddLog("12. neo_prestige <max|number>\n\t\tSet your prestige.");
-			AddLog("13. neo_squadpoints <max|squadpoints>\n\t\tSet your squadpoints.");
-			AddLog("14. neo_unlockall\n\t\tUnlock everything in the game.");
-			AddLog("15. neo_resetstats\n\t\tCompletely erase your save game.");
-			AddLog("16. neo_hostdvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
-			AddLog("17. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
-			AddLog("18. neo_chatspam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
-			AddLog("19. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
-			AddLog("20. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
-			AddLog("21. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
-			AddLog("22. neo_memread <address> <byte|word|dword|qword>\n\t\tRead value of the specified type from memory.");
-			AddLog("23. neo_memwrite <address> <byte|word|dword|qword> <value>\n\t\tWrite value of the specified type to memory.");
+			AddLog("11. neo_bhop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
+			AddLog("12. neo_tbag <on|off> <message>\n\t\tEnable/disable auto tea bag on kill with optional message (as host).");
+			AddLog("13. neo_experience <all|index> <max|experience>\n\t\tSet your experience.");
+			AddLog("14. neo_prestige <max|number>\n\t\tSet your prestige.");
+			AddLog("15. neo_squadpoints <max|squadpoints>\n\t\tSet your squadpoints.");
+			AddLog("16. neo_unlockall\n\t\tUnlock everything in the game.");
+			AddLog("17. neo_resetstats\n\t\tCompletely erase your save game.");
+			AddLog("18. neo_hostdvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
+			AddLog("19. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
+			AddLog("20. neo_chatspam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
+			AddLog("21. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
+			AddLog("22. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
+			AddLog("23. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
+			AddLog("24. neo_memread <address> <byte|word|dword|qword>\n\t\tRead value of the specified type from memory.");
+			AddLog("25. neo_memwrite <address> <byte|word|dword|qword> <value>\n\t\tWrite value of the specified type to memory.");
 
 			bWriteLog = true;
 		} ImGui::SameLine();
@@ -548,7 +552,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_mainGui.Menu.HostMenu.bSuperJump = true;
+					_profiler.gSuperJump->Custom.bValue = true;
 
 					AddLog("Super jump has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -558,7 +562,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_mainGui.Menu.HostMenu.bSuperJump = false;
+					_profiler.gSuperJump->Custom.bValue = false;
 
 					AddLog("Super jump has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -617,6 +621,100 @@ namespace NeoGenesys
 					_profiler.gMassKill->Custom.iValue = cProfiler::MASSKILL_ALL;
 
 					AddLog("Masskill has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
+			}
+
+			else
+			{
+				AddLog("[ERROR] Missing argument(s).");
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_bhop"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					_profiler.gBunnyHop->Custom.bValue = true;
+
+					AddLog("Auto bunny hop has been enabled.");
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					_profiler.gBunnyHop->Custom.bValue = false;
+
+					AddLog("Auto bunny hop has been disabled.");
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
+			}
+
+			else
+			{
+				AddLog("[ERROR] Missing argument(s).");
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_tbag"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					char szArgBuff[512] = { NULL };
+
+					for (int i = 1; i < CmdLine.iArgNum; i++)
+						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+
+					LPSTR szTeaBagMessage = strtok(szArgBuff, "\n");
+
+					if (szTeaBagMessage)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_profiler.gTeaBagMessage->Custom.szValue = Strdup(szTeaBagMessage);
+						_profiler.gTeaBag->Custom.bValue = true;
+
+						AddLog("Auto tea bag has been enabled with message \"%s.\"", szTeaBagMessage);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_profiler.gTeaBag->Custom.bValue = true;
+
+						AddLog("Auto tea bag has been enabled.");
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					_profiler.gTeaBagMessage->Custom.szValue = Strdup("");
+					_profiler.gTeaBag->Custom.bValue = false;
+
+					AddLog("Auto tea bag has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -785,7 +883,10 @@ namespace NeoGenesys
 			for (int i = 0; i < OFF_CHALLENGESIZE; i++)
 				*(BYTE*)(OFF_CHALLENGES + i) = 0xFF;
 
-			AddLog("All challenges have been unlocked.");
+			for (auto& Achievement : szAchievements)
+				GameSendServerCommand(CG->PlayerState.iClientNum, SV_CMD_RELIABLE, VariadicText("3 %s", Achievement.c_str()));
+
+			AddLog("All challenges/achievements have been unlocked.");
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
@@ -1207,10 +1308,10 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gChatSpamMessage->Custom.szValue = Strdup(strtok(szArgBuff, "\n"));
+						_profiler.gChatSpamMessage->Custom.szValue = Strdup(szChatSpam);
 						_profiler.gChatSpam->Custom.bValue = true;
 
-						AddLog("Custom chatspam message has been enabled.");
+						AddLog("Custom chatspam message \"%s\" has been enabled.", szChatSpam);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1260,10 +1361,10 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gKillSpamMessage->Custom.szValue = Strdup(strtok(szArgBuff, "\n"));
+						_profiler.gKillSpamMessage->Custom.szValue = Strdup(szKillSpam);
 						_profiler.gKillSpam->Custom.bValue = true;
 
-						AddLog("Custom killspam message has been enabled.");
+						AddLog("Custom killspam message \"%s\" has been enabled.", szKillSpam);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 

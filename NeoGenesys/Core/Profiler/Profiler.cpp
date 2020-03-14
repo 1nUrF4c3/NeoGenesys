@@ -231,7 +231,10 @@ namespace NeoGenesys
 		gNameSpam->Custom.bValue = gNameSpam->Default.bValue;
 		gChatSpam->Custom.bValue = gChatSpam->Default.bValue;
 		gKillSpam->Custom.bValue = gKillSpam->Default.bValue;
+		gSuperJump->Custom.bValue = gSuperJump->Default.bValue;
 		gMassKill->Custom.iValue = gMassKill->Default.iValue;
+		gBunnyHop->Custom.bValue = gBunnyHop->Default.bValue;
+		gTeaBag->Custom.bValue = gTeaBag->Default.bValue;
 	}
 }
 

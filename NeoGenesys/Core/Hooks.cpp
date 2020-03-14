@@ -85,6 +85,22 @@ namespace NeoGenesys
 		{
 			if (entitystate->iAttackerEntityNum == CG->PlayerState.iClientNum)
 			{
+				if (_profiler.gTeaBag->Custom.bValue && *(int*)OFF_ISCURRENTHOST)
+				{
+					_packets.iTeaBagTime = clock();
+					VectorCopy(PlayerState[entitystate->iOtherEntityNum].vOrigin, _packets.vTeaBagPos);
+
+					std::string szTeaBag = _profiler.gTeaBagMessage->Custom.szValue;
+
+					if (!szTeaBag.empty())
+					{
+						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
+						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
+
+						Say(&GEntity[entitystate->iOtherEntityNum], NULL, 0, szTeaBag);
+					}
+				}
+
 				if (_profiler.gKillSpam->Custom.bValue)
 				{
 					std::string szKillSpam = _profiler.gKillSpamMessage->Custom.szValue;

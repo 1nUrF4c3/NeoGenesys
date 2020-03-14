@@ -253,7 +253,11 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gKillSpam = std::make_shared<sCvar>("Killspam", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gChatSpamMessage = std::make_shared<sCvar>("Chatspam Message", std::vector<std::string>(), _strdup(""));
 		std::shared_ptr<sCvar> gKillSpamMessage = std::make_shared<sCvar>("Killspam Message", std::vector<std::string>(), _strdup(""));
+		std::shared_ptr<sCvar> gSuperJump = std::make_shared<sCvar>("Super Jump", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>(), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
+		std::shared_ptr<sCvar> gBunnyHop = std::make_shared<sCvar>("Bunny Hop", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gTeaBag = std::make_shared<sCvar>("Tea Bag", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gTeaBagMessage = std::make_shared<sCvar>("Tea Bag Message", std::vector<std::string>(), _strdup(""));
 
 		acut::XmlDoc<char> XML;
 

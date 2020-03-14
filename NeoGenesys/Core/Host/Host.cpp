@@ -78,13 +78,13 @@ namespace NeoGenesys
 
 		static bool bSuperJump = false;
 
-		if (_mainGui.Menu.HostMenu.bSuperJump && !bSuperJump)
+		if (_profiler.gSuperJump->Custom.bValue && !bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 			bSuperJump = true;
 		}
 
-		else if (!_mainGui.Menu.HostMenu.bSuperJump && bSuperJump)
+		else if (!_profiler.gSuperJump->Custom.bValue && bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 			bSuperJump = false;
