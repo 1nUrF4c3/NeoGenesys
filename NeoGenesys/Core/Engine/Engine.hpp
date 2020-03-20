@@ -383,6 +383,29 @@ namespace NeoGenesys
 	*/
 	typedef enum
 	{
+		HITLOC_HEAD = 2,
+		HITLOC_NECK,
+		HITLOC_UPPER_SPINE,
+		HITLOC_LOWER_SPINE,
+		HITLOC_RIGHT_SHOULDER,
+		HITLOC_LEFT_SHOULDER,
+		HITLOC_RIGHT_ELBOW,
+		HITLOC_LEFT_ELBOW,
+		HITLOC_RIGHT_WRIST,
+		HITLOC_LEFT_WRIST,
+		HITLOC_RIGHT_HIP,
+		HITLOC_LEFT_HIP,
+		HITLOC_RIGHT_KNEE,
+		HITLOC_LEFT_KNEE,
+		HITLOC_RIGHT_ANKLE,
+		HITLOC_LEFT_ANKLE,
+		HITLOC_MAX
+	} eHitLocation;
+	/*
+	//=====================================================================================
+	*/
+	typedef enum
+	{
 		WEAPON_C4 = 15,
 		WEAPON_AK_12 = 38,
 		WEAPON_AMELI,
@@ -440,7 +463,29 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	static std::vector<std::pair<std::string, std::string>> vBones =
+	static std::vector<std::pair<eBone, eHitLocation>> vBones =
+	{
+		std::make_pair(BONE_HEAD, HITLOC_HEAD),
+		std::make_pair(BONE_NECK, HITLOC_NECK),
+		std::make_pair(BONE_UPPER_SPINE, HITLOC_UPPER_SPINE),
+		std::make_pair(BONE_LOWER_SPINE, HITLOC_LOWER_SPINE),
+		std::make_pair(BONE_LEFT_SHOULDER, HITLOC_LEFT_SHOULDER),
+		std::make_pair(BONE_RIGHT_SHOULDER, HITLOC_RIGHT_SHOULDER),
+		std::make_pair(BONE_LEFT_HIP, HITLOC_LEFT_HIP),
+		std::make_pair(BONE_RIGHT_HIP, HITLOC_RIGHT_HIP),
+		std::make_pair(BONE_LEFT_ELBOW, HITLOC_LEFT_ELBOW),
+		std::make_pair(BONE_RIGHT_ELBOW, HITLOC_RIGHT_ELBOW),
+		std::make_pair(BONE_LEFT_KNEE, HITLOC_LEFT_KNEE),
+		std::make_pair(BONE_RIGHT_KNEE, HITLOC_RIGHT_KNEE),
+		std::make_pair(BONE_LEFT_WRIST, HITLOC_LEFT_WRIST),
+		std::make_pair(BONE_RIGHT_WRIST, HITLOC_RIGHT_WRIST),
+		std::make_pair(BONE_LEFT_ANKLE, HITLOC_LEFT_ANKLE),
+		std::make_pair(BONE_RIGHT_ANKLE, HITLOC_RIGHT_ANKLE)
+	};
+	/*
+	//=====================================================================================
+	*/
+	static std::vector<std::pair<std::string, std::string>> szBones =
 	{
 		std::make_pair("Head", "j_head"),
 		std::make_pair("Neck", "j_neck"),

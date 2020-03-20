@@ -334,7 +334,7 @@ namespace NeoGenesys
 				_drawing.DrawCrosshair();
 			}
 
-			std::string szWatermark(VariadicText("%s for Call of Duty: Ghosts | Frametime: %s, Ping: %s", acut::ToUpper(PROGRAM_NAME).c_str(),
+			std::string szWatermark(VariadicText("%s - COD GHOSTS by: InUrFace | Frametime: %s, Ping: %s", acut::ToUpper(PROGRAM_NAME).c_str(),
 				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME).c_str() : "N/A",
 				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
 
@@ -574,7 +574,7 @@ namespace NeoGenesys
 
 				case cProfiler::MENU_TAB_TWEAKS:
 				{
-					if (ImGui::SliderInt(_profiler.gAimBone->szLabel.c_str(), &_profiler.gAimBone->Custom.iValue, _profiler.gAimBone->MinValue.iMin, _profiler.gAimBone->MaxValue.iMax, vBones[_profiler.gAimBone->Custom.iValue].first.c_str()))
+					if (ImGui::SliderInt(_profiler.gAimBone->szLabel.c_str(), &_profiler.gAimBone->Custom.iValue, _profiler.gAimBone->MinValue.iMin, _profiler.gAimBone->MaxValue.iMax, szBones[_profiler.gAimBone->Custom.iValue].first.c_str()))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();

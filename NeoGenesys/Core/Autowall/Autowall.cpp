@@ -8,7 +8,7 @@ namespace NeoGenesys
 {
 	cAutowall _autoWall;
 
-	float cAutowall::C_Autowall(Vector3 start, Vector3 end)
+	float cAutowall::C_Autowall(Vector3 start, Vector3 end, short hitloc)
 	{
 		sBulletFireParams FP_Enter;
 		sBulletTraceResults TR_Enter;
@@ -102,7 +102,7 @@ namespace NeoGenesys
 				}
 
 				else if (!bEnterHit)
-					return FP_Enter.flPower;
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
 
 				if (bEnterHit)
 				{
@@ -114,7 +114,7 @@ namespace NeoGenesys
 			}
 		}
 
-		return FP_Enter.flPower;
+		return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
 	}
 	/*
 	//=====================================================================================

@@ -37,7 +37,7 @@ namespace NeoGenesys
 
 				for (int j = BONE_HEAD; j < BONE_MAX; j++)
 				{
-					GetTagPosition(&CEntity[i], pDObj, RegisterTag(vBones[j].second), EntityList[i].vBones3D[j]);
+					GetTagPosition(&CEntity[i], pDObj, RegisterTag(szBones[j].second), EntityList[i].vBones3D[j]);
 
 					for (int k = 0; k < sizeof(Vector3) / sizeof(float); k++)
 					{
@@ -136,8 +136,8 @@ namespace NeoGenesys
 
 			if (EntityList[i].bAimFeet)
 			{
-				bool bIsLeftAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], _profiler.gAutoWall->Custom.bValue, NULL),
-					bIsRightAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], _profiler.gAutoWall->Custom.bValue, NULL);
+				bool bIsLeftAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, NULL),
+					bIsRightAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, NULL);
 
 				if (bIsLeftAnkleVisible && bIsRightAnkleVisible)
 				{
@@ -176,7 +176,7 @@ namespace NeoGenesys
 
 					else
 					{
-						EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], _profiler.gAutoWall->Custom.bValue, NULL);
+						EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, NULL);
 						VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 					}
 				}
@@ -190,7 +190,7 @@ namespace NeoGenesys
 				else
 				{
 					EntityList[i].iBoneIndex = (eBone)_profiler.gAimBone->Custom.iValue;
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], _profiler.gAutoWall->Custom.bValue, NULL);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, NULL);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 			}
@@ -198,13 +198,13 @@ namespace NeoGenesys
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
 				EntityList[i].iBoneIndex = BONE_HEAD;
-				EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], _profiler.gAutoWall->Custom.bValue, NULL);
+				EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, NULL);
 				VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 			}
 
 			else
 			{
-				EntityList[i].bIsVisible = IsVisible(&CEntity[i], CEntity[i].vOrigin, _profiler.gAutoWall->Custom.bValue, NULL);
+				EntityList[i].bIsVisible = IsVisible(&CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Custom.bValue, NULL);
 				VectorCopy(CEntity[i].vOrigin, EntityList[i].vHitLocation);
 			}
 
@@ -365,7 +365,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisible(sCEntity* entity, Vector3 position, bool autowall, float* damage)
+	bool cTargetList::IsVisible(sCEntity* entity, Vector3 position, short hitloc,  bool autowall, float* damage)
 	{
 		Vector3 vViewOrigin;
 
@@ -382,12 +382,12 @@ namespace NeoGenesys
 
 		else if (autowall)
 		{
-			float flDamage = _autoWall.C_Autowall(vViewOrigin, position);
+			float flDamage = _autoWall.C_Autowall(vViewOrigin, position, hitloc);
 
 			if (damage)
 				*damage = flDamage;
 
-			if (flDamage > 0.0f)
+			if (flDamage >= 1.0f)
 				return true;
 		}
 
@@ -415,7 +415,7 @@ namespace NeoGenesys
 		{
 			if (autowall)
 			{
-				if (IsVisible(entity, bones3d[i], true, &DamageInfo.flDamage))
+				if (IsVisible(entity, bones3d[i], vBones[i].second, true, &DamageInfo.flDamage))
 				{
 					DamageInfo.iBoneIndex = (eBone)i;
 					vDamageInfo.push_back(DamageInfo);
@@ -426,7 +426,7 @@ namespace NeoGenesys
 
 			else
 			{
-				if (IsVisible(entity, bones3d[i], false, NULL))
+				if (IsVisible(entity, bones3d[i], vBones[i].second, false, NULL))
 				{
 					*index = (eBone)i;
 					return true;

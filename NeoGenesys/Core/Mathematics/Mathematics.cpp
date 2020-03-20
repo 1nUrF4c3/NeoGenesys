@@ -229,30 +229,6 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cMathematics::WorldToScreen(Vector3 world, ImVec2& screen)
-	{
-		float flCenterX = RefDef->iWidth / 2.0f,
-			flCenterY = RefDef->iHeight / 2.0f;
-
-		Vector3 vLocal, vTransForm;
-
-		VectorSubtract(world, RefDef->vViewOrg, vLocal);
-
-		vTransForm[0] = DotProduct(vLocal, RefDef->vViewAxis[1]);
-		vTransForm[1] = DotProduct(vLocal, RefDef->vViewAxis[2]);
-		vTransForm[2] = DotProduct(vLocal, RefDef->vViewAxis[0]);
-
-		if (vTransForm[2] < 0.01f)
-			return false;
-
-		screen.x = flCenterX * (1.0f - (vTransForm[0] / RefDef->flFovX / vTransForm[2]));
-		screen.y = flCenterY * (1.0f - (vTransForm[1] / RefDef->flFovY / vTransForm[2]));
-
-		return true;
-	}
-	/*
-	//=====================================================================================
-	*/
 	void cMathematics::WorldToCompass(Vector3 world, ImVec2 compasspos, float compasssize, ImVec2& screen)
 	{
 		float flAngle;

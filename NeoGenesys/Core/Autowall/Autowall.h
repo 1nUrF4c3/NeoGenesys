@@ -12,7 +12,7 @@ namespace NeoGenesys
 	{
 	public:
 
-		float C_Autowall(Vector3 start, Vector3 end);
+		float C_Autowall(Vector3 start, Vector3 end, short hitloc);
 		bool C_TraceBullet(Vector3 start, Vector3 end, int entitynum);
 		float G_Autowall(Vector3 start, Vector3 end);
 		bool G_TraceBullet(Vector3 start, Vector3 end, int entitynum);
