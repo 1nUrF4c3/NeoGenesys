@@ -42,8 +42,8 @@ namespace NeoGenesys
 		void GetInformation();
 		bool EntityIsValid(int index);
 		bool EntityIsEnemy(int index);
-		bool IsVisible(sCEntity* entity, Vector3 position, short hitloc, bool autowall, float* damage);
-		bool Bonescan(sCEntity* entity, Vector3 bones3d[BONE_MAX], bool autowall, eBone* index);
+		bool IsVisibleInternal(sCEntity* entity, Vector3 position, short hitloc, bool autowall, float* damage);
+		bool IsVisible(sCEntity* entity, Vector3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone* index);
 		void ApplyPrediction(sCEntity* entity, Vector3 position);
 	} extern _targetList;
 }

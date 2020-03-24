@@ -34,7 +34,7 @@ namespace NeoGenesys
 
 				if (_mainGui.Menu.HostMenu.PlayerMod[i].bInfiniteAmmo)
 				{
-					for (int j = 0; j < sizeof(PlayerState[i].AmmoNotInClip) / sizeof(sGlobalAmmo); j++)
+					for (int j = 0; j < 15; j++)
 					{
 						if (PlayerState[i].AmmoNotInClip[j].iAmmoCount != 600)
 							PlayerState[i].AmmoNotInClip[j].iAmmoCount = 600;

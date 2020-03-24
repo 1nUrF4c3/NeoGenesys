@@ -418,9 +418,9 @@ namespace NeoGenesys
 	{
 		ImVec2 vTemp, vMinTemp = { FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX };
 
-		for (int i = BONE_NECK; i < BONE_MAX; i++)
+		for (auto& Bone : vBones)
 		{
-			if (!WorldToScreen(GetScreenMatrix(), bones3d[i], vTemp))
+			if (!WorldToScreen(GetScreenMatrix(), bones3d[Bone.first], vTemp))
 				return false;
 
 			if (vTemp.x < vMinTemp.x)
@@ -435,7 +435,7 @@ namespace NeoGenesys
 			if (vTemp.y > vMaxTemp.y)
 				vMaxTemp.y = vTemp.y;
 
-			bones2d[i] = vTemp;
+			bones2d[Bone.first] = vTemp;
 		}
 
 		dimentions = vMaxTemp - vMinTemp;

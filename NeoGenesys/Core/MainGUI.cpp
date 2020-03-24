@@ -362,7 +362,7 @@ namespace NeoGenesys
 					*(int*)OFF_ISCURRENTHOST ? 0xFF00FF00 : 0xFF0000FF, szConnection.c_str());
 			}
 
-			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
+			std::string szFramesPerSecond(VariadicText("0x%X", CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags));//(int)ImGui::GetIO().Framerate));
 			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
 
 			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,

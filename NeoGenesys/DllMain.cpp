@@ -121,6 +121,9 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 
 void Initialize()
 {
+	SetUnhandledExceptionFilter(NULL);
+	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
+
 	Hook(oPresent, hPresent);
 	Hook(oRefresh, hRefresh);
 	Hook(oWritePacket, hWritePacket);
@@ -135,6 +138,8 @@ void Initialize()
 
 void Deallocate()
 {
+	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
+
 	UnHook(oPresent, hPresent);
 	UnHook(oRefresh, hRefresh);
 	UnHook(oWritePacket, hWritePacket);

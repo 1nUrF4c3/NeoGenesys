@@ -70,11 +70,11 @@ namespace NeoGenesys
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
 
 				bool bExitHit = C_BulletTrace(&FP_Exit, &CEntity[CG->PlayerState.iClientNum], &TR_Exit, TR_Exit.iDepthSurfaceType);
-				bool bSolid = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
+				bool bStaticModel = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
 
-				if (bExitHit || bSolid)
+				if (bExitHit || bStaticModel)
 				{
-					if (bSolid)
+					if (bStaticModel)
 						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
 
 					else
@@ -214,14 +214,14 @@ namespace NeoGenesys
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
 
 				bool bExitHit = G_BulletTrace(&FP_Exit, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode, &GEntity[CG->PlayerState.iClientNum], &TR_Exit, TR_Exit.iDepthSurfaceType);
-				bool bSolid = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
+				bool bStaticModel = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
 
 				if (TR_Exit.Trace.wPartGroup == 19)
 					return 0.0f;
 
-				if (bExitHit || bSolid)
+				if (bExitHit || bStaticModel)
 				{
-					if (bSolid)
+					if (bStaticModel)
 						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
 
 					else

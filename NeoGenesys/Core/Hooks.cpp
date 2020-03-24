@@ -10,6 +10,8 @@ namespace NeoGenesys
 
 	void cHooks::Refresh(int localnum)
 	{
+		dwThreadLocalStoragePointer = Sys_GetValue(3);
+
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
 			_targetList.GetInformation();
@@ -158,6 +160,24 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 			_host.MassKill();
+	}
+	/*
+	//=====================================================================================
+	*/
+	LONG cHooks::VectoredExceptionHandler(_In_ LPEXCEPTION_POINTERS ExceptionInfo)
+	{
+		if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION)
+		{
+			if (ExceptionInfo->ContextRecord->Rip == OFF_SYSGETVALUEEXCEPTION)
+			{
+				ExceptionInfo->ContextRecord->Rax = dwThreadLocalStoragePointer;
+				ExceptionInfo->ContextRecord->Rip += 0x4;
+
+				return EXCEPTION_CONTINUE_EXECUTION;
+			}
+		}
+
+		return EXCEPTION_CONTINUE_SEARCH;
 	}
 }
 

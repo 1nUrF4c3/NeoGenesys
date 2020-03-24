@@ -18,7 +18,10 @@
 #define EF_CROUCH 0x4
 #define EF_PRONE 0x8
 #define EF_MANTLE 0x20000
+#define EF_DEAD 0x40000
 #define EF_ZOOM 0x80000
+#define EF_FIRE 0x800000
+#define EF_STREAK 0x10000000
 #define TF_NONE 0x0
 #define TF_SHADOW 0x3
 #define WF_AKIMBO 0x20000
@@ -65,6 +68,8 @@
 #define OFF_HUDSAYPOSITION_EXCEPTION 0x14025C40B
 #define OFF_PACKETDUPLICATION_DVAR 0x141E04AA8
 #define OFF_PACKETDUPLICATION_EXCEPTION 0x1402C1FB2
+#define OFF_SYSGETVALUE 0x1404237D0
+#define OFF_SYSGETVALUEEXCEPTION 0x1404237F0
 #define OFF_WINDOWHANDLE 0x147AD2640
 #define OFF_SWAPCHAIN 0x1480B1D70
 #define OFF_REFRESH 0x14025CC50
@@ -1107,6 +1112,13 @@ namespace NeoGenesys
 	inline void Cbuf_AddText(std::string command)
 	{
 		return VariadicCall<void>(OFF_CBUFADDTEXT, 0, command.c_str());
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline QWORD Sys_GetValue(int value)
+	{
+		return VariadicCall<QWORD>(OFF_SYSGETVALUE, value);
 	}
 	/*
 	//=====================================================================================
