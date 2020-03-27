@@ -1080,7 +1080,7 @@ namespace NeoGenesys
 	static MODULEINFO hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
 
 	static DWORD_PTR dwPresent = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage) ?
-		ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x48\x89\x05\x00\x00\x00\x00\x48\x8B\x4F\x50", "xxx????xxxx"), 0x3) :
+		ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
 		(**(DWORD_PTR**)OFF_SWAPCHAIN + sizeof(DWORD_PTR) * 0x8);
 	/*
 	//=====================================================================================
