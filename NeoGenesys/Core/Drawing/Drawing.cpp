@@ -505,7 +505,7 @@ namespace NeoGenesys
 
 		for (int i = 0; i < 8; i++)
 		{
-			_mathematics.RotatePoint(corners3d[i], center, entity->vAngles[1], corners3d[i]);
+			_mathematics.RotatePoint(corners3d[i], center, entity->vViewAngles[1], corners3d[i]);
 
 			if (!WorldToScreen(GetScreenMatrix(), corners3d[i], corners2d[i]))
 				return false;
@@ -576,7 +576,7 @@ namespace NeoGenesys
 						(_profiler.gWallHackMode->Custom.iValue == cProfiler::WALLHACK_MODE_ALLIES && !_targetList.EntityIsEnemy(i)) ||
 						_profiler.gWallHackMode->Custom.iValue == cProfiler::WALLHACK_MODE_ALL)
 					{
-						float flAngle = (((CG->vRefDefViewAngles[1] - CEntity[i].vAngles[1]) + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
+						float flAngle = (((CG->vRefDefViewAngles[1] - CEntity[i].vViewAngles[1]) + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
 
 						ImVec2 vBaseX = ImVec2(Compass.flArrowSize / -2.0f, 0.0f);
 						ImVec2 vBaseY = ImVec2(Compass.flArrowSize / 2.0f, Compass.flArrowSize / 2.0f * -0.75f);

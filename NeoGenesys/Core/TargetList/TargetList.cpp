@@ -119,7 +119,7 @@ namespace NeoGenesys
 			VectorAngles(vDirection, vAngles);
 			_mathematics.NormalizeAngles(vAngles);
 
-			VectorSubtract(vAngles, CEntity[i].vAngles, vDelta);
+			VectorSubtract(vAngles, CEntity[i].vViewAngles, vDelta);
 
 			if (((BYTE)CEntity[i].NextEntityState.iWeapon == WEAPON_RIOT_SHIELD && !AngleCompare180(vDelta[1])) ||
 				((BYTE)CEntity[i].NextEntityState.LerpEntityState.iSecondaryWeapon == WEAPON_RIOT_SHIELD && AngleCompare180(vDelta[1])))

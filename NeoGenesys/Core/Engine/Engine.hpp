@@ -741,7 +741,7 @@ namespace NeoGenesys
 		char _0x128[0x54];
 		int iEntityNum;
 		char _0x180[0x4];
-		Vector3 vAngles;
+		Vector3 vViewAngles;
 		char _0x190[0x38];
 		int iStats[4];
 		char _0x1D8[0x84];
@@ -794,7 +794,7 @@ namespace NeoGenesys
 		eTeam iOldTeam;
 		int iPerks[2];
 		char _0x1C[0x444];
-		Vector3 vAngles;
+		Vector3 vViewAngles;
 		char _0x46C[0x128];
 		int iDualWielding;
 		int iIsFemale;
@@ -866,7 +866,7 @@ namespace NeoGenesys
 		short wValid;
 		char _0x4[0x14];
 		Vector3 vOrigin;
-		Vector3 vAngles;
+		Vector3 vViewAngles;
 		char _0x30[0x60];
 		sLerpEntityState CurrentEntityState;
 		sEntityState NextEntityState;
