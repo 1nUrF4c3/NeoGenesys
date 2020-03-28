@@ -39,7 +39,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::PredictPlayerState(int localnum)
+	void cHooks::CreateNewCommands(int localnum)
 	{
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
@@ -52,7 +52,7 @@ namespace NeoGenesys
 			*pOldCmd = *pNewCmd;
 			--pOldCmd->iServerTime;
 
-			_packets.PredictPlayerState(pOldCmd, pNewCmd);
+			_packets.CreateNewCommands(pOldCmd, pNewCmd);
 		}
 	}
 	/*
@@ -76,6 +76,17 @@ namespace NeoGenesys
 				AngleVectors(_profiler.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
 				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Custom.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
 			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cHooks::CalcEntityLerpPositions(int localnum, sCEntity* entity)
+	{
+		if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
+		{
+			CharacterInfo[entity->NextEntityState.iEntityNum].vAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
+			entity->vAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
 		}
 	}
 	/*

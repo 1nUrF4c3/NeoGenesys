@@ -12,8 +12,9 @@ namespace NeoGenesys
 	{
 	public:
 
-		void ClientAntiAim(sUserCmd* usercmd);
-		void EntityAntiAim(Vector3 angles);
+		Vector3 vAntiAimAngles;
+
+		void AntiAim(sUserCmd* usercmd);
 	} extern _antiAim;
 }
 

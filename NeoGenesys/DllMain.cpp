@@ -25,13 +25,17 @@ void HOOKCALL hWritePacket(int localnum);
 typedef void(HOOKCALL* tWritePacket)(int localnum);
 tWritePacket oWritePacket = (tWritePacket)OFF_WRITEPACKET;
 
-void HOOKCALL hPredictPlayerState(int localnum);
-typedef void(HOOKCALL* tPredictPlayerState)(int localnum);
-tPredictPlayerState oPredictPlayerState = (tPredictPlayerState)OFF_PREDICTPLAYERSTATE;
+void HOOKCALL hCreateNewCommands(int localnum);
+typedef void(HOOKCALL* tCreateNewCommands)(int localnum);
+tCreateNewCommands oCreateNewCommands = (tCreateNewCommands)OFF_CREATENEWCOMMANDS;
 
 void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
 typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
 tBulletFirePenetrate oBulletFirePenetrate = (tBulletFirePenetrate)OFF_BULLETFIREPENETRATE;
+
+void HOOKCALL hCalcEntityLerpPositions(int localnum, sCEntity* entity);
+typedef void(HOOKCALL* tCalcEntityLerpPositions)(int localnum, sCEntity* entity);
+tCalcEntityLerpPositions oCalcEntityLerpPositions = (tCalcEntityLerpPositions)OFF_CALCENTITYLERPPOSITIONS;
 
 void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon);
 typedef void(HOOKCALL* tObituary)(int localnum, sEntityState* entitystate, int weapon);
@@ -74,11 +78,11 @@ void HOOKCALL hWritePacket(int localnum)
 
 //=====================================================================================
 
-void HOOKCALL hPredictPlayerState(int localnum)
+void HOOKCALL hCreateNewCommands(int localnum)
 {
-	_hooks.PredictPlayerState(localnum);
+	oCreateNewCommands(localnum);
 
-	return oPredictPlayerState(localnum);
+	_hooks.CreateNewCommands(localnum);
 }
 
 //=====================================================================================
@@ -88,6 +92,15 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 	_hooks.BulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
 
 	return oBulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
+}
+
+//=====================================================================================
+
+void HOOKCALL hCalcEntityLerpPositions(int localnum, sCEntity* entity)
+{
+	oCalcEntityLerpPositions(localnum, entity);
+
+	_hooks.CalcEntityLerpPositions(localnum, entity);
 }
 
 //=====================================================================================
@@ -127,8 +140,9 @@ void Initialize()
 	Hook(oPresent, hPresent);
 	Hook(oRefresh, hRefresh);
 	Hook(oWritePacket, hWritePacket);
-	Hook(oPredictPlayerState, hPredictPlayerState);
+	Hook(oCreateNewCommands, hCreateNewCommands);
 	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
+	Hook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	Hook(oObituary, hObituary);
 	Hook(oAddCmdDrawText, hAddCmdDrawText);
 	Hook(oClientFrame, hClientFrame);
@@ -143,8 +157,9 @@ void Deallocate()
 	UnHook(oPresent, hPresent);
 	UnHook(oRefresh, hRefresh);
 	UnHook(oWritePacket, hWritePacket);
-	UnHook(oPredictPlayerState, hPredictPlayerState);
+	UnHook(oCreateNewCommands, hCreateNewCommands);
 	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
+	UnHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	UnHook(oObituary, hObituary);
 	UnHook(oAddCmdDrawText, hAddCmdDrawText);
 	UnHook(oClientFrame, hClientFrame);

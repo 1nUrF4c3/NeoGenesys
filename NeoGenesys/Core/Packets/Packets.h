@@ -16,7 +16,7 @@ namespace NeoGenesys
 		Vector3 vTeaBagPos;
 
 		void WritePacket(sUserCmd* currentcmd);
-		void PredictPlayerState(sUserCmd* oldcmd, sUserCmd* newcmd);
+		void CreateNewCommands(sUserCmd* oldcmd, sUserCmd* newcmd);
 	} extern _packets;
 }
 

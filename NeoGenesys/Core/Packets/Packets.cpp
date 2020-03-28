@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cPackets::WritePacket(sUserCmd* currentcmd)
 	{
-		_antiAim.ClientAntiAim(currentcmd);
+		_antiAim.AntiAim(currentcmd);
 
 		if (_profiler.gBunnyHop->Custom.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
 		{
@@ -35,7 +35,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cPackets::PredictPlayerState(sUserCmd* oldcmd, sUserCmd* newcmd)
+	void cPackets::CreateNewCommands(sUserCmd* oldcmd, sUserCmd* newcmd)
 	{
 		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
 		{
