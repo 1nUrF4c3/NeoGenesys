@@ -83,12 +83,18 @@ namespace NeoGenesys
 	*/
 	void cHooks::CalcEntityLerpPositions(int localnum, sCEntity* entity)
 	{
-		if (LocalClientIsInGame() && _profiler.gAntiAim->Custom.bValue > cProfiler::ANTIAIM_OFF)
+		if (LocalClientIsInGame())
 		{
-			if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
+			if (_antiAim.IsAntiAiming())
 			{
-				CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
-				entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
+				if (_profiler.gAntiAim->Custom.iValue > cProfiler::ANTIAIM_OFF)
+				{
+					if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
+					{
+						CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
+						entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
+					}
+				}
 			}
 		}
 	}
