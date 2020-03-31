@@ -755,7 +755,7 @@ namespace NeoGenesys
 				}
 
 				ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-				ImGui::InputText("", Menu.szProfilePath, sizeof(Menu.szProfilePath), ImGuiInputTextFlags_ReadOnly);
+				ImGui::InputText("", Menu.szProfilePath, IM_ARRAYSIZE(Menu.szProfilePath), ImGuiInputTextFlags_ReadOnly);
 				ImGui::PopItemWidth();
 				ImGui::End();
 
