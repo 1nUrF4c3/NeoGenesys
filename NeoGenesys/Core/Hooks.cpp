@@ -85,15 +85,12 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (_antiAim.IsAntiAiming())
+			if (_profiler.gThirdPersonAntiAim->Custom.bValue && _antiAim.IsAntiAiming())
 			{
-				if (_profiler.gAntiAim->Custom.iValue > cProfiler::ANTIAIM_OFF)
+				if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
 				{
-					if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
-					{
-						CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
-						entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
-					}
+					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
+					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
 				}
 			}
 		}

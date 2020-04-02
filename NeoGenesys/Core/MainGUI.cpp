@@ -385,8 +385,8 @@ namespace NeoGenesys
 
 				ImGui::SetNextWindowSize(ImVec2(490.0f, 324.0f));
 				ImGui::Begin(acut::ToUpper(PROGRAM_NAME).c_str(), &Menu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
-				ImGui::SetColorEditOptions(ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
- 
+				ImGui::SetColorEditOptions(ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
+
 				if (ImGui::TabLabels(_profiler.gMenuTabs->MaxValue.iMax, acut::StringVectorToCharPointerArray(_profiler.gMenuTabs->szItems), _profiler.gMenuTabs->Custom.iValue, NULL, false, NULL, NULL, false, false, NULL, NULL, &ImVec2(94.0f, 25.0f)))
 				{
 					Menu.bWriteLog = true;
@@ -536,32 +536,42 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::Checkbox(_profiler.gPlayerCrossHair->szLabel.c_str(), &_profiler.gPlayerCrossHair->Custom.bValue))
+					if (ImGui::Checkbox(_profiler.gThirdPersonAntiAim->szLabel.c_str(), &_profiler.gThirdPersonAntiAim->Custom.bValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::SameLine(296.0f);
+
+					if (ImGui::Checkbox(_profiler.gPlayerCrossHair->szLabel.c_str(), &_profiler.gPlayerCrossHair->Custom.bValue))
+					{
+						Menu.bWriteLog = true;
+					} ImGui::NewLine();
 
 					if (ImGui::Checkbox(_profiler.gPlayerCompass->szLabel.c_str(), &_profiler.gPlayerCompass->Custom.bValue))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::NewLine();
+					} ImGui::SameLine(296.0f);
 
 					if (ImGui::Checkbox(_profiler.gPlayerRadar->szLabel.c_str(), &_profiler.gPlayerRadar->Custom.bValue))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(296.0f);
+					} ImGui::NewLine();
 
 					if (ImGui::Checkbox("Console", &Menu.bShowConsole))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::NewLine();
+					} ImGui::SameLine(296.0f);
 
 					if (ImGui::Checkbox("Player List", &Menu.PlayerList.bShowWindow))
 					{
 						Menu.bWriteLog = true;
-					} ImGui::SameLine(296.0f);
+					} ImGui::NewLine();
 
 					if (ImGui::Checkbox("Host Menu", &Menu.HostMenu.bShowWindow))
+					{
+						Menu.bWriteLog = true;
+					} ImGui::SameLine(296.0f);
+
+					if (ImGui::Checkbox("Memory Editor", &Menu.bShowMemoryEditor))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
@@ -650,36 +660,54 @@ namespace NeoGenesys
 
 				case cProfiler::MENU_TAB_STYLES:
 				{
-					if (ImGui::ColorEdit3(_profiler.gColorAxis->szLabel.c_str(), _profiler.gColorAxis->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorAxis->szLabel, _profiler.gColorAxis->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorAxis->szLabel.c_str(), _profiler.gColorAxis->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::ColorEdit3(_profiler.gColorAllies->szLabel.c_str(), _profiler.gColorAllies->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorAllies->szLabel, _profiler.gColorAllies->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorAllies->szLabel.c_str(), _profiler.gColorAllies->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::ColorEdit3(_profiler.gColorRiotShield->szLabel.c_str(), _profiler.gColorRiotShield->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorRiotShield->szLabel, _profiler.gColorRiotShield->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorRiotShield->szLabel.c_str(), _profiler.gColorRiotShield->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::ColorEdit3(_profiler.gColorCrossHair->szLabel.c_str(), _profiler.gColorCrossHair->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorCrossHair->szLabel, _profiler.gColorCrossHair->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorCrossHair->szLabel.c_str(), _profiler.gColorCrossHair->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::ColorEdit3(_profiler.gColorText->szLabel.c_str(), _profiler.gColorText->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorText->szLabel, _profiler.gColorText->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorText->szLabel.c_str(), _profiler.gColorText->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::ColorEdit3(_profiler.gColorShadow->szLabel.c_str(), _profiler.gColorShadow->Custom.cValue))
+					_drawing.ColorPicker(_profiler.gColorShadow->szLabel, _profiler.gColorShadow->Custom.cValue);
+					ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::ColorEdit4(_profiler.gColorShadow->szLabel.c_str(), _profiler.gColorShadow->Custom.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-					
+
 					if (ImGui::Combo(_profiler.gMenuColor->szLabel.c_str(), &_profiler.gMenuColor->Custom.iValue, acut::StringVectorToCharPointerArray(_profiler.gMenuColor->szItems), _profiler.gMenuColor->MaxValue.iMax))
 					{
 						WritePrivateProfileString("MenuStyle", "COLOR", std::to_string(_profiler.gMenuColor->Custom.iValue).c_str(), (acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_CFG, " ", "")).c_str());
@@ -759,230 +787,235 @@ namespace NeoGenesys
 				ImGui::PopItemWidth();
 				ImGui::End();
 
+				if (Menu.bShowMemoryEditor)
+				{
+					Menu.MemEdit.DrawWindow("MEMORY EDITOR", &Menu.bShowMemoryEditor, hIw6mp64_ship.lpBaseOfDll, hIw6mp64_ship.SizeOfImage, (size_t)hIw6mp64_ship.lpBaseOfDll);
+				}
+
 				if (Menu.bShowConsole)
 				{
 					_console.Init();
 					_console.Draw("CONSOLE", &Menu.bShowConsole);
 				}
-			}
 
-			if (Menu.bShowWindow && Menu.PlayerList.bShowWindow && LocalClientIsInGame())
-			{
-				if (Menu.PlayerList.bWriteLog)
+				if (Menu.PlayerList.bShowWindow && LocalClientIsInGame())
 				{
-					ImGui::LogToFile();
-					Menu.PlayerList.bWriteLog = false;
-				}
-
-				ImGui::SetNextWindowSize(ImVec2(400.0f, 480.0f));
-				ImGui::Begin("PLAYER LIST", &Menu.PlayerList.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
-				ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
-
-				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
-				{
-					if (CharacterInfo[i].iInfoValid)
+					if (Menu.PlayerList.bWriteLog)
 					{
-						GetPlayerAddr(&Menu.PlayerList.NetAddr[i], GetCurrentSession(), ClientInfo[i].iClientNum);
+						ImGui::LogToFile();
+						Menu.PlayerList.bWriteLog = false;
+					}
 
-						ImGui::PushID(i);
+					ImGui::SetNextWindowSize(ImVec2(400.0f, 480.0f));
+					ImGui::Begin("PLAYER LIST", &Menu.PlayerList.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+					ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
 
-						if (ImGui::RadioButton("", &_targetList.iRiotShieldTarget, i))
+					for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+					{
+						if (CharacterInfo[i].iInfoValid)
 						{
-							Menu.PlayerList.bWriteLog = true;
-						} ImGui::PopID(); ImGui::SameLine();
+							GetPlayerAddr(&Menu.PlayerList.NetAddr[i], GetCurrentSession(), ClientInfo[i].iClientNum);
 
-						ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue);
-						
-						if (ImGui::Checkbox("", (bool*)&_targetList.vIsTarget[i]))
-						{
-							Menu.PlayerList.bWriteLog = true;
-						} ImGui::PopID(); ImGui::SameLine();
+							ImGui::PushID(i);
 
-						if (*(int*)OFF_ISCURRENTHOST)
-						{
-							ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue * 2);
-
-							if (ImGui::Button("Crash", ImVec2(50.0f, 0.0f)))
+							if (ImGui::RadioButton("", &_targetList.iRiotShieldTarget, i))
 							{
-								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
 								Menu.PlayerList.bWriteLog = true;
 							} ImGui::PopID(); ImGui::SameLine();
+
+							ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue);
+
+							if (ImGui::Checkbox("", (bool*)&_targetList.vIsTarget[i]))
+							{
+								Menu.PlayerList.bWriteLog = true;
+							} ImGui::PopID(); ImGui::SameLine();
+
+							if (*(int*)OFF_ISCURRENTHOST)
+							{
+								ImGui::PushID(i + FindVariable("sv_maxclients")->Current.iValue * 2);
+
+								if (ImGui::Button("Crash", ImVec2(50.0f, 0.0f)))
+								{
+									Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
+									Menu.PlayerList.bWriteLog = true;
+								} ImGui::PopID(); ImGui::SameLine();
+							}
+
+							ImGui::PushItemWidth(150.0f);
+							ImGui::InputText(VariadicText("%i: %s", ClientInfo[i].iClientNum, ClientInfo[i].szName).c_str(),
+								(LPSTR)VariadicText("%u.%u.%u.%u",
+									(BYTE)Menu.PlayerList.NetAddr[i].szIP[0],
+									(BYTE)Menu.PlayerList.NetAddr[i].szIP[1],
+									(BYTE)Menu.PlayerList.NetAddr[i].szIP[2],
+									(BYTE)Menu.PlayerList.NetAddr[i].szIP[3]).c_str(),
+								1024, ImGuiInputTextFlags_ReadOnly);
+							ImGui::PopItemWidth();
 						}
-
-						ImGui::PushItemWidth(150.0f);
-						ImGui::InputText(VariadicText("%i: %s", ClientInfo[i].iClientNum, ClientInfo[i].szName).c_str(),
-							(LPSTR)VariadicText("%u.%u.%u.%u",
-								(BYTE)Menu.PlayerList.NetAddr[i].szIP[0],
-								(BYTE)Menu.PlayerList.NetAddr[i].szIP[1],
-								(BYTE)Menu.PlayerList.NetAddr[i].szIP[2],
-								(BYTE)Menu.PlayerList.NetAddr[i].szIP[3]).c_str(),
-							1024, ImGuiInputTextFlags_ReadOnly);
-						ImGui::PopItemWidth();
 					}
+
+					ImGui::EndChild();
+					ImGui::End();
 				}
 
-				ImGui::EndChild();
-				ImGui::End();
-			}
-
-			if (Menu.bShowWindow && Menu.HostMenu.bShowWindow && LocalClientIsInGame() && *(int*)OFF_ISCURRENTHOST && !*(bool*)OFF_ISALIENSMODE)
-			{
-				if (Menu.HostMenu.bWriteLog)
+				if (Menu.HostMenu.bShowWindow && LocalClientIsInGame() && *(int*)OFF_ISCURRENTHOST && !*(bool*)OFF_ISALIENSMODE)
 				{
-					ImGui::LogToFile();
-					Menu.HostMenu.bWriteLog = false;
+					if (Menu.HostMenu.bWriteLog)
+					{
+						ImGui::LogToFile();
+						Menu.HostMenu.bWriteLog = false;
+					}
+
+					ImGui::SetNextWindowSize(ImVec2(484.0f, 708.0f));
+					ImGui::Begin("HOST MENU", &Menu.HostMenu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+
+					for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+						if (CharacterInfo[i].iInfoValid)
+							Menu.HostMenu.vPlayers.push_back(std::make_pair(ClientInfo[i].iClientNum, ClientInfo[i].szName));
+
+					ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
+					if (ImGui::BeginCombo("", ClientInfo[Menu.HostMenu.iPlayer].szName))
+					{
+						Menu.HostMenu.GetPlayerSelection();
+						ImGui::EndCombo();
+
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::PopItemWidth();
+
+					ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
+					ImGui::Separator();
+					ImGui::NewLine();
+
+					if (ImGui::Checkbox("God Mode", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bGodMode))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(292.0f);
+
+					if (ImGui::Checkbox("No Clip", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bNoClip))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine();
+
+					if (ImGui::Checkbox("Infinite Ammo", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInfiniteAmmo))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(292.0f);
+
+					if (ImGui::Checkbox("Invisibility", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInvisibility))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine();
+
+					if (ImGui::Checkbox("Super Speed", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bSuperSpeed))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(292.0f);
+
+					if (ImGui::Checkbox("Freeze Position", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bFreezePosition))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+					if (ImGui::InputText("Name", PlayerState[Menu.HostMenu.iPlayer].ClientState.szName, 16))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					}
+
+					if (ImGui::Combo("Team", (int*)&PlayerState[Menu.HostMenu.iPlayer].ClientState.iTeam, Menu.HostMenu.szTeam.data(), TEAM_MAX))
+					{
+						TeamChanged(ClientInfo[Menu.HostMenu.iPlayer].iClientNum);
+						Menu.HostMenu.bWriteLog = true;
+					}
+
+					if (ImGui::InputInt("Health", &GEntity[Menu.HostMenu.iPlayer].iHealth))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+					for (auto& WeaponID : vWeaponIDs)
+					{
+						char szComplete[1024] = { NULL }, szDisplay[1024] = { NULL };
+
+						GetWeaponNameComplete(WeaponID, false, szComplete, 1024);
+						GetWeaponDisplayName(WeaponID, false, szDisplay, 1024);
+
+						Menu.HostMenu.vWeaponCompleteNames.push_back(_strdup(acut::StripColorCodes(szComplete).c_str()));
+						Menu.HostMenu.vWeaponDisplayNames.push_back(_strdup(acut::StripColorCodes(szDisplay).c_str()));
+					}
+
+					if (ImGui::Combo("Weapon", &Menu.HostMenu.iWeaponID, Menu.HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size()))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} Menu.HostMenu.vWeaponCompleteNames.clear(); Menu.HostMenu.vWeaponDisplayNames.clear();
+
+					if (ImGui::Button("Give Weapon", ImVec2(150.0f, 25.0f)))
+					{
+						TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
+						GivePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, false, true);
+						GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", vWeaponIDs[Menu.HostMenu.iWeaponID]));
+						AddAmmo(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, 255, true);
+
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::Button("Take Weapon", ImVec2(150.0f, 25.0f)))
+					{
+						TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
+						GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", 0));
+
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+					if (ImGui::Combo("Perk", &Menu.HostMenu.iPerkID, szPerkIDs.data(), (int)vPerkIDs.size()))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					}
+
+					if (ImGui::Button("Enable Perk", ImVec2(150.0f, 25.0f)))
+					{
+						EnablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
+
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::Button("Disable Perk", ImVec2(150.0f, 25.0f)))
+					{
+						DisablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
+
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+					if (ImGui::SliderFloat3("Position", PlayerState[Menu.HostMenu.iPlayer].vOrigin, -8192.0f, 8192.0f, "%.0f"))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					}
+
+					if (ImGui::Button("Teleport To", ImVec2(150.0f, 25.0f)))
+					{
+						VectorCopy(PlayerState[Menu.HostMenu.iPlayer].vOrigin, PlayerState[CG->PlayerState.iClientNum].vOrigin);
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::SameLine(0.0f, 4.0f);
+
+					if (ImGui::Button("Teleport From", ImVec2(150.0f, 25.0f)))
+					{
+						VectorCopy(PlayerState[CG->PlayerState.iClientNum].vOrigin, PlayerState[Menu.HostMenu.iPlayer].vOrigin);
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
+
+					if (ImGui::Button("Kick", ImVec2(304.0f, 25.0f)))
+					{
+						KickClient(ClientInfo[Menu.HostMenu.iPlayer].iClientNum, Menu.HostMenu.szKickReason);
+						Menu.HostMenu.bWriteLog = true;
+					}
+
+					if (ImGui::InputText("Reason", Menu.HostMenu.szKickReason, 64))
+					{
+						Menu.HostMenu.bWriteLog = true;
+					} ImGui::NewLine(); ImGui::Separator(); ImGui::EndChild();
+
+					Menu.HostMenu.vPlayers.clear();
+
+					ImGui::End();
 				}
-
-				ImGui::SetNextWindowSize(ImVec2(484.0f, 708.0f));
-				ImGui::Begin("HOST MENU", &Menu.HostMenu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
-
-				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
-					if (CharacterInfo[i].iInfoValid)
-						Menu.HostMenu.vPlayers.push_back(std::make_pair(ClientInfo[i].iClientNum, ClientInfo[i].szName));
-
-				ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-				if (ImGui::BeginCombo("", ClientInfo[Menu.HostMenu.iPlayer].szName))
-				{
-					Menu.HostMenu.GetPlayerSelection();
-					ImGui::EndCombo();
-
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::PopItemWidth();
-
-				ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
-				ImGui::Separator();
-				ImGui::NewLine();
-
-				if (ImGui::Checkbox("God Mode", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bGodMode))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(292.0f);
-				
-				if (ImGui::Checkbox("No Clip", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bNoClip))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine();
-				
-				if (ImGui::Checkbox("Infinite Ammo", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInfiniteAmmo))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(292.0f);
-
-				if (ImGui::Checkbox("Invisibility", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bInvisibility))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine();
-				
-				if (ImGui::Checkbox("Super Speed", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bSuperSpeed))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(292.0f);
-				
-				if (ImGui::Checkbox("Freeze Position", &Menu.HostMenu.PlayerMod[Menu.HostMenu.iPlayer].bFreezePosition))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-
-				if (ImGui::InputText("Name", PlayerState[Menu.HostMenu.iPlayer].ClientState.szName, 16))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				}
-
-				if (ImGui::Combo("Team", (int*)&PlayerState[Menu.HostMenu.iPlayer].ClientState.iTeam, Menu.HostMenu.szTeam.data(), TEAM_MAX))
-				{
-					TeamChanged(ClientInfo[Menu.HostMenu.iPlayer].iClientNum);
-					Menu.HostMenu.bWriteLog = true;
-				}
-
-				if (ImGui::InputInt("Health", &GEntity[Menu.HostMenu.iPlayer].iHealth))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-
-				for (auto& WeaponID : vWeaponIDs)
-				{
-					char szComplete[1024] = { NULL }, szDisplay[1024] = { NULL };
-
-					GetWeaponNameComplete(WeaponID, false, szComplete, 1024);
-					GetWeaponDisplayName(WeaponID, false, szDisplay, 1024);
-
-					Menu.HostMenu.vWeaponCompleteNames.push_back(_strdup(acut::StripColorCodes(szComplete).c_str()));
-					Menu.HostMenu.vWeaponDisplayNames.push_back(_strdup(acut::StripColorCodes(szDisplay).c_str()));
-				}
-
-				if (ImGui::Combo("Weapon", &Menu.HostMenu.iWeaponID, Menu.HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size()))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} Menu.HostMenu.vWeaponCompleteNames.clear(); Menu.HostMenu.vWeaponDisplayNames.clear();
-
-				if (ImGui::Button("Give Weapon", ImVec2(150.0f, 25.0f)))
-				{
-					TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
-					GivePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, false, true);
-					GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", vWeaponIDs[Menu.HostMenu.iWeaponID]));
-					AddAmmo(&PlayerState[Menu.HostMenu.iPlayer], vWeaponIDs[Menu.HostMenu.iWeaponID], false, 255, true);
-
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(0.0f, 4.0f);
-
-				if (ImGui::Button("Take Weapon", ImVec2(150.0f, 25.0f)))
-				{
-					TakePlayerWeapon(&PlayerState[Menu.HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[Menu.HostMenu.iPlayer]));
-					GameSendServerCommand(Menu.HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", 0));
-
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-
-				if (ImGui::Combo("Perk", &Menu.HostMenu.iPerkID, szPerkIDs.data(), (int)vPerkIDs.size()))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				}
-
-				if (ImGui::Button("Enable Perk", ImVec2(150.0f, 25.0f)))
-				{
-					EnablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
-
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(0.0f, 4.0f);
-
-				if (ImGui::Button("Disable Perk", ImVec2(150.0f, 25.0f)))
-				{
-					DisablePerk(Menu.HostMenu.iPlayer, vPerkIDs[Menu.HostMenu.iPerkID]);
-
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-
-				if (ImGui::SliderFloat3("Position", PlayerState[Menu.HostMenu.iPlayer].vOrigin, -8192.0f, 8192.0f, "%.0f"))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				}
-
-				if (ImGui::Button("Teleport To", ImVec2(150.0f, 25.0f)))
-				{
-					VectorCopy(PlayerState[Menu.HostMenu.iPlayer].vOrigin, PlayerState[CG->PlayerState.iClientNum].vOrigin);
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::SameLine(0.0f, 4.0f);
-
-				if (ImGui::Button("Teleport From", ImVec2(150.0f, 25.0f)))
-				{
-					VectorCopy(PlayerState[CG->PlayerState.iClientNum].vOrigin, PlayerState[Menu.HostMenu.iPlayer].vOrigin);
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
-
-				if (ImGui::Button("Kick", ImVec2(304.0f, 25.0f)))
-				{
-					KickClient(ClientInfo[Menu.HostMenu.iPlayer].iClientNum, Menu.HostMenu.szKickReason);
-					Menu.HostMenu.bWriteLog = true;
-				}
-
-				if (ImGui::InputText("Reason", Menu.HostMenu.szKickReason, 64))
-				{
-					Menu.HostMenu.bWriteLog = true;
-				} ImGui::NewLine(); ImGui::Separator(); ImGui::EndChild();
-
-				Menu.HostMenu.vPlayers.clear();
-
-				ImGui::End();
 			}
 
 			ImGui::Render();

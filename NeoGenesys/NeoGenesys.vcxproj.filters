@@ -250,5 +250,8 @@
     <ClInclude Include="Core\Engine\Helpers.hpp">
       <Filter>Core\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_memory_editor.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

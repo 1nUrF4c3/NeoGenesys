@@ -55,8 +55,6 @@ namespace NeoGenesys
 			vCommands.push_back("neo_killspam");
 			vCommands.push_back("neo_spawnbot");
 			vCommands.push_back("neo_infinite");
-			vCommands.push_back("neo_memread");
-			vCommands.push_back("neo_memwrite");
 
 			AddLog("Ready.");
 
@@ -148,8 +146,6 @@ namespace NeoGenesys
 			AddLog("21. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
 			AddLog("22. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
 			AddLog("23. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
-			AddLog("24. neo_memread <address> <byte|word|dword|qword>\n\t\tRead value of the specified type from memory.");
-			AddLog("25. neo_memwrite <address> <byte|word|dword|qword> <value>\n\t\tWrite value of the specified type to memory.");
 
 			bWriteLog = true;
 		} ImGui::SameLine();
@@ -1480,122 +1476,6 @@ namespace NeoGenesys
 
 			AddLog("Score/time limit has been set to unlimited.");
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-		}
-
-		else if (!Stricmp(CmdLine.szCmdName, "neo_memread"))
-		{
-			if (CmdLine.iArgNum > 1)
-			{
-				if (_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) >= (QWORD)hIw6mp64_ship.lpBaseOfDll && _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) <= ((QWORD)hIw6mp64_ship.lpBaseOfDll + hIw6mp64_ship.SizeOfImage))
-				{
-					if (!Stricmp(CmdLine.szCmdArgs[1], "byte"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-						AddLog("%s at 0x%llX is 0x%hhX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(BYTE*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "word"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-						AddLog("%s at 0x%llX is 0x%hX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(WORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "dword"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-						AddLog("%s at 0x%llX is 0x%lX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(DWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "qword"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-						AddLog("%s at 0x%llX is 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), *(QWORD*)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else
-					{
-						AddLog("[ERROR] Invalid argument(s).");
-					}
-				}
-
-				else
-				{
-					AddLog("[ERROR] Invalid argument(s).");
-				}
-			}
-
-			else
-			{
-				AddLog("[ERROR] Missing argument(s).");
-			}
-		}
-
-		else if (!Stricmp(CmdLine.szCmdName, "neo_memwrite"))
-		{
-			if (CmdLine.iArgNum > 2)
-			{
-				if (_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) >= (QWORD)hIw6mp64_ship.lpBaseOfDll && _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10) <= ((QWORD)hIw6mp64_ship.lpBaseOfDll + hIw6mp64_ship.SizeOfImage))
-				{
-					if (!Stricmp(CmdLine.szCmdArgs[1], "byte"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-
-						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
-
-						AddLog("%s 0x%hhX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (BYTE)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "word"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-
-						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
-
-						AddLog("%s 0x%hX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (WORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "dword"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-
-						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
-
-						AddLog("%s 0x%lX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (DWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else if (!Stricmp(CmdLine.szCmdArgs[1], "qword"))
-					{
-						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
-
-						WriteMemoryProtected((LPVOID)_strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10), (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10));
-
-						AddLog("%s 0x%llX has been written to 0x%llX.", acut::ToUpper(CmdLine.szCmdArgs[1]).c_str(), (QWORD)_strtoui64(CmdLine.szCmdArgs[2], NULL, 0x10), _strtoui64(CmdLine.szCmdArgs[0], NULL, 0x10));
-						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-					}
-
-					else
-					{
-						AddLog("[ERROR] Invalid argument(s).");
-					}
-				}
-
-				else
-				{
-					AddLog("[ERROR] Invalid argument(s).");
-				}
-			}
-
-			else
-			{
-				AddLog("[ERROR] Missing argument(s).");
-			}
 		}
 
 		else

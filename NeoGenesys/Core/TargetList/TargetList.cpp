@@ -133,8 +133,8 @@ namespace NeoGenesys
 
 			if (EntityList[i].bAimFeet)
 			{
-				bool bIsLeftAnkleVisible = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get(),
-					bIsRightAnkleVisible = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				bool bIsLeftAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get(),
+					bIsRightAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
 
 				if (bIsLeftAnkleVisible && bIsRightAnkleVisible)
 				{
@@ -186,13 +186,13 @@ namespace NeoGenesys
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
 				EntityList[i].iBoneIndex = BONE_HEAD;
-				EntityList[i].bIsVisible = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
 				VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 			}
 
 			else
 			{
-				EntityList[i].bIsVisible = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Custom.bValue, nullptr).get();
 				VectorCopy(CEntity[i].vOrigin, EntityList[i].vHitLocation);
 			}
 
@@ -350,7 +350,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisibleInternal(sCEntity* entity, Vector3 position, short hitloc,  bool autowall, float* damage)
+	bool cTargetList::IsVisibleInternal(sCEntity* entity, Vector3 position, short hitloc, bool autowall, float* damage)
 	{
 		Vector3 vViewOrigin;
 
@@ -359,9 +359,12 @@ namespace NeoGenesys
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
 		{
-			bool bTraceHit = _autoWall.TraceLine(RefDef->vViewOrg, position, entity->NextEntityState.iEntityNum);
+			float flDamage = _autoWall.C_TraceBullet(RefDef->vViewOrg, position, hitloc, entity->NextEntityState.iEntityNum);
 
-			if (bTraceHit)
+			if (damage)
+				*damage = flDamage;
+
+			if (flDamage >= 1.0f)
 				return true;
 		}
 
@@ -378,9 +381,12 @@ namespace NeoGenesys
 
 		else
 		{
-			bool bTraceHit = _autoWall.C_TraceBullet(vViewOrigin, position, entity->NextEntityState.iEntityNum);
+			float flDamage = _autoWall.C_TraceBullet(vViewOrigin, position, hitloc, entity->NextEntityState.iEntityNum);
 
-			if (bTraceHit)
+			if (damage)
+				*damage = flDamage;
+
+			if (flDamage >= 1.0f)
 				return true;
 		}
 
@@ -401,44 +407,24 @@ namespace NeoGenesys
 		{
 			for (auto& Bone : vBones)
 			{
-				if (autowall)
-					vIsVisible[Bone.first] = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first], vBones[Bone.first].second, true, &DamageInfo.flDamage);
-
-				else
-					vIsVisible[Bone.first] = std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first], vBones[Bone.first].second, false, nullptr);
+				vIsVisible[Bone.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first], vBones[Bone.first].second, autowall, &DamageInfo.flDamage);
 			}
 
 			for (auto& Bone : vBones)
 			{
-				if (autowall)
+				if (vIsVisible[Bone.first].get())
 				{
-					if (vIsVisible[Bone.first].get())
-					{
-						DamageInfo.iBoneIndex = Bone.first;
-						vDamageInfo.push_back(DamageInfo);
+					DamageInfo.iBoneIndex = Bone.first;
+					vDamageInfo.push_back(DamageInfo);
 
-						bReturn = true;
-					}
-				}
-
-				else
-				{
-					if (vIsVisible[Bone.first].get())
-					{
-						*index = Bone.first;
-						return true;
-					}
+					bReturn = true;
 				}
 			}
 		}
 
 		else
 		{
-			if (autowall)
-				return std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, entity, bones3d[*index], vBones[*index].second, true, &DamageInfo.flDamage).get();
-
-			else
-				return std::async(std::launch::async, &cTargetList::IsVisibleInternal, this, entity, bones3d[*index], vBones[*index].second, false, nullptr).get();
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[*index], vBones[*index].second, autowall, &DamageInfo.flDamage).get();
 		}
 
 		if (!vDamageInfo.empty())

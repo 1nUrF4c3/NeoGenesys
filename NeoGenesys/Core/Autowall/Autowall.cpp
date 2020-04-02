@@ -119,7 +119,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cAutowall::C_TraceBullet(Vector3 start, Vector3 end, int entitynum)
+	float cAutowall::C_TraceBullet(Vector3 start, Vector3 end, short hitloc, int entitynum)
 	{
 		sBulletFireParams FP_Enter;
 		sBulletTraceResults TR_Enter;
@@ -141,7 +141,10 @@ namespace NeoGenesys
 
 		C_BulletTrace(&FP_Enter, &CEntity[CG->PlayerState.iClientNum], &TR_Enter, TRACE_HITTYPE_NONE);
 
-		return (TR_Enter.Trace.wHitID == entitynum || TR_Enter.Trace.flFraction == 1.0f);
+		if (TR_Enter.Trace.wHitID == entitynum || TR_Enter.Trace.flFraction == 1.0f)
+			return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
+
+		return 0.0f;
 	}
 	/*
 	//=====================================================================================
@@ -266,7 +269,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cAutowall::G_TraceBullet(Vector3 start, Vector3 end, int entitynum)
+	float cAutowall::G_TraceBullet(Vector3 start, Vector3 end, int entitynum)
 	{
 		sBulletFireParams FP_Enter;
 		sBulletTraceResults TR_Enter;
@@ -288,7 +291,10 @@ namespace NeoGenesys
 
 		G_BulletTrace(&FP_Enter, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode, &GEntity[CG->PlayerState.iClientNum], &TR_Enter, TRACE_HITTYPE_NONE);
 
-		return ((TR_Enter.Trace.wHitID == entitynum || TR_Enter.Trace.flFraction == 1.0f) && TR_Enter.Trace.wPartGroup != 19);
+		if ((TR_Enter.Trace.wHitID == entitynum || TR_Enter.Trace.flFraction == 1.0f) && TR_Enter.Trace.wPartGroup != 19)
+			return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
+
+		return 0.0f;
 	}
 	/*
 	//=====================================================================================

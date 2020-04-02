@@ -226,6 +226,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gItems = std::make_shared<sCvar>("Items", std::vector<std::string>(), false);
 
 		std::shared_ptr<sCvar> gNameStealer = std::make_shared<sCvar>("Name Stealer", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gThirdPersonAntiAim = std::make_shared<sCvar>("Third Person Anti-Aim", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerCompass = std::make_shared<sCvar>("Compass", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerRadar = std::make_shared<sCvar>("Radar", std::vector<std::string>(), false);

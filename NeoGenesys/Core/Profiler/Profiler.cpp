@@ -66,26 +66,32 @@ namespace NeoGenesys
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Alpha", gColorAxis->Custom.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Alpha", gColorAllies->Custom.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Alpha", gColorRiotShield->Custom.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Alpha", gColorCrossHair->Custom.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Red", gColorText->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Green", gColorText->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Blue", gColorText->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Alpha", gColorText->Custom.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Alpha", gColorShadow->Custom.cValue[3]);
 
 			XML.write_document(szFilePath);
 
@@ -164,26 +170,32 @@ namespace NeoGenesys
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Red", gColorAxis->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Green", gColorAxis->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Blue", gColorAxis->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Axis.Alpha", gColorAxis->Custom.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Red", gColorAllies->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Green", gColorAllies->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Alpha", gColorAllies->Custom.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Alpha", gColorRiotShield->Custom.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Blue", gColorCrossHair->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Alpha", gColorCrossHair->Custom.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Red", gColorText->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Green", gColorText->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Blue", gColorText->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Text.Alpha", gColorText->Custom.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Red", gColorShadow->Custom.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Green", gColorShadow->Custom.cValue[1]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Blue", gColorShadow->Custom.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Shadow.Alpha", gColorShadow->Custom.cValue[3]);
 
 			return true;
 		}
@@ -223,6 +235,7 @@ namespace NeoGenesys
 		gItems->Custom.bValue = gItems->Default.bValue;
 
 		gNameStealer->Custom.bValue = gNameStealer->Default.bValue;
+		gThirdPersonAntiAim->Custom.bValue = gThirdPersonAntiAim->Default.bValue;
 		gPlayerCrossHair->Custom.bValue = gPlayerCrossHair->Default.bValue;
 		gPlayerCompass->Custom.bValue = gPlayerCompass->Default.bValue;
 		gPlayerRadar->Custom.bValue = gPlayerRadar->Default.bValue;

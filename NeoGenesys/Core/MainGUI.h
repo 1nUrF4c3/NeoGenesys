@@ -35,7 +35,7 @@ namespace NeoGenesys
 		struct sMenu
 		{
 			char szProfilePath[1024] = { NULL };
-			bool bShowWindow = true, bShowConsole = false, bStyleChanged = false, bWriteLog = false;
+			bool bShowWindow = true, bShowConsole = false, bShowMemoryEditor = false, bStyleChanged = false, bWriteLog = false;
 
 			std::string szIniFileName, szLogFileName;
 
@@ -85,6 +85,7 @@ namespace NeoGenesys
 			} HostMenu;
 
 			ImGuiFs::Dialog SaveDialog, LoadDialog;
+			MemoryEditor MemEdit;
 		} Menu;
 
 		struct sVirtualKeys
