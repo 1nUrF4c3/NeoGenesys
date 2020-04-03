@@ -15,7 +15,7 @@ using namespace NeoGenesys;
 
 HRESULT WINAPI hPresent(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags);
 typedef HRESULT(WINAPI* tPresent)(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags);
-tPresent oPresent = *(tPresent*)dwPresent;
+tPresent oPresent;
 
 void HOOKCALL hRefresh(int localnum);
 typedef void(HOOKCALL* tRefresh)(int localnum);
@@ -136,8 +136,9 @@ void Initialize()
 {
 	SetUnhandledExceptionFilter(NULL);
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
+	
+	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
-	Hook(oPresent, hPresent);
 	Hook(oRefresh, hRefresh);
 	Hook(oWritePacket, hWritePacket);
 	Hook(oCreateNewCommands, hCreateNewCommands);
@@ -154,7 +155,8 @@ void Deallocate()
 {
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
 
-	UnHook(oPresent, hPresent);
+	SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)oPresent, bGameOverlayRenderer64 ? 0 : 8);
+
 	UnHook(oRefresh, hRefresh);
 	UnHook(oWritePacket, hWritePacket);
 	UnHook(oCreateNewCommands, hCreateNewCommands);
@@ -178,6 +180,8 @@ void Deallocate()
 
 BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID lpvReserved)
 {
+	DisableThreadLibraryCalls(hinstDLL);
+
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:

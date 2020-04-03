@@ -68,7 +68,7 @@ namespace NeoGenesys
 				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
 
 				Vector3 vAngles, vForward, vRight, vUp;
-				VectorCopy(_aimBot.AimState.vAimbotAngles, vAngles);
+				VectorCopy(_aimBot.AimState.vAimAngles, vAngles);
 
 				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
 				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
@@ -85,12 +85,12 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (_profiler.gThirdPersonAntiAim->Custom.bValue && _antiAim.IsAntiAiming())
+			if (_profiler.gThirdPersonAntiAim->Custom.bValue && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
 				{
-					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->vRefDefViewAngles[0];
-					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->vRefDefViewAngles[1];
+					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->PlayerState.vDeltaAngles[0];
+					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->PlayerState.vDeltaAngles[1];
 				}
 			}
 		}

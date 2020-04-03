@@ -163,19 +163,37 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::CalculateAngles(Vector3 start, Vector3 end, Vector3 angles)
+	void cMathematics::CalculateAimAngles(Vector3 start, Vector3 end, Vector3 angles)
 	{
 		Vector3 vDirection;
 
-		VectorSubtract(end, start, vDirection);
+		VectorSubtract(start, end, vDirection);
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, angles);
-		
+
 		NormalizeAngles(angles);
 
 		angles[0] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
 		angles[1] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
+
+		NormalizeAngles(angles);
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMathematics::CalculateAntiAimAngles(Vector3 start, Vector3 end, Vector3 angles)
+	{
+		Vector3 vDirection;
+		VectorSubtract(start, end, vDirection);
+
+		VectorNormalize(vDirection);
+		VectorAngles(vDirection, angles);
+
+		NormalizeAngles(angles);
+
+		angles[0] -= CG->PlayerState.vDeltaAngles[0];
+		angles[1] -= CG->PlayerState.vDeltaAngles[1];
 
 		NormalizeAngles(angles);
 	}

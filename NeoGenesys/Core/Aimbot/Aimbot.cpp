@@ -12,21 +12,21 @@ namespace NeoGenesys
 	{
 		if ((!_profiler.gSilentAim->Custom.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState))) && AimState.bTargetAcquired)
 		{
-			AimState.vAimbotAngles[0] *= _profiler.gAimPower->Custom.iValue / 100.0f;
-			AimState.vAimbotAngles[1] *= _profiler.gAimPower->Custom.iValue / 100.0f;
+			AimState.vAimAngles[0] *= _profiler.gAimPower->Custom.iValue / 100.0f;
+			AimState.vAimAngles[1] *= _profiler.gAimPower->Custom.iValue / 100.0f;
 
 			if (_profiler.gAutoAimTime->Custom.iValue)
 			{
-				AimState.vAimbotAngles[0] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
-				AimState.vAimbotAngles[1] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
+				AimState.vAimAngles[0] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
+				AimState.vAimAngles[1] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
 			}
 
 			if (AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Custom.iValue)
 			{
 				if (AimState.bLockonTarget)
 				{
-					ViewMatrix->vViewAngles[0] += AimState.vAimbotAngles[0];
-					ViewMatrix->vViewAngles[1] += AimState.vAimbotAngles[1];
+					ViewMatrix->vViewAngles[0] += AimState.vAimAngles[0];
+					ViewMatrix->vViewAngles[1] += AimState.vAimAngles[1];
 				}
 			}
 
@@ -44,10 +44,10 @@ namespace NeoGenesys
 		{
 			if (AimState.bLockonTarget)
 			{
-				usercmd->iViewAngles[0] += AngleToShort(AimState.vAimbotAngles[0]);
-				usercmd->iViewAngles[1] += AngleToShort(AimState.vAimbotAngles[1]);
+				usercmd->iViewAngles[0] += AngleToShort(AimState.vAimAngles[0]);
+				usercmd->iViewAngles[1] += AngleToShort(AimState.vAimAngles[1]);
 
-				_mathematics.MovementFix(usercmd, AimState.vAimbotAngles[1]);
+				_mathematics.MovementFix(usercmd, AimState.vAimAngles[1]);
 			}
 
 			if (AimState.iCurrentZoomDelay == _profiler.gAutoZoomDelay->Custom.iValue)

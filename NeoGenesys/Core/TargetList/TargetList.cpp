@@ -290,11 +290,12 @@ namespace NeoGenesys
 		if (_aimBot.AimState.bTargetAcquired)
 		{
 			Vector3 vViewOrigin;
-
 			GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
 
-			VectorCopy(EntityList[_aimBot.AimState.iTargetNum].vHitLocation, _aimBot.AimState.vAimbotPosition);
-			_mathematics.CalculateAngles(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, _aimBot.AimState.vAimbotPosition, _aimBot.AimState.vAimbotAngles);
+			VectorCopy(EntityList[_aimBot.AimState.iTargetNum].vHitLocation, _aimBot.AimState.vAimPosition);
+
+			_mathematics.CalculateAimAngles(_aimBot.AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, _aimBot.AimState.vAimAngles);
+			_mathematics.CalculateAntiAimAngles(_aimBot.AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, _aimBot.AimState.vAntiAimAngles);
 		}
 
 		iCounter++;
@@ -359,12 +360,9 @@ namespace NeoGenesys
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
 		{
-			float flDamage = _autoWall.C_TraceBullet(RefDef->vViewOrg, position, hitloc, entity->NextEntityState.iEntityNum);
+			bool bTraceHit = _autoWall.TraceLine(RefDef->vViewOrg, position, entity->NextEntityState.iEntityNum);
 
-			if (damage)
-				*damage = flDamage;
-
-			if (flDamage >= 1.0f)
+			if (bTraceHit)
 				return true;
 		}
 
