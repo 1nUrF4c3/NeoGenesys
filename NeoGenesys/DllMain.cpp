@@ -134,9 +134,7 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 
 void Initialize()
 {
-	SetUnhandledExceptionFilter(NULL);
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
-	
 	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
 	Hook(oRefresh, hRefresh);
@@ -154,7 +152,6 @@ void Initialize()
 void Deallocate()
 {
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
-
 	SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)oPresent, bGameOverlayRenderer64 ? 0 : 8);
 
 	UnHook(oRefresh, hRefresh);
