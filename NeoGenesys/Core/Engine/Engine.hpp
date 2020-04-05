@@ -675,7 +675,28 @@ namespace NeoGenesys
 			LPSTR szValue;
 		} Current, Latched, Reset;
 
-		char _0x40[0x20];
+		union uDvarLimits
+		{
+			struct
+			{
+				DWORD dwMin;
+				DWORD dwMax;
+			};
+
+			struct
+			{
+				QWORD qwMin;
+				QWORD qwMax;
+			};
+
+			struct
+			{
+				FLOAT flMin;
+				FLOAT flMax;
+			};
+		} Domain;
+
+		char _0x50[0x10];
 	} sDvar;
 	/*
 	//=====================================================================================

@@ -10,18 +10,18 @@ namespace NeoGenesys
 
 	void cAimbot::StandardAim()
 	{
-		if ((!_profiler.gSilentAim->Custom.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState))) && AimState.bTargetAcquired)
+		if ((!_profiler.gSilentAim->Current.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState))) && AimState.bTargetAcquired)
 		{
-			AimState.vAimAngles[0] *= _profiler.gAimPower->Custom.iValue / 100.0f;
-			AimState.vAimAngles[1] *= _profiler.gAimPower->Custom.iValue / 100.0f;
+			AimState.vAimAngles[0] *= _profiler.gAimPower->Current.iValue / 100.0f;
+			AimState.vAimAngles[1] *= _profiler.gAimPower->Current.iValue / 100.0f;
 
-			if (_profiler.gAutoAimTime->Custom.iValue)
+			if (_profiler.gAutoAimTime->Current.iValue)
 			{
-				AimState.vAimAngles[0] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
-				AimState.vAimAngles[1] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Custom.iValue;
+				AimState.vAimAngles[0] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Current.iValue;
+				AimState.vAimAngles[1] *= (float)AimState.iCurrentAimTime / (float)_profiler.gAutoAimTime->Current.iValue;
 			}
 
-			if (AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Custom.iValue)
+			if (AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Current.iValue)
 			{
 				if (AimState.bLockonTarget)
 				{
@@ -30,8 +30,8 @@ namespace NeoGenesys
 				}
 			}
 
-			if (AimState.iCurrentZoomDelay == _profiler.gAutoZoomDelay->Custom.iValue)
-				if (_profiler.gAutoZoom->Custom.bValue && _profiler.gAimBotMode->Custom.iValue == cProfiler::AIMBOT_MODE_AUTO)
+			if (AimState.iCurrentZoomDelay == _profiler.gAutoZoomDelay->Current.iValue)
+				if (_profiler.gAutoZoom->Current.bValue && _profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO)
 					SetZoomState(true);
 		}
 	}
@@ -40,7 +40,7 @@ namespace NeoGenesys
 	*/
 	void cAimbot::SilentAim(sUserCmd* usercmd)
 	{
-		if (_profiler.gSilentAim->Custom.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) && AimState.bTargetAcquired)
+		if (_profiler.gSilentAim->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) && AimState.bTargetAcquired)
 		{
 			if (AimState.bLockonTarget)
 			{
@@ -50,8 +50,8 @@ namespace NeoGenesys
 				_mathematics.MovementFix(usercmd, AimState.vAimAngles[1]);
 			}
 
-			if (AimState.iCurrentZoomDelay == _profiler.gAutoZoomDelay->Custom.iValue)
-				if (_profiler.gAutoZoom->Custom.bValue && _profiler.gAimBotMode->Custom.iValue == cProfiler::AIMBOT_MODE_AUTO)
+			if (AimState.iCurrentZoomDelay == _profiler.gAutoZoomDelay->Current.iValue)
+				if (_profiler.gAutoZoom->Current.bValue && _profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO)
 					SetZoomState(true);
 		}
 	}
@@ -60,9 +60,9 @@ namespace NeoGenesys
 	*/
 	void cAimbot::AutoFire(sUserCmd* usercmd)
 	{
-		if (_profiler.gAutoFire->Custom.bValue && AimState.bTargetAcquired)
+		if (_profiler.gAutoFire->Current.bValue && AimState.bTargetAcquired)
 		{
-			if (AimState.iCurrentFireDelay == _profiler.gAutoFireDelay->Custom.iValue)
+			if (AimState.iCurrentFireDelay == _profiler.gAutoFireDelay->Current.iValue)
 			{
 				if (_aimBot.AimState.bLockonTarget)
 				{

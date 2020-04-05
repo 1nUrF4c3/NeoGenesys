@@ -73,8 +73,8 @@ namespace NeoGenesys
 				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
 				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
 
-				AngleVectors(_profiler.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Custom.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
+				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
+				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Current.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
 			}
 		}
 	}
@@ -85,7 +85,7 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (_profiler.gThirdPersonAntiAim->Custom.bValue && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
+			if (_profiler.gThirdPersonAntiAim->Current.bValue && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
 				{
@@ -104,12 +104,12 @@ namespace NeoGenesys
 		{
 			if (entitystate->iAttackerEntityNum == CG->PlayerState.iClientNum)
 			{
-				if (_profiler.gTeaBag->Custom.bValue && *(int*)OFF_ISCURRENTHOST)
+				if (_profiler.gTeaBag->Current.bValue && *(int*)OFF_ISCURRENTHOST)
 				{
 					_packets.iTeaBagTime = clock();
 					VectorCopy(PlayerState[entitystate->iOtherEntityNum].vOrigin, _packets.vTeaBagPos);
 
-					std::string szTeaBag = _profiler.gTeaBagMessage->Custom.szValue;
+					std::string szTeaBag = _profiler.gTeaBagMessage->Current.szValue;
 
 					if (!szTeaBag.empty())
 					{
@@ -120,9 +120,9 @@ namespace NeoGenesys
 					}
 				}
 
-				if (_profiler.gKillSpam->Custom.bValue)
+				if (_profiler.gKillSpam->Current.bValue)
 				{
-					std::string szKillSpam = _profiler.gKillSpamMessage->Custom.szValue;
+					std::string szKillSpam = _profiler.gKillSpamMessage->Current.szValue;
 
 					if (!szKillSpam.empty())
 					{
@@ -149,7 +149,7 @@ namespace NeoGenesys
 					}
 				}
 
-				if (_profiler.gNameStealer->Custom.bValue)
+				if (_profiler.gNameStealer->Current.bValue)
 				{
 					strncpy_s((LPSTR)(*(DWORD_PTR*)OFF_STEAMAPI + OFF_STEAMNAME), 
 						strlen(ClientInfo[entitystate->iOtherEntityNum].szName) + 1, 

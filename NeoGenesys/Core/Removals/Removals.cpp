@@ -10,25 +10,25 @@ namespace NeoGenesys
 
 	void cRemovals::RecoilCompensation()
 	{
-		Punch->vPunchAngles[0] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vPunchAngles[1] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vPunchAngles[2] *= _profiler.gRecoilFactor->Custom.flValue;
+		Punch->vPunchAngles[0] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vPunchAngles[1] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vPunchAngles[2] *= _profiler.gRecoilFactor->Current.flValue;
 
-		ViewMatrix->vRecoilAngles[0] *= _profiler.gRecoilFactor->Custom.flValue;
-		ViewMatrix->vRecoilAngles[1] *= _profiler.gRecoilFactor->Custom.flValue;
-		ViewMatrix->vRecoilAngles[2] *= _profiler.gRecoilFactor->Custom.flValue;
+		ViewMatrix->vRecoilAngles[0] *= _profiler.gRecoilFactor->Current.flValue;
+		ViewMatrix->vRecoilAngles[1] *= _profiler.gRecoilFactor->Current.flValue;
+		ViewMatrix->vRecoilAngles[2] *= _profiler.gRecoilFactor->Current.flValue;
 
-		Punch->vWeaponPunchAngles[0][0] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[0][1] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[0][2] *= _profiler.gRecoilFactor->Custom.flValue;
+		Punch->vWeaponPunchAngles[0][0] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[0][1] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[0][2] *= _profiler.gRecoilFactor->Current.flValue;
 
-		Punch->vWeaponPunchAngles[1][0] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[1][1] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[1][2] *= _profiler.gRecoilFactor->Custom.flValue;
+		Punch->vWeaponPunchAngles[1][0] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[1][1] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[1][2] *= _profiler.gRecoilFactor->Current.flValue;
 
-		Punch->vWeaponPunchAngles[2][0] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[2][1] *= _profiler.gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[2][2] *= _profiler.gRecoilFactor->Custom.flValue;
+		Punch->vWeaponPunchAngles[2][0] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[2][1] *= _profiler.gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[2][2] *= _profiler.gRecoilFactor->Current.flValue;
 	}
 	/*
 	//=====================================================================================
@@ -41,8 +41,8 @@ namespace NeoGenesys
 
 		GetSpreadAngles(akimbo, usercmd->iServerTime, GetWeaponSpread(), vAngles);
 
-		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
-		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - _profiler.gSpreadFactor->Current.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - _profiler.gSpreadFactor->Current.flValue));
 	}
 	/*
 	//=====================================================================================
@@ -59,8 +59,8 @@ namespace NeoGenesys
 		flSpreadX *= flSpread;
 		flSpreadY *= flSpread;
 
-		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
-		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * (1.0f - _profiler.gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * (1.0f - _profiler.gSpreadFactor->Current.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * (1.0f - _profiler.gSpreadFactor->Current.flValue));
 	}
 	/*
 	//=====================================================================================

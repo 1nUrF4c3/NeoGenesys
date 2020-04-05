@@ -78,13 +78,13 @@ namespace NeoGenesys
 
 		static bool bSuperJump = false;
 
-		if (_profiler.gSuperJump->Custom.bValue && !bSuperJump)
+		if (_profiler.gSuperJump->Current.bValue && !bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 			bSuperJump = true;
 		}
 
-		else if (!_profiler.gSuperJump->Custom.bValue && bSuperJump)
+		else if (!_profiler.gSuperJump->Current.bValue && bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 			bSuperJump = false;
@@ -145,9 +145,9 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[iTargetNum].iInfoValid && CharacterInfo[iTargetNum].iNextValid)
 			{
-				if ((_profiler.gMassKill->Custom.iValue == cProfiler::MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
-					(_profiler.gMassKill->Custom.iValue == cProfiler::MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
-					_profiler.gMassKill->Custom.iValue == cProfiler::MASSKILL_ALL)
+				if ((_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
+					(_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
+					_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_ALL)
 				{
 					PlayerKill(&GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? NULL : &GEntity[iTargetNum],

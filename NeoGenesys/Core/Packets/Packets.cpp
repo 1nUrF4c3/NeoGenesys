@@ -12,7 +12,7 @@ namespace NeoGenesys
 	{
 		_antiAim.AntiAim(currentcmd);
 
-		if (_profiler.gBunnyHop->Custom.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
+		if (_profiler.gBunnyHop->Current.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
 		{
 			if (currentcmd->iButtons & BUTTON_JUMP)
 				currentcmd->iButtons &= ~BUTTON_JUMP;
@@ -48,7 +48,7 @@ namespace NeoGenesys
 				_aimBot.AutoFire(newcmd);
 		}
 
-		if (_profiler.gSilentAim->Custom.bValue)
+		if (_profiler.gSilentAim->Current.bValue)
 			_removals.SpreadCompensationSilentAim(oldcmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && oldcmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		else

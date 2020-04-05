@@ -76,11 +76,11 @@ namespace NeoGenesys
 
 				if (!EntityIsEnemy(i))
 				{
-					EntityList[i].cColor = _profiler.gColorAllies->Custom.cValue;
+					EntityList[i].cColor = _profiler.gColorAllies->Current.cValue;
 					continue;
 				}
 
-				EntityList[i].cColor = _profiler.gColorAxis->Custom.cValue;
+				EntityList[i].cColor = _profiler.gColorAxis->Current.cValue;
 			}
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_ITEM)
@@ -106,9 +106,9 @@ namespace NeoGenesys
 			}
 
 			if (!(CEntity[i].NextEntityState.iEntityType == ET_PLAYER ||
-				(_profiler.gTargetMissiles->Custom.bValue && CEntity[i].NextEntityState.iEntityType == ET_MISSILE &&
+				(_profiler.gTargetMissiles->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_MISSILE &&
 				(CEntity[i].NextEntityState.iWeapon == WEAPON_C4 || CEntity[i].NextEntityState.iWeapon == WEAPON_IED)) ||
-					(_profiler.gTargetAgents->Custom.bValue && CEntity[i].NextEntityState.iEntityType == ET_AGENT)))
+					(_profiler.gTargetAgents->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_AGENT)))
 				continue;
 
 			Vector3 vDirection, vAngles, vDelta;
@@ -124,17 +124,17 @@ namespace NeoGenesys
 			if (((BYTE)CEntity[i].NextEntityState.iWeapon == WEAPON_RIOT_SHIELD && !AngleCompare180(vDelta[1])) ||
 				((BYTE)CEntity[i].NextEntityState.LerpEntityState.iSecondaryWeapon == WEAPON_RIOT_SHIELD && AngleCompare180(vDelta[1])))
 			{
-				if (_profiler.gRiotShield->Custom.iValue == cProfiler::RIOTSHIELD_IGNOREPLAYER)
+				if (_profiler.gRiotShield->Current.iValue == cProfiler::RIOTSHIELD_IGNOREPLAYER)
 					continue;
 
-				else if (_profiler.gRiotShield->Custom.iValue == cProfiler::RIOTSHIELD_TARGETFEET)
+				else if (_profiler.gRiotShield->Current.iValue == cProfiler::RIOTSHIELD_TARGETFEET)
 					EntityList[i].bAimFeet = true;
 			}
 
 			if (EntityList[i].bAimFeet)
 			{
-				bool bIsLeftAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get(),
-					bIsRightAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				bool bIsLeftAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Current.bValue, nullptr).get(),
+					bIsRightAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Current.bValue, nullptr).get();
 
 				if (bIsLeftAnkleVisible && bIsRightAnkleVisible)
 				{
@@ -163,22 +163,22 @@ namespace NeoGenesys
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER)
 			{
-				if (_profiler.gBoneScan->Custom.iValue == cProfiler::BONESCAN_ONTIMER)
+				if (_profiler.gBoneScan->Current.iValue == cProfiler::BONESCAN_ONTIMER)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, _profiler.gAutoWall->Custom.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 
-				else if (_profiler.gBoneScan->Custom.iValue == cProfiler::BONESCAN_IMMEDIATE)
+				else if (_profiler.gBoneScan->Current.iValue == cProfiler::BONESCAN_IMMEDIATE)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, _profiler.gAutoWall->Custom.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 
 				else
 				{
-					EntityList[i].iBoneIndex = (eBone)_profiler.gAimBone->Custom.iValue;
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Custom.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].iBoneIndex = (eBone)_profiler.gAimBone->Current.iValue;
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 			}
@@ -186,13 +186,13 @@ namespace NeoGenesys
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
 				EntityList[i].iBoneIndex = BONE_HEAD;
-				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Current.bValue, nullptr).get();
 				VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 			}
 
 			else
 			{
-				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Custom.bValue, nullptr).get();
+				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Current.bValue, nullptr).get();
 				VectorCopy(CEntity[i].vOrigin, EntityList[i].vHitLocation);
 			}
 
@@ -215,7 +215,7 @@ namespace NeoGenesys
 				}
 			}
 
-			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= _profiler.gAimAngle->Custom.flValue)
+			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= _profiler.gAimAngle->Current.flValue)
 			{
 				TargetInfo.iIndex = i;
 
@@ -228,13 +228,13 @@ namespace NeoGenesys
 
 		if (!vTargetInfo.empty())
 		{
-			if (_profiler.gSortMethod->Custom.iValue == cProfiler::SORT_METHOD_FOV)
+			if (_profiler.gSortMethod->Current.iValue == cProfiler::SORT_METHOD_FOV)
 			{
 				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
 				_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
 			}
 
-			else if (_profiler.gSortMethod->Custom.iValue == cProfiler::SORT_METHOD_DISTANCE)
+			else if (_profiler.gSortMethod->Current.iValue == cProfiler::SORT_METHOD_DISTANCE)
 			{
 				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
 				_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
@@ -244,13 +244,13 @@ namespace NeoGenesys
 		}
 
 		_aimBot.AimState.bTargetAcquired = (_aimBot.AimState.iTargetNum > -1);
-		_aimBot.AimState.bLockonTarget = (_profiler.gAimBotMode->Custom.iValue == cProfiler::AIMBOT_MODE_AUTO || (_profiler.gAimBotMode->Custom.iValue == cProfiler::AIMBOT_MODE_MANUAL && CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
+		_aimBot.AimState.bLockonTarget = (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO || (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_MANUAL && CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
 		_aimBot.AimState.bIsAutoAiming = (_aimBot.AimState.bTargetAcquired && _aimBot.AimState.bLockonTarget);
-		_aimBot.AimState.bIsAutoFiring = (_profiler.gAutoFire->Custom.bValue && _aimBot.AimState.bIsAutoAiming);
+		_aimBot.AimState.bIsAutoFiring = (_profiler.gAutoFire->Current.bValue && _aimBot.AimState.bIsAutoAiming);
 
 		if (_aimBot.AimState.bLockonTarget)
 		{
-			if (_aimBot.AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Custom.iValue)
+			if (_aimBot.AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Current.iValue)
 				_aimBot.AimState.iCurrentAimTime += clock() - _aimBot.AimState.iDeltaTMR;
 
 			_aimBot.AimState.iCurrentAimDelay += clock() - _aimBot.AimState.iDeltaTMR;
@@ -275,17 +275,17 @@ namespace NeoGenesys
 		if (!_aimBot.AimState.bTargetAcquired)
 			_aimBot.AimState.iCurrentAimDelay = _aimBot.AimState.iCurrentZoomDelay = _aimBot.AimState.iCurrentFireDelay = 0;
 
-		if (_aimBot.AimState.iCurrentAimTime > _profiler.gAutoAimTime->Custom.iValue)
-			_aimBot.AimState.iCurrentAimTime = _profiler.gAutoAimTime->Custom.iValue;
+		if (_aimBot.AimState.iCurrentAimTime > _profiler.gAutoAimTime->Current.iValue)
+			_aimBot.AimState.iCurrentAimTime = _profiler.gAutoAimTime->Current.iValue;
 
-		if (_aimBot.AimState.iCurrentAimDelay > _profiler.gAutoAimDelay->Custom.iValue)
-			_aimBot.AimState.iCurrentAimDelay = _profiler.gAutoAimDelay->Custom.iValue;
+		if (_aimBot.AimState.iCurrentAimDelay > _profiler.gAutoAimDelay->Current.iValue)
+			_aimBot.AimState.iCurrentAimDelay = _profiler.gAutoAimDelay->Current.iValue;
 
-		if (_aimBot.AimState.iCurrentZoomDelay > _profiler.gAutoZoomDelay->Custom.iValue)
-			_aimBot.AimState.iCurrentZoomDelay = _profiler.gAutoZoomDelay->Custom.iValue;
+		if (_aimBot.AimState.iCurrentZoomDelay > _profiler.gAutoZoomDelay->Current.iValue)
+			_aimBot.AimState.iCurrentZoomDelay = _profiler.gAutoZoomDelay->Current.iValue;
 
-		if (_aimBot.AimState.iCurrentFireDelay > _profiler.gAutoFireDelay->Custom.iValue)
-			_aimBot.AimState.iCurrentFireDelay = _profiler.gAutoFireDelay->Custom.iValue;
+		if (_aimBot.AimState.iCurrentFireDelay > _profiler.gAutoFireDelay->Current.iValue)
+			_aimBot.AimState.iCurrentFireDelay = _profiler.gAutoFireDelay->Current.iValue;
 
 		if (_aimBot.AimState.bTargetAcquired)
 		{
