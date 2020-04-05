@@ -70,16 +70,16 @@ namespace NeoGenesys
 			{
 				_mathematics.CalculateAntiAimAngles(CEntity[_targetList.iRiotShieldTarget].vOrigin, CG->PlayerState.vOrigin, _targetList.vRiotShieldAimAngles);
 
-				vAntiAimAngles[0] = -_targetList.vRiotShieldAimAngles[0] - 40.0f;
-				vAntiAimAngles[1] = _targetList.vRiotShieldAimAngles[1] - 180.0f;
+				vAntiAimAngles[0] = _targetList.vRiotShieldAimAngles[0];
+				vAntiAimAngles[1] = _targetList.vRiotShieldAimAngles[1];
 			}
 
 			else
 			{
 				if (_aimBot.AimState.bIsAutoAiming)
 				{
-					vAntiAimAngles[0] = -_aimBot.AimState.vAntiAimAngles[0] - 40.0f;
-					vAntiAimAngles[1] = _aimBot.AimState.vAntiAimAngles[1] - 180.0f;
+					vAntiAimAngles[0] = _aimBot.AimState.vAntiAimAngles[0];
+					vAntiAimAngles[1] = _aimBot.AimState.vAntiAimAngles[1];
 				}
 
 				else
