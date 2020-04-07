@@ -410,6 +410,8 @@ namespace NeoGenesys
 
 			for (auto& Bone : vBones)
 			{
+				vIsVisible[Bone.first].wait();
+
 				if (vIsVisible[Bone.first].get())
 				{
 					DamageInfo.iBoneIndex = Bone.first;
