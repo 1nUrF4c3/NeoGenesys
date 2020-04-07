@@ -61,6 +61,10 @@ namespace NeoGenesys
 
 				else
 					VectorCopy(PlayerState[i].vOrigin, _mainGui.Menu.HostMenu.PlayerMod[i].szPosition);
+
+				if (_profiler.gAntiLeave->Current.bValue)
+					if (i != CG->PlayerState.iClientNum)
+						GameSendServerCommand(i, SV_CMD_RELIABLE, "o 11 1");
 			}
 
 			if (!LocalClientIsInGame() || !CharacterInfo[i].iInfoValid)
@@ -159,6 +163,49 @@ namespace NeoGenesys
 		}
 
 		iCounter++;
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cHost::SpawnBots(int count)
+	{
+		int iCurrentIndex = 0;
+		std::vector<sGEntity*> vSpawnedBots;
+
+		auto AddEntities = [&]()
+		{
+			for (auto& SpawnedBot : vSpawnedBots)
+			{
+				AddEntity(SpawnedBot);
+			}
+		};
+
+		auto SpawnTestClients = [&]()
+		{
+			for (auto& SpawnedBot : vSpawnedBots)
+			{
+				SpawnTestClient(SpawnedBot);
+			}
+		};
+
+		auto AddTestClients = [&]()
+		{
+			vSpawnedBots.clear();
+
+			for (int i = 0; i < count; iCurrentIndex++)
+			{
+				if (CharacterInfo[iCurrentIndex].iInfoValid)
+					continue;
+
+				vSpawnedBots.push_back(AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, sEntRef(iCurrentIndex, 0)));
+
+				i++;
+			}
+		};
+
+		AddTestClients();
+		AddEntities();
+		SpawnTestClients();
 	}
 }
 

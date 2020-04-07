@@ -81,6 +81,7 @@
 #define OFF_OBITUARY 0x14026A010
 #define OFF_ADDCMDDRAWTEXT 0x140601070
 #define OFF_CLIENTFRAME 0x140382890
+#define OFF_AISYSTEMENABLED 0x140216DC0
 #define OFF_LOCALCLIENTISINGAME 0x1402CFE50
 #define OFF_ISMAINTHREAD 0x140423950
 #define OFF_ISRENDERTHREAD 0x1404239A0
@@ -146,6 +147,8 @@
 #define OFF_RANDOM 0x14021E3F0
 #define OFF_EVALUATETRAJECTORY 0x140218240
 #define OFF_TEAMCHANGED 0x1403880D0
+#define OFF_ADDSTRING 0x1404381D0
+#define OFF_NOTIFY 0x1403D3CD0
 #define OFF_ADDTESTCLIENT 0x140470B70
 #define OFF_SPAWNTESTCLIENT 0x1404740A0
 #define OFF_ADDENTITY 0x1403D3480
@@ -190,11 +193,13 @@
 #define OFF_SQUADMEMBERSIZE 0x564
 #define OFF_STEAMAPI 0x147D4B048
 #define OFF_STEAMNAME 0x1D2
+#define OFF_ISPRIVATEMATCH 0x147AC9E50
 #define OFF_ISCURRENTHOST 0x141734DD4
 #define OFF_ISALIENSMODE 0x147AD0B42
 #define OFF_ALTJUMPHEIGHT 0x140840088
 #define OFF_SERVERID 0x141D9BA3C
 #define OFF_SERVERSESSION 0x1474F0060
+#define OFF_MENURESPONSE 0x14450D088
 #define OFF_MOUSEINPUT 0x147AC9D85
 
 //=====================================================================================
@@ -1011,11 +1016,18 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sEntRef
 	{
 		short wEntityNum;
 		short wClassNum;
-	} sEntRef;
+
+		sEntRef(short entitynum, short classnum) :
+			wEntityNum(entitynum),
+			wClassNum(classnum)
+		{
+
+		}
+	};
 	/*
 	//=====================================================================================
 	*/
@@ -1577,6 +1589,20 @@ namespace NeoGenesys
 	inline void TeamChanged(int clientnum)
 	{
 		return VariadicCall<void>(OFF_TEAMCHANGED, clientnum);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline void AddString(std::string value)
+	{
+		return VariadicCall<void>(OFF_ADDSTRING, value.c_str());
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline void Notify(int entitynum, DWORD stringvalue, int paramnum)
+	{
+		return VariadicCall<void>(OFF_NOTIFY, entitynum, stringvalue, paramnum);
 	}
 	/*
 	//=====================================================================================

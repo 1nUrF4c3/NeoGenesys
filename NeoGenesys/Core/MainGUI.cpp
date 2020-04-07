@@ -1003,7 +1003,7 @@ namespace NeoGenesys
 
 					if (ImGui::Button("Kick", ImVec2(304.0f, 25.0f)))
 					{
-						KickClient(ClientInfo[Menu.HostMenu.iPlayer].iClientNum, Menu.HostMenu.szKickReason);
+						GameSendServerCommand(ClientInfo[Menu.HostMenu.iPlayer].iClientNum, SV_CMD_RELIABLE, VariadicText("r \"%s\"", Menu.HostMenu.szKickReason));
 						Menu.HostMenu.bWriteLog = true;
 					}
 

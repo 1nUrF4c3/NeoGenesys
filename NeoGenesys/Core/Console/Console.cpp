@@ -42,6 +42,7 @@ namespace NeoGenesys
 			vCommands.push_back("neo_rapidfire");
 			vCommands.push_back("neo_superjump");
 			vCommands.push_back("neo_masskill");
+			vCommands.push_back("neo_antileave");
 			vCommands.push_back("neo_bhop");
 			vCommands.push_back("neo_tbag");
 			vCommands.push_back("neo_experience");
@@ -54,6 +55,7 @@ namespace NeoGenesys
 			vCommands.push_back("neo_chatspam");
 			vCommands.push_back("neo_killspam");
 			vCommands.push_back("neo_spawnbot");
+			vCommands.push_back("neo_enableai");
 			vCommands.push_back("neo_infinite");
 
 			AddLog("Ready.");
@@ -133,19 +135,21 @@ namespace NeoGenesys
 			AddLog("8. neo_rapidfire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
 			AddLog("9. neo_superjump <on|off>\n\t\tEnable/disable super high jump (as host).");
 			AddLog("10. neo_masskill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
-			AddLog("11. neo_bhop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
-			AddLog("12. neo_tbag <on|off> <message>\n\t\tEnable/disable auto tea bag on kill with optional message (as host).");
-			AddLog("13. neo_experience <all|index> <max|experience>\n\t\tSet your experience.");
-			AddLog("14. neo_prestige <max|number>\n\t\tSet your prestige.");
-			AddLog("15. neo_squadpoints <max|squadpoints>\n\t\tSet your squadpoints.");
-			AddLog("16. neo_unlockall\n\t\tUnlock everything in the game.");
-			AddLog("17. neo_resetstats\n\t\tCompletely erase your save game.");
-			AddLog("18. neo_hostdvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
-			AddLog("19. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
-			AddLog("20. neo_chatspam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
-			AddLog("21. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
-			AddLog("22. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
-			AddLog("23. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
+			AddLog("11. neo_antileave <off|on>\n\t\tEnable/disable player antileave (as host).");
+			AddLog("12. neo_bhop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
+			AddLog("13. neo_tbag <on|off> <message>\n\t\tEnable/disable auto tea bag on kill with optional message (as host).");
+			AddLog("14. neo_experience <all|index> <max|experience>\n\t\tSet your experience.");
+			AddLog("15. neo_prestige <max|number>\n\t\tSet your prestige.");
+			AddLog("16. neo_squadpoints <max|squadpoints>\n\t\tSet your squadpoints.");
+			AddLog("17. neo_unlockall\n\t\tUnlock everything in the game.");
+			AddLog("18. neo_resetstats\n\t\tCompletely erase your save game.");
+			AddLog("19. neo_hostdvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
+			AddLog("20. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
+			AddLog("21. neo_chatspam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
+			AddLog("22. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
+			AddLog("23. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
+			AddLog("24. neo_enableai <on|off>\n\t\tEnable/disable AI system for bots in public match (as host).");
+			AddLog("25. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
 
 			bWriteLog = true;
 		} ImGui::SameLine();
@@ -216,7 +220,7 @@ namespace NeoGenesys
 		{
 			LPSTR szInputEnd = szInput + strlen(szInput);
 
-			while (szInputEnd > szInput&& szInputEnd[-1] == ' ')
+			while (szInputEnd > szInput && szInputEnd[-1] == ' ')
 			{
 				szInputEnd--;
 			} *szInputEnd = 0;
@@ -630,6 +634,42 @@ namespace NeoGenesys
 			{
 				AddLog("[ERROR] Missing argument(s).");
 			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_antileave"))
+		{
+		if (CmdLine.iArgNum > 0)
+		{
+			if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+			{
+				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+				_profiler.gAntiLeave->Current.bValue = true;
+
+				AddLog("Anti-leave has been enabled.");
+				AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+			}
+
+			else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+			{
+				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+				_profiler.gAntiLeave->Current.bValue = false;
+
+				AddLog("Anti-leave has been disabled.");
+				AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+			}
+
+			else
+			{
+				AddLog("[ERROR] Invalid argument(s).");
+			}
+		}
+
+		else
+		{
+			AddLog("[ERROR] Missing argument(s).");
+		}
 		}
 
 		else if (!Stricmp(CmdLine.szCmdName, "neo_bhop"))
@@ -1397,7 +1437,7 @@ namespace NeoGenesys
 		{
 			if (CmdLine.iArgNum > 0)
 			{
-				int iCurrentPlayers = 0, iCurrentIndex = 0;
+				int iCurrentPlayers = 0;
 
 				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 					if (CharacterInfo[i].iInfoValid)
@@ -1407,23 +1447,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers; iCurrentIndex++)
-					{
-						if (CharacterInfo[iCurrentIndex].iInfoValid)
-							continue;
-
-						sEntRef EntRef;
-
-						EntRef.wEntityNum = iCurrentIndex;
-						EntRef.wClassNum = 0;
-
-						sGEntity* pEntity = AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, EntRef);
-
-						AddEntity(pEntity);
-						SpawnTestClient(pEntity);
-
-						i++;
-					}
+					_host.SpawnBots(FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers);
 
 					AddLog("Spawned %i bots into the match.", FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers);
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1433,25 +1457,46 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					for (int i = 0; i < atoi(CmdLine.szCmdArgs[0]); iCurrentIndex++)
-					{
-						if (CharacterInfo[iCurrentIndex].iInfoValid)
-							continue;
-
-						sEntRef EntRef;
-
-						EntRef.wEntityNum = iCurrentIndex;
-						EntRef.wClassNum = 0;
-
-						sGEntity* pEntity = AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, EntRef);
-
-						AddEntity(pEntity);
-						SpawnTestClient(pEntity);
-
-						i++;
-					}
+					_host.SpawnBots(atoi(CmdLine.szCmdArgs[0]));
 
 					AddLog("Spawned %i bot(s) into the match.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
+			}
+
+			else
+			{
+				AddLog("[ERROR] Missing argument(s).");
+			}
+		}
+
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_enableai"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					Cbuf_AddText("xblive_privatematch 1\n");
+
+					AddLog("AI system has been enabled.");
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					Cbuf_AddText("xblive_privatematch 0\n");
+
+					AddLog("AI system has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 

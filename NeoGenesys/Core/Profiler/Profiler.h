@@ -262,6 +262,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gBunnyHop = std::make_shared<sCvar>("Bunny Hop", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTeaBag = std::make_shared<sCvar>("Tea Bag", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTeaBagMessage = std::make_shared<sCvar>("Tea Bag Message", std::vector<std::string>(), _strdup(""));
+		std::shared_ptr<sCvar> gAntiLeave = std::make_shared<sCvar>("Anti-Leave", std::vector<std::string>(), false);
 
 		acut::XmlDoc<char> XML;
 
