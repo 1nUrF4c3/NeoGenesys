@@ -156,7 +156,8 @@
 #define OFF_GIVEPLAYERWEAPON 0x1403DA5E0
 #define OFF_ADDAMMO 0x140399E50
 #define OFF_ISMIGRATING 0x14047BAB0
-#define OFF_KICKCLIENT 0x14046F730
+#define OFF_GAMEDROPCLIENT 0x140475890
+#define OFF_KICKCLIENTNUM 0x14046F730
 #define OFF_PLAYERDIE 0x140396920
 #define OFF_PLAYERKILL 0x1403CE260
 #define OFF_SPREADMULTIPLIER 0x14187D43C
@@ -1656,9 +1657,16 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	inline void KickClient(int clientnum, std::string reason)
+	inline void GameDropClient(int clientnum, std::string reason)
 	{
-		return VariadicCall<void>(OFF_KICKCLIENT, clientnum, reason.c_str());
+		return VariadicCall<void>(OFF_GAMEDROPCLIENT, clientnum, reason.c_str());
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline void KickClientNum(int clientnum, std::string reason)
+	{
+		return VariadicCall<void>(OFF_KICKCLIENTNUM, clientnum, reason.c_str());
 	}
 	/*
 	//=====================================================================================
