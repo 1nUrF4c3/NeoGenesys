@@ -192,7 +192,7 @@ namespace NeoGenesys
 
 			else
 			{
-				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, NULL, _profiler.gAutoWall->Current.bValue, nullptr).get();
+				EntityList[i].bIsVisible = IsVisibleInternal(&CEntity[i], CEntity[i].vOrigin, HITLOC_NONE, _profiler.gAutoWall->Current.bValue, NULL);
 				VectorCopy(CEntity[i].vOrigin, EntityList[i].vHitLocation);
 			}
 

@@ -372,6 +372,7 @@ namespace NeoGenesys
 	*/
 	typedef enum
 	{
+		BONE_HELMET,
 		BONE_HEAD,
 		BONE_NECK,
 		BONE_UPPER_SPINE,
@@ -395,7 +396,9 @@ namespace NeoGenesys
 	*/
 	typedef enum
 	{
-		HITLOC_HEAD = 2,
+		HITLOC_NONE,
+		HITLOC_HELMET,
+		HITLOC_HEAD,
 		HITLOC_NECK,
 		HITLOC_UPPER_SPINE,
 		HITLOC_LOWER_SPINE,
@@ -477,6 +480,7 @@ namespace NeoGenesys
 	*/
 	static std::vector<std::pair<eBone, eHitLocation>> vBones =
 	{
+		std::make_pair(BONE_HELMET, HITLOC_HELMET),
 		std::make_pair(BONE_HEAD, HITLOC_HEAD),
 		std::make_pair(BONE_NECK, HITLOC_NECK),
 		std::make_pair(BONE_UPPER_SPINE, HITLOC_UPPER_SPINE),
@@ -499,6 +503,7 @@ namespace NeoGenesys
 	*/
 	static std::vector<std::pair<std::string, std::string>> szBones =
 	{
+		std::make_pair("Helmet", "j_helmet"),
 		std::make_pair("Head", "j_head"),
 		std::make_pair("Neck", "j_neck"),
 		std::make_pair("Upper Spine", "j_spineupper"),
