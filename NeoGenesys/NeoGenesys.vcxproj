@@ -105,6 +105,7 @@
     <ClInclude Include="Core\Profiler\RapidXML\Utilities\StringUtility.hpp" />
     <ClInclude Include="Core\Removals\Removals.h" />
     <ClInclude Include="Core\TargetList\TargetList.h" />
+    <ClInclude Include="Detours\detours.h" />
     <ClInclude Include="ImGui\Addons\dirent_portable.h" />
     <ClInclude Include="ImGui\Addons\FileSystem\imguifilesystem.h" />
     <ClInclude Include="ImGui\Addons\TabWindow\imguitabwindow.h" />
@@ -121,7 +122,20 @@
     <ClInclude Include="ImGui\STB\imstb_textedit.h" />
     <ClInclude Include="ImGui\STB\imstb_truetype.h" />
     <ClInclude Include="ImGui\Win32\imgui_impl_win32.h" />
+    <ClInclude Include="Resources\Resource.h" />
     <ClInclude Include="StdAfx.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Resource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Detours\detours.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Detours\detours.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

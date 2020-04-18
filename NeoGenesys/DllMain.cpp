@@ -132,8 +132,10 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 
 //=====================================================================================
 
-void Initialize()
+void Initialize(HINSTANCE hinstDLL)
 {
+	_mainGui.hInstDll = hinstDLL;
+
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
@@ -182,7 +184,7 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Initialize();
+		Initialize(hinstDLL);
 		return TRUE;
 
 	case DLL_PROCESS_DETACH:

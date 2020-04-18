@@ -70,6 +70,12 @@
     <Filter Include="ImGui\Fonts">
       <UniqueIdentifier>{7751aaa0-3337-40b7-93af-6a68e304e987}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{da9f0f45-cb85-457e-a446-bbbdbc1bc1df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours">
+      <UniqueIdentifier>{44a84e57-64df-4b6b-9305-d61aa0cb30aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -259,5 +265,31 @@
     <ClInclude Include="ImGui\Addons\WICTextureLoader.h">
       <Filter>ImGui\Addons</Filter>
     </ClInclude>
+    <ClInclude Include="Resources\Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours\detours.h">
+      <Filter>Detours</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Resource.png">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\Resource.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Detours\detours.lib">
+      <Filter>Detours</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Detours\detours.pdb">
+      <Filter>Detours</Filter>
+    </None>
   </ItemGroup>
 </Project>

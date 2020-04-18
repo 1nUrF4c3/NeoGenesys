@@ -33,7 +33,51 @@ namespace NeoGenesys
 
 		RefreshInterface(_profiler.gMenuColor->Current.iValue, _profiler.gMenuCursor->Current.iValue, _profiler.gMenuFont->Current.iValue);
 
+		LoadBackgroundImage();
+
 		bInitialized = true;
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMainGUI::LoadBackgroundImage()
+	{
+		HRESULT hResult = S_OK;
+
+		HRSRC hResource;
+		HGLOBAL hGlobal;
+		LPVOID pResourceData;
+		DWORD dwResourceSize;
+
+		if (SUCCEEDED(hResult))
+		{
+			hResource = FindResource(hInstDll, MAKEINTRESOURCE(IDB_BACKGROUND), "PNG");
+			hResult = (hResource ? S_OK : E_FAIL);
+		}
+
+		if (SUCCEEDED(hResult))
+		{
+			hGlobal = LoadResource(hInstDll, hResource);
+			hResult = (hGlobal ? S_OK : E_FAIL);
+		}
+
+		if (SUCCEEDED(hResult))
+		{
+			pResourceData = LockResource(hGlobal);
+			hResult = (pResourceData ? S_OK : E_FAIL);
+		}
+
+		if (SUCCEEDED(hResult))
+		{
+			dwResourceSize = SizeofResource(hInstDll, hResource);
+			hResult = (dwResourceSize ? S_OK : E_FAIL);
+		}
+
+		if (SUCCEEDED(hResult))
+		{
+			CreateWICTextureFromMemory(pDevice, pDeviceContext, (uint8_t*)pResourceData, (size_t)dwResourceSize, &pD3D11Resource, &pD3D11ShaderResourceView);
+			hResult = (pD3D11Resource && pD3D11ShaderResourceView ? S_OK : E_FAIL);
+		}
 	}
 	/*
 	//=====================================================================================
@@ -387,6 +431,8 @@ namespace NeoGenesys
 				ImGui::Begin(acut::ToUpper(PROGRAM_NAME).c_str(), &Menu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 				ImGui::SetColorEditOptions(ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
 
+				ImGui::GetWindowDrawList()->AddImage(pD3D11ShaderResourceView, ImGui::GetWindowPos(), ImGui::GetWindowPos() + ImGui::GetWindowSize());
+
 				if (ImGui::TabLabels(_profiler.gMenuTabs->Domain.iMax, acut::StringVectorToCharPointerArray(_profiler.gMenuTabs->szItems), _profiler.gMenuTabs->Current.iValue, NULL, false, NULL, NULL, false, false, NULL, NULL, &ImVec2(94.0f, 25.0f)))
 				{
 					Menu.bWriteLog = true;
@@ -629,12 +675,12 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::SliderFloat(FindVariable("cg_fov")->szName, &FindVariable("cg_fov")->Current.flValue, FindVariable("cg_fov")->Domain.flMin, FindVariable("cg_fov")->Domain.flMax))
+					if (ImGui::SliderFloat("Field Of View", &FindVariable("cg_fov")->Current.flValue, FindVariable("cg_fov")->Domain.flMin, FindVariable("cg_fov")->Domain.flMax, "%.0f fov"))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::SliderInt(FindVariable("com_maxfps")->szName, (int*)&FindVariable("com_maxfps")->Current.dwValue, FindVariable("com_maxfps")->Domain.dwMin, FindVariable("com_maxfps")->Domain.dwMax))
+					if (ImGui::SliderInt("Frames Per Second", (int*)&FindVariable("com_maxfps")->Current.dwValue, FindVariable("com_maxfps")->Domain.dwMin, FindVariable("com_maxfps")->Domain.dwMax, "%d fps"))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
