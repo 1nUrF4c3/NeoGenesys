@@ -19,7 +19,7 @@ namespace NeoGenesys
 
 		void Refresh(int localnum);
 		void WritePacket(int localnum);
-		void CreateNewCommands(int localnum);
+		void PredictPlayerState(int localnum);
 		void BulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
 		void CalcEntityLerpPositions(int localnum, sCEntity* entity);
 		void Obituary(int localnum, sEntityState* entitystate, int weapon);

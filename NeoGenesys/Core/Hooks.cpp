@@ -39,20 +39,29 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::CreateNewCommands(int localnum)
+	void cHooks::PredictPlayerState(int localnum)
 	{
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
+			static int iBackupAngles[3];
+
 			sUserCmd* pOldCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - 1);
-			sUserCmd* pNewCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
+			sUserCmd* pCurrentCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
+			sUserCmd* pNewCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd + 1);
 
 			if (_mainGui.GetKeyPress(VK_DELETE, true))
-				*pNewCmd = *pOldCmd;
+				CopyMemory(pCurrentCmd, pOldCmd, sizeof(sUserCmd));
 
-			*pOldCmd = *pNewCmd;
-			--pOldCmd->iServerTime;
+			CopyMemory(pNewCmd, pCurrentCmd, sizeof(sUserCmd));
+			++ClientActive->iCurrentCmd;
 
-			_packets.CreateNewCommands(pOldCmd, pNewCmd);
+			VectorCopy(iBackupAngles, pOldCmd->iViewAngles);
+			VectorCopy(pCurrentCmd->iViewAngles, iBackupAngles);
+
+			++pOldCmd->iServerTime;
+			--pCurrentCmd->iServerTime;
+
+			_packets.PredictPlayerState(pOldCmd);
 		}
 	}
 	/*

@@ -8,51 +8,51 @@ namespace NeoGenesys
 {
 	cPackets _packets;
 
-	void cPackets::WritePacket(sUserCmd* currentcmd)
+	void cPackets::WritePacket(sUserCmd* usercmd)
 	{
-		_antiAim.AntiAim(currentcmd);
+		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
+			_aimBot.AutoFire(usercmd);
+
+		_antiAim.AntiAim(usercmd);
 
 		if (_profiler.gBunnyHop->Current.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
 		{
-			if (currentcmd->iButtons & BUTTON_JUMP)
-				currentcmd->iButtons &= ~BUTTON_JUMP;
+			if (usercmd->iButtons & BUTTON_JUMP)
+				usercmd->iButtons &= ~BUTTON_JUMP;
 
 			else
-				currentcmd->iButtons |= BUTTON_JUMP;
+				usercmd->iButtons |= BUTTON_JUMP;
 		}
 
 		if (clock() - iTeaBagTime < 3000)
 		{
 			VectorCopy(vTeaBagPos, PlayerState[CG->PlayerState.iClientNum].vOrigin);
 
-			if (currentcmd->iButtons & BUTTON_CROUCH)
-				currentcmd->iButtons &= ~BUTTON_CROUCH;
+			if (usercmd->iButtons & BUTTON_CROUCH)
+				usercmd->iButtons &= ~BUTTON_CROUCH;
 
 			else
-				currentcmd->iButtons |= BUTTON_CROUCH;
+				usercmd->iButtons |= BUTTON_CROUCH;
 		}
 	}
 	/*
 	//=====================================================================================
 	*/
-	void cPackets::CreateNewCommands(sUserCmd* oldcmd, sUserCmd* newcmd)
+	void cPackets::PredictPlayerState(sUserCmd* usercmd)
 	{
 		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
 		{
-			_aimBot.SilentAim(oldcmd);
+			_aimBot.SilentAim(usercmd);
 
 			if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
-				_aimBot.AutoFire(oldcmd);
-
-			else
-				_aimBot.AutoFire(newcmd);
+				_aimBot.AutoFire(usercmd);
 		}
 
 		if (_profiler.gSilentAim->Current.bValue)
-			_removals.SpreadCompensationSilentAim(oldcmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && oldcmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		else
-			_removals.SpreadCompensationStandardAim(oldcmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && oldcmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 	}
 }
 

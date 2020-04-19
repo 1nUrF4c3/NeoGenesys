@@ -25,9 +25,9 @@ void HOOKCALL hWritePacket(int localnum);
 typedef void(HOOKCALL* tWritePacket)(int localnum);
 tWritePacket oWritePacket = (tWritePacket)OFF_WRITEPACKET;
 
-void HOOKCALL hCreateNewCommands(int localnum);
-typedef void(HOOKCALL* tCreateNewCommands)(int localnum);
-tCreateNewCommands oCreateNewCommands = (tCreateNewCommands)OFF_CREATENEWCOMMANDS;
+void HOOKCALL hPredictPlayerState(int localnum);
+typedef void(HOOKCALL* tPredictPlayerState)(int localnum);
+tPredictPlayerState oPredictPlayerState = (tPredictPlayerState)OFF_PREDICTPLAYERSTATE;
 
 void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
 typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
@@ -78,11 +78,11 @@ void HOOKCALL hWritePacket(int localnum)
 
 //=====================================================================================
 
-void HOOKCALL hCreateNewCommands(int localnum)
+void HOOKCALL hPredictPlayerState(int localnum)
 {
-	oCreateNewCommands(localnum);
+	_hooks.PredictPlayerState(localnum);
 
-	_hooks.CreateNewCommands(localnum);
+	return oPredictPlayerState(localnum);
 }
 
 //=====================================================================================
@@ -141,7 +141,7 @@ void Initialize(HINSTANCE hinstDLL)
 
 	Hook(oRefresh, hRefresh);
 	Hook(oWritePacket, hWritePacket);
-	Hook(oCreateNewCommands, hCreateNewCommands);
+	Hook(oPredictPlayerState, hPredictPlayerState);
 	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
 	Hook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	Hook(oObituary, hObituary);
@@ -158,7 +158,7 @@ void Deallocate()
 
 	UnHook(oRefresh, hRefresh);
 	UnHook(oWritePacket, hWritePacket);
-	UnHook(oCreateNewCommands, hCreateNewCommands);
+	UnHook(oPredictPlayerState, hPredictPlayerState);
 	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
 	UnHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	UnHook(oObituary, hObituary);
