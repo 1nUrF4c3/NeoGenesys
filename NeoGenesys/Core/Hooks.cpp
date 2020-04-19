@@ -160,7 +160,7 @@ namespace NeoGenesys
 
 				if (_profiler.gNameStealer->Current.bValue)
 				{
-					strncpy_s((LPSTR)(*(DWORD_PTR*)OFF_STEAMAPI + OFF_STEAMNAME), 
+					strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })),
 						strlen(ClientInfo[entitystate->iOtherEntityNum].szName) + 1, 
 						ClientInfo[entitystate->iOtherEntityNum].szName, 32);
 					

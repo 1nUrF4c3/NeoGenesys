@@ -327,7 +327,7 @@ namespace NeoGenesys
 			{
 				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-				strncpy_s((LPSTR)(*(DWORD_PTR*)OFF_STEAMAPI + OFF_STEAMNAME), strlen(szUsername) + 1, szUsername, 32);
+				strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })), strlen(szUsername) + 1, szUsername, 32);
 				Cbuf_AddText(VariadicText("name \"%s\"\n", szUsername));
 
 				AddLog("Name has been changed to \"%s.\"", szUsername);

@@ -64,7 +64,7 @@ void HOOKCALL hRefresh(int localnum)
 {
 	_hooks.Refresh(localnum);
 
-	return oRefresh(localnum);
+	oRefresh(localnum);
 }
 
 //=====================================================================================
@@ -73,7 +73,7 @@ void HOOKCALL hWritePacket(int localnum)
 {
 	_hooks.WritePacket(localnum);
 
-	return oWritePacket(localnum);
+	oWritePacket(localnum);
 }
 
 //=====================================================================================
@@ -82,7 +82,7 @@ void HOOKCALL hPredictPlayerState(int localnum)
 {
 	_hooks.PredictPlayerState(localnum);
 
-	return oPredictPlayerState(localnum);
+	oPredictPlayerState(localnum);
 }
 
 //=====================================================================================
@@ -91,7 +91,7 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 {
 	_hooks.BulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
 
-	return oBulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
+	oBulletFirePenetrate(seed, bp, br, weapon, alternate, attacker, servertime);
 }
 
 //=====================================================================================
@@ -109,7 +109,7 @@ void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon)
 {
 	_hooks.Obituary(localnum, entitystate, weapon);
 
-	return oObituary(localnum, entitystate, weapon);
+	oObituary(localnum, entitystate, weapon);
 }
 
 //=====================================================================================
@@ -118,7 +118,7 @@ void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, floa
 {
 	_hooks.AddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
 
-	return oAddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
+	oAddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
 }
 
 //=====================================================================================
@@ -127,15 +127,13 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 {
 	_hooks.ClientFrame(entity);
 
-	return oClientFrame(entity);
+	oClientFrame(entity);
 }
 
 //=====================================================================================
 
-void Initialize(HINSTANCE hinstDLL)
+void Initialize()
 {
-	_mainGui.hInstDll = hinstDLL;
-
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
@@ -184,7 +182,7 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Initialize(hinstDLL);
+		Initialize();
 		return TRUE;
 
 	case DLL_PROCESS_DETACH:
