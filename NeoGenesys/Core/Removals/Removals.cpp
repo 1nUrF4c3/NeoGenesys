@@ -76,7 +76,7 @@ namespace NeoGenesys
 		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
 
 		VectorAngles(vDir, angles);
-		_mathematics.NormalizeAngles(angles);
+		_mathematics.ClampAngles(angles);
 	}
 	/*
 	//=====================================================================================

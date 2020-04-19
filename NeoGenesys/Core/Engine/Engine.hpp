@@ -930,9 +930,8 @@ namespace NeoGenesys
 		int iButtons;
 		int iViewAngles[3];
 		char _0x14[0x8];
-		char szForwardMove;
-		char szRightMove;
-		char _0x1E[0x1E];
+		char szMove[3];
+		char _0x1F[0x1D];
 	} sUserCmd;
 	/*
 	//=====================================================================================
