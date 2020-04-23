@@ -99,7 +99,7 @@ namespace NeoGenesys
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
-				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), EntityList[i].vBones3D[BONE_HEAD], EntityList[i].vCenter2D);
+				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), EntityList[i].vBones3D[vBones[BONE_HEAD].first], EntityList[i].vCenter2D);
 
 				if (!EntityIsEnemy(i))
 					continue;
@@ -133,26 +133,26 @@ namespace NeoGenesys
 
 			if (EntityList[i].bAimFeet)
 			{
-				bool bIsLeftAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_LEFT_ANKLE], vBones[BONE_LEFT_ANKLE].second, _profiler.gAutoWall->Current.bValue, nullptr).get(),
-					bIsRightAnkleVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[BONE_RIGHT_ANKLE], vBones[BONE_RIGHT_ANKLE].second, _profiler.gAutoWall->Current.bValue, nullptr).get();
+				bool bIsLeftAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, vBones[BONE_LEFT_ANKLE].first),
+					bIsRightAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, vBones[BONE_RIGHT_ANKLE].first);
 
 				if (bIsLeftAnkleVisible && bIsRightAnkleVisible)
 				{
-					EntityList[i].iBoneIndex = EntityList[i].vBones3D[BONE_LEFT_ANKLE][2] < EntityList[i].vBones3D[BONE_RIGHT_ANKLE][2] ? BONE_LEFT_ANKLE : BONE_RIGHT_ANKLE;
+					EntityList[i].iBoneIndex = EntityList[i].vBones3D[vBones[BONE_LEFT_ANKLE].first][2] < EntityList[i].vBones3D[vBones[BONE_RIGHT_ANKLE].first][2] ? vBones[BONE_LEFT_ANKLE].first : vBones[BONE_RIGHT_ANKLE].first;
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 					EntityList[i].bIsVisible = true;
 				}
 
 				else if (bIsLeftAnkleVisible)
 				{
-					EntityList[i].iBoneIndex = BONE_LEFT_ANKLE;
+					EntityList[i].iBoneIndex = vBones[BONE_LEFT_ANKLE].first;
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 					EntityList[i].bIsVisible = true;
 				}
 
 				else if (bIsRightAnkleVisible)
 				{
-					EntityList[i].iBoneIndex = BONE_RIGHT_ANKLE;
+					EntityList[i].iBoneIndex = vBones[BONE_RIGHT_ANKLE].first;
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 					EntityList[i].bIsVisible = true;
 				}
@@ -165,28 +165,28 @@ namespace NeoGenesys
 			{
 				if (_profiler.gBoneScan->Current.iValue == cProfiler::BONESCAN_ONTIMER)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, _profiler.gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 
 				else if (_profiler.gBoneScan->Current.iValue == cProfiler::BONESCAN_IMMEDIATE)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, _profiler.gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 
 				else
 				{
 					EntityList[i].iBoneIndex = (eBone)_profiler.gAimBone->Current.iValue;
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, &EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
 					VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 				}
 			}
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
-				EntityList[i].iBoneIndex = BONE_HEAD;
-				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], EntityList[i].vBones3D[EntityList[i].iBoneIndex], vBones[EntityList[i].iBoneIndex].second, _profiler.gAutoWall->Current.bValue, nullptr).get();
+				EntityList[i].iBoneIndex = vBones[BONE_HEAD].first;
+				EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, _profiler.gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
 				VectorCopy(EntityList[i].vBones3D[EntityList[i].iBoneIndex], EntityList[i].vHitLocation);
 			}
 
@@ -393,7 +393,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisible(sCEntity* entity, Vector3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone* index)
+	bool cTargetList::IsVisible(sCEntity* entity, Vector3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index)
 	{
 		bool bReturn = false;
 
@@ -405,13 +405,11 @@ namespace NeoGenesys
 		{
 			for (auto& Bone : vBones)
 			{
-				vIsVisible[Bone.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first], vBones[Bone.first].second, autowall, &DamageInfo.flDamage);
+				vIsVisible[Bone.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first], Bone.second, autowall, &DamageInfo.flDamage);
 			}
 
 			for (auto& Bone : vBones)
 			{
-				vIsVisible[Bone.first].wait();
-
 				if (vIsVisible[Bone.first].get())
 				{
 					DamageInfo.iBoneIndex = Bone.first;
@@ -424,13 +422,13 @@ namespace NeoGenesys
 
 		else
 		{
-			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[*index], vBones[*index].second, autowall, &DamageInfo.flDamage).get();
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].second, autowall, nullptr).get();
 		}
 
 		if (!vDamageInfo.empty())
 		{
 			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
-			*index = vDamageInfo.front().iBoneIndex;
+			index = vDamageInfo.front().iBoneIndex;
 			vDamageInfo.clear();
 		}
 

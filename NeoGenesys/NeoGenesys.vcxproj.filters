@@ -70,9 +70,6 @@
     <Filter Include="ImGui\Fonts">
       <UniqueIdentifier>{7751aaa0-3337-40b7-93af-6a68e304e987}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{da9f0f45-cb85-457e-a446-bbbdbc1bc1df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Detours">
       <UniqueIdentifier>{44a84e57-64df-4b6b-9305-d61aa0cb30aa}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="Core\Profiler\RapidXML\Utilities\FileUtility.cpp">
       <Filter>Core\Profiler\RapidXML\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Addons\WICTextureLoader.cpp">
+      <Filter>ImGui\Addons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="Detours\detours.h">
       <Filter>Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Addons\WICTextureLoader.h">
+      <Filter>ImGui\Addons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
