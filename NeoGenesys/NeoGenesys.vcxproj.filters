@@ -71,7 +71,7 @@
       <UniqueIdentifier>{7751aaa0-3337-40b7-93af-6a68e304e987}</UniqueIdentifier>
     </Filter>
     <Filter Include="Detours">
-      <UniqueIdentifier>{44a84e57-64df-4b6b-9305-d61aa0cb30aa}</UniqueIdentifier>
+      <UniqueIdentifier>{9ef17511-2be9-4b32-b9b8-d5b27aa136e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

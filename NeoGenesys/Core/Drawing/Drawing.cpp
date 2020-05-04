@@ -306,28 +306,28 @@ namespace NeoGenesys
 		bool bHasRiotShield = EntityHasRiotShield(entity);
 
 		if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_BORDER)
-			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), true, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), true, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 
 		else if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_CORNER)
-			DrawCorners(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), 3.0f, false, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawCorners(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), 3.0f, false, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 
 		else if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_BORDER_FILLED)
 		{
-			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), false, (bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color) * ImVec4(1.0f, 1.0f, 1.0f, 0.25f));
-			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), true, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), false, (bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color) * ImVec4(1.0f, 1.0f, 1.0f, 0.25f));
+			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), true, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 		}
 
 		else if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_CORNER_FILLED)
 		{
-			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), false, (bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color) * ImVec4(1.0f, 1.0f, 1.0f, 0.25f));
-			DrawCorners(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), 3.0f, false, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawBorder(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), false, (bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color) * ImVec4(1.0f, 1.0f, 1.0f, 0.25f));
+			DrawCorners(ImVec2(center.x - flWidth / 2.0f, center.y - flHeight / 2.0f), ImVec2(flWidth, flHeight), 3.0f, false, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 		}
 
 		else if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_BORDER_3D)
-			DrawBorder3D(corners2d, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawBorder3D(corners2d, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 
 		else if (_profiler.gPlayerBoxes->Current.iValue == cProfiler::PLAYER_BOXES_CORNER_3D)
-			DrawCorners3D(corners2d, 3.0f, bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : color);
+			DrawCorners3D(corners2d, 3.0f, bHasRiotShield ? _profiler.gColorAccents->Current.cValue : color);
 
 		if (_profiler.gPlayerBones->Current.iValue == cProfiler::PLAYER_BONES_DOTS)
 			DrawBones(bones2d, false, color);
@@ -344,25 +344,9 @@ namespace NeoGenesys
 		else if (_profiler.gPlayerSnapLines->Current.iValue == cProfiler::PLAYER_SNAPLINES_CROSSHAIR)
 			DrawLine(ImVec2(center.x, center.y), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f - ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)), color);
 
-		if (_profiler.gPlayerDistances->Current.bValue && _profiler.gPlayerNames->Current.bValue)
+		if (_profiler.gPlayerInformation->Current.bValue)
 		{
 			std::string szText(acut::StripColorCodes(VariadicText("[%im] %s", (int)(distance / M_METERS), name.c_str())));
-			ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
-
-			DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - flHeight / 2.0f - flPadding - vStringSize.y), false, _profiler.gColorText->Current.cValue);
-		}
-
-		else if (_profiler.gPlayerDistances->Current.bValue)
-		{
-			std::string szText(acut::StripColorCodes(VariadicText("[%im]", (int)(distance / M_METERS))));
-			ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
-
-			DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - flHeight / 2.0f - flPadding - vStringSize.y), false, _profiler.gColorText->Current.cValue);
-		}
-
-		else if (_profiler.gPlayerNames->Current.bValue)
-		{
-			std::string szText(acut::StripColorCodes(name));
 			ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
 
 			DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - flHeight / 2.0f - flPadding - vStringSize.y), false, _profiler.gColorText->Current.cValue);
@@ -516,6 +500,31 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	void cDrawing::CalculateTracers()
+	{
+		for (auto Tracer = vTracers.begin(); Tracer != vTracers.end();)
+		{
+			int iDeltaTime = CG->PlayerState.iCommandTime - Tracer->iStartTime;
+
+			if (Tracer->bW2SSuccess = WorldToScreen(GetScreenMatrix(), Tracer->vHitPos3D, Tracer->vHitPos2D))
+			{
+				WorldToScreen(GetScreenMatrix(), Tracer->vStartPos3D, Tracer->vStartPos2D);
+
+				Tracer->cColorShadow[3] = 1.0f - ((float)iDeltaTime / 1000);
+				Tracer->cColorHitMarker[3] = 1.0f - ((float)iDeltaTime / 1000);
+				Tracer->cColorTracer[3] = 1.0f - ((float)iDeltaTime / 1000);
+			}
+
+			if (Tracer->cColorShadow[3] <= 0.0f || Tracer->cColorHitMarker[3] <= 0.0f || Tracer->cColorTracer[3] <= 0.0f)
+				Tracer = vTracers.erase(Tracer);
+
+			else
+				++Tracer;
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
 	void cDrawing::DrawESP()
 	{
 		for (int i = 0; i < MAX_ENTITIES; i++)
@@ -563,10 +572,10 @@ namespace NeoGenesys
 	{
 		if (_profiler.gPlayerCompass->Current.bValue)
 		{
-			_drawing.Compass.flArrowSize = ImGui::GetIO().DisplaySize.y / 40.0f;
-			_drawing.Compass.flCompassSize = ImGui::GetIO().DisplaySize.y / 1.5f;
+			Compass.flArrowSize = ImGui::GetIO().DisplaySize.y / 40.0f;
+			Compass.flCompassSize = ImGui::GetIO().DisplaySize.y / 1.5f;
 
-			_drawing.Compass.vCompassPosition = ImGui::GetIO().DisplaySize / 2.0f;
+			Compass.vCompassPosition = ImGui::GetIO().DisplaySize / 2.0f;
 
 			for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 			{
@@ -591,9 +600,9 @@ namespace NeoGenesys
 						ImGui::GetWindowDrawList()->AddTriangleFilled(vFinalX, vFinalY, vFinalZ,
 							ImGui::GetColorU32(_targetList.EntityList[i].cColor * ImVec4(1.0f, 1.0f, 1.0f, 0.25f)));
 
-						ImGui::GetWindowDrawList()->AddLine(vFinalX, vFinalY, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : _targetList.EntityList[i].cColor));
-						ImGui::GetWindowDrawList()->AddLine(vFinalY, vFinalZ, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : _targetList.EntityList[i].cColor));
-						ImGui::GetWindowDrawList()->AddLine(vFinalZ, vFinalX, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : _targetList.EntityList[i].cColor));
+						ImGui::GetWindowDrawList()->AddLine(vFinalX, vFinalY, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorAccents->Current.cValue : _targetList.EntityList[i].cColor));
+						ImGui::GetWindowDrawList()->AddLine(vFinalY, vFinalZ, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorAccents->Current.cValue : _targetList.EntityList[i].cColor));
+						ImGui::GetWindowDrawList()->AddLine(vFinalZ, vFinalX, ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorAccents->Current.cValue : _targetList.EntityList[i].cColor));
 					}
 				}
 			}
@@ -636,7 +645,7 @@ namespace NeoGenesys
 							ImGui::GetColorU32(_targetList.EntityList[i].cColor * ImVec4(1.0f, 1.0f, 1.0f, 0.25f)));
 
 						ImGui::GetWindowDrawList()->AddCircle(Radar.vBlipPosition[i], Radar.flBlipSize / 2.0f,
-							ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorRiotShield->Current.cValue : _targetList.EntityList[i].cColor));
+							ImGui::GetColorU32(bHasRiotShield ? _profiler.gColorAccents->Current.cValue : _targetList.EntityList[i].cColor));
 					}
 				}
 			}
@@ -658,6 +667,25 @@ namespace NeoGenesys
 
 				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 12.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 4.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
 				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) + 3.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) + 11.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
+			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cDrawing::DrawTracers()
+	{
+		for (auto& Tracer : vTracers)
+		{
+			if (Tracer.bW2SSuccess)
+			{
+				ImGui::GetWindowDrawList()->AddLine(Tracer.vHitPos2D + ImVec2(+5.0f, +5.0f), Tracer.vHitPos2D + ImVec2(-5.0f, -5.0f), ImGui::GetColorU32(Tracer.cColorShadow), 3.0f);
+				ImGui::GetWindowDrawList()->AddLine(Tracer.vHitPos2D + ImVec2(+5.0f, -5.0f), Tracer.vHitPos2D + ImVec2(-5.0f, +5.0f), ImGui::GetColorU32(Tracer.cColorShadow), 3.0f);
+
+				ImGui::GetWindowDrawList()->AddLine(Tracer.vHitPos2D + ImVec2(+4.0f, +4.0f), Tracer.vHitPos2D + ImVec2(-4.0f, -4.0f), ImGui::GetColorU32(Tracer.cColorHitMarker), 1.0f);
+				ImGui::GetWindowDrawList()->AddLine(Tracer.vHitPos2D + ImVec2(+4.0f, -4.0f), Tracer.vHitPos2D + ImVec2(-4.0f, +4.0f), ImGui::GetColorU32(Tracer.cColorHitMarker), 1.0f);
+
+				ImGui::GetWindowDrawList()->AddLine(Tracer.vStartPos2D, Tracer.vHitPos2D, ImGui::GetColorU32(Tracer.cColorTracer), 1.0f);
 			}
 		}
 	}

@@ -129,6 +129,7 @@ namespace NeoGenesys
 			ANTIAIM_JITTERBOT,
 			ANTIAIM_RANDOMIZED,
 			ANTIAIM_REVERSED,
+			ANTIAIM_INVERTED,
 			ANTIAIM_MAX
 		} eAntiAim;
 
@@ -213,7 +214,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gSilentAim = std::make_shared<sCvar>("Silent-Aim", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTargetAgents = std::make_shared<sCvar>("Target Agents", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTargetMissiles = std::make_shared<sCvar>("Target Missiles", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gAntiAim = std::make_shared<sCvar>("Anti-Aim", std::vector<std::string>({ "Off", "Spinbot", "Jitterbot", "Randomized", "Reversed" }), ANTIAIM_OFF, ANTIAIM_OFF, ANTIAIM_MAX);
+		std::shared_ptr<sCvar> gAntiAim = std::make_shared<sCvar>("Anti-Aim", std::vector<std::string>({ "Off", "Spinbot", "Jitterbot", "Randomized", "Reversed", "Inverted" }), ANTIAIM_OFF, ANTIAIM_OFF, ANTIAIM_MAX);
 		std::shared_ptr<sCvar> gBoneScan = std::make_shared<sCvar>("Bonescan", std::vector<std::string>({ "Off", "On Timer", "Immediate" }), BONESCAN_OFF, BONESCAN_OFF, BONESCAN_MAX);
 		std::shared_ptr<sCvar> gSortMethod = std::make_shared<sCvar>("Sort Method", std::vector<std::string>({ "Field of View", "Distance" }), SORT_METHOD_FOV, SORT_METHOD_FOV, SORT_METHOD_MAX);
 		
@@ -221,9 +222,9 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gPlayerBoxes = std::make_shared<sCvar>("Boxes", std::vector<std::string>({ "Off", "Border", "Corner", "Border Filled", "Corner Filled", "Border 3D", "Corner 3D" }), PLAYER_BOXES_OFF, PLAYER_BOXES_OFF, PLAYER_BOXES_MAX);
 		std::shared_ptr<sCvar> gPlayerBones = std::make_shared<sCvar>("Bones", std::vector<std::string>({ "Off", "Dots", "Lines" }), PLAYER_BONES_OFF, PLAYER_BONES_OFF, PLAYER_BONES_MAX);
 		std::shared_ptr<sCvar> gPlayerSnapLines = std::make_shared<sCvar>("Snaplines", std::vector<std::string>({ "Off", "Top", "Bottom", "Crosshair" }), PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_OFF, PLAYER_SNAPLINES_MAX);
-		std::shared_ptr<sCvar> gPlayerDistances = std::make_shared<sCvar>("Distances", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gPlayerNames = std::make_shared<sCvar>("Names", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gPlayerInformation = std::make_shared<sCvar>("Information", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerWeapons = std::make_shared<sCvar>("Weapons", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gPlayerBulletTracers = std::make_shared<sCvar>("Bullet Tracers", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gAgents = std::make_shared<sCvar>("Agents", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gMissiles = std::make_shared<sCvar>("Missiles", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gItems = std::make_shared<sCvar>("Items", std::vector<std::string>(), false);
@@ -236,8 +237,8 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gRiotShield = std::make_shared<sCvar>("Riotshields", std::vector<std::string>({ "Off", "Ignore Player", "Target Feet" }), RIOTSHIELD_OFF, RIOTSHIELD_OFF, RIOTSHIELD_MAX);
 
 		std::shared_ptr<sCvar> gAimBone = std::make_shared<sCvar>("Aimbone", std::vector<std::string>(), BONE_HELMET, BONE_HELMET, BONE_MAX - 1);
-		std::shared_ptr<sCvar> gAimAngle = std::make_shared<sCvar>("Aimangle", std::vector<std::string>(), 180.0f, 5.0f, 180.0f);
-		std::shared_ptr<sCvar> gAimPower = std::make_shared<sCvar>("Aimpower", std::vector<std::string>(), 100, 5, 100);
+		std::shared_ptr<sCvar> gAimAngle = std::make_shared<sCvar>("Aimangle", std::vector<std::string>(), 180, 1, 180);
+		std::shared_ptr<sCvar> gAimPower = std::make_shared<sCvar>("Aimpower", std::vector<std::string>(), 100, 1, 100);
 		std::shared_ptr<sCvar> gAutoAimTime = std::make_shared<sCvar>("Autoaim Time", std::vector<std::string>(), 0, 0, 1000);
 		std::shared_ptr<sCvar> gAutoAimDelay = std::make_shared<sCvar>("Autoaim Delay", std::vector<std::string>(), 0, 0, 1000);
 		std::shared_ptr<sCvar> gAutoZoomDelay = std::make_shared<sCvar>("Autozoom Delay", std::vector<std::string>(), 0, 0, 1000);
@@ -247,7 +248,7 @@ namespace NeoGenesys
 
 		std::shared_ptr<sCvar> gColorAxis = std::make_shared<sCvar>("Axis", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorAllies = std::make_shared<sCvar>("Allies", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
-		std::shared_ptr<sCvar> gColorRiotShield = std::make_shared<sCvar>("Riotshield", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)));
+		std::shared_ptr<sCvar> gColorAccents = std::make_shared<sCvar>("Accents", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(255), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorText = std::make_shared<sCvar>("Text", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(255), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorShadow = std::make_shared<sCvar>("Shadow", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)));

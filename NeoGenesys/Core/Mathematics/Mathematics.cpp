@@ -191,7 +191,7 @@ namespace NeoGenesys
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, angles);
-
+		
 		ClampAngles(angles);
 
 		angles[0] -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
@@ -225,7 +225,7 @@ namespace NeoGenesys
 	*/
 	void cMathematics::MakeVector(Vector3 angles, Vector3 out)
 	{
-		float flPitch = DegreesToRadians(angles[0]),
+		float flPitch = DegreesToRadians(angles[0]), 
 			flYaw = DegreesToRadians(angles[1]);
 
 		out[0] = -cosf(flPitch) * -cosf(flYaw);
@@ -260,7 +260,7 @@ namespace NeoGenesys
 		VectorAngles(vDirection, vAngles);
 
 		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vAngles, vAngles);
-		_mathematics.ClampAngles(vAngles);
+		ClampAngles(vAngles);
 
 		flAngle = ((vAngles[1] + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
 

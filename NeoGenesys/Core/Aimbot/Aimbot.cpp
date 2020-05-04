@@ -66,7 +66,7 @@ namespace NeoGenesys
 		{
 			if (AimState.iCurrentFireDelay == _profiler.gAutoFireDelay->Current.iValue)
 			{
-				if (_aimBot.AimState.bLockonTarget)
+				if (AimState.bLockonTarget)
 				{
 					if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)))
 					{
@@ -82,6 +82,78 @@ namespace NeoGenesys
 				}
 			}
 		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cAimbot::SetAimState()
+	{
+
+		AimState.bTargetAcquired = (AimState.iTargetNum > -1);
+		AimState.bLockonTarget = (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO || (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_MANUAL && CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
+		AimState.bIsAutoAiming = (AimState.bTargetAcquired && AimState.bLockonTarget);
+		AimState.bIsAutoFiring = (_profiler.gAutoFire->Current.bValue && AimState.bIsAutoAiming);
+
+		if (AimState.bLockonTarget)
+		{
+			if (AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Current.iValue)
+				AimState.iCurrentAimTime += clock() - AimState.iDeltaTMR;
+
+			AimState.iCurrentAimDelay += clock() - AimState.iDeltaTMR;
+			AimState.iCurrentZoomDelay += clock() - AimState.iDeltaTMR;
+			AimState.iCurrentFireDelay += clock() - AimState.iDeltaTMR;
+		}
+
+		AimState.iDeltaTMR = clock();
+
+		if (AimState.iLastTarget != AimState.iTargetNum)
+		{
+			AimState.iLastTarget = AimState.iTargetNum;
+			AimState.iCurrentAimTime = 0;
+		}
+
+		if (_targetList.EntityList[AimState.iTargetNum].iLastBone != _targetList.EntityList[AimState.iTargetNum].iBoneIndex)
+		{
+			_targetList.EntityList[AimState.iTargetNum].iLastBone = _targetList.EntityList[AimState.iTargetNum].iBoneIndex;
+			AimState.iCurrentAimTime = 0;
+		}
+
+		if (!AimState.bTargetAcquired)
+			AimState.iCurrentAimDelay = AimState.iCurrentZoomDelay = AimState.iCurrentFireDelay = 0;
+
+		if (AimState.iCurrentAimTime > _profiler.gAutoAimTime->Current.iValue)
+			AimState.iCurrentAimTime = _profiler.gAutoAimTime->Current.iValue;
+
+		if (AimState.iCurrentAimDelay > _profiler.gAutoAimDelay->Current.iValue)
+			AimState.iCurrentAimDelay = _profiler.gAutoAimDelay->Current.iValue;
+
+		if (AimState.iCurrentZoomDelay > _profiler.gAutoZoomDelay->Current.iValue)
+			AimState.iCurrentZoomDelay = _profiler.gAutoZoomDelay->Current.iValue;
+
+		if (AimState.iCurrentFireDelay > _profiler.gAutoFireDelay->Current.iValue)
+			AimState.iCurrentFireDelay = _profiler.gAutoFireDelay->Current.iValue;
+
+		if (AimState.bTargetAcquired)
+		{
+			Vector3 vViewOrigin;
+			GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+
+			VectorCopy(_targetList.EntityList[AimState.iTargetNum].vHitLocation, AimState.vAimPosition);
+
+			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, AimState.vAimAngles);
+			_mathematics.CalculateAntiAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, AimState.vAntiAimAngles);
+		}
+
+		AimState.iFireTMR++;
+
+		if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)))
+		{
+			if (!(AimState.iFireTMR % ((BYTE)GetViewmodelWeapon(&CG->PlayerState) == WEAPON_44_MAGNUM ? 12 : 6)))
+				AimState.bAkimbo = !AimState.bAkimbo;
+		}
+
+		else
+			AimState.bAkimbo = false;
 	}
 }
 

@@ -22,6 +22,7 @@ namespace NeoGenesys
 		void StandardAim();
 		void SilentAim(sUserCmd* usercmd);
 		void AutoFire(sUserCmd* usercmd);
+		void SetAimState();
 	} extern _aimBot;
 }
 

@@ -12,6 +12,17 @@ namespace NeoGenesys
 	{
 	public:
 
+		typedef struct
+		{
+			bool bW2SSuccess;
+			ImVec2 vHitPos2D, vStartPos2D;
+			Vector3 vHitPos3D, vStartPos3D;
+			int iStartTime;
+			ImVec4 cColorShadow, cColorHitMarker, cColorTracer;
+		} sTracer;
+
+		std::vector<sTracer> vTracers;
+
 		struct sCompass
 		{
 			float flCompassSize, flArrowSize;
@@ -37,10 +48,12 @@ namespace NeoGenesys
 		void DrawAgent(sCEntity* entity, ImVec2 center, float distance, ImVec4 color);
 		bool Calculate2D(Vector3 bones3d[BONE_MAX], ImVec2 bones2d[BONE_MAX], ImVec2& position, ImVec2& dimentions);
 		bool Calculate3D(sCEntity* entity, Vector3 center, Vector3 corners3d[8], ImVec2 corners2d[8]);
+		void CalculateTracers();
 		void DrawESP();
 		void DrawCompass();
 		void DrawRadar();
 		void DrawCrosshair();
+		void DrawTracers();
 		void ColorPicker(std::string label, ImVec4& color);
 	} extern _drawing;
 }

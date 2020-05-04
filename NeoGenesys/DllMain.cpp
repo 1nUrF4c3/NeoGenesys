@@ -33,6 +33,10 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime);
 tBulletFirePenetrate oBulletFirePenetrate = (tBulletFirePenetrate)OFF_BULLETFIREPENETRATE;
 
+void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents);
+typedef void(HOOKCALL* tBulletHitEvent)(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents);
+tBulletHitEvent oBulletHitEvent = (tBulletHitEvent)OFF_BULLETHITEVENT;
+
 void HOOKCALL hCalcEntityLerpPositions(int localnum, sCEntity* entity);
 typedef void(HOOKCALL* tCalcEntityLerpPositions)(int localnum, sCEntity* entity);
 tCalcEntityLerpPositions oCalcEntityLerpPositions = (tCalcEntityLerpPositions)OFF_CALCENTITYLERPPOSITIONS;
@@ -96,6 +100,15 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 
 //=====================================================================================
 
+void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents)
+{
+	_hooks.BulletHitEvent(localnum, sourcenum, targetnum, weapon, alternate, start, position, normal, surface, _event, param, contents);
+
+	oBulletHitEvent(localnum, sourcenum, targetnum, weapon, alternate, start, position, normal, surface, _event, param, contents);
+}
+
+//=====================================================================================
+
 void HOOKCALL hCalcEntityLerpPositions(int localnum, sCEntity* entity)
 {
 	oCalcEntityLerpPositions(localnum, entity);
@@ -141,6 +154,7 @@ void Initialize()
 	Hook(oWritePacket, hWritePacket);
 	Hook(oPredictPlayerState, hPredictPlayerState);
 	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
+	Hook(oBulletHitEvent, hBulletHitEvent);
 	Hook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	Hook(oObituary, hObituary);
 	Hook(oAddCmdDrawText, hAddCmdDrawText);
@@ -158,6 +172,7 @@ void Deallocate()
 	UnHook(oWritePacket, hWritePacket);
 	UnHook(oPredictPlayerState, hPredictPlayerState);
 	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
+	UnHook(oBulletHitEvent, hBulletHitEvent);
 	UnHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
 	UnHook(oObituary, hObituary);
 	UnHook(oAddCmdDrawText, hAddCmdDrawText);

@@ -125,10 +125,10 @@
     <ClInclude Include="StdAfx.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Detours\detours.pdb" />
+    <Library Include="Detours\detours.lib" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Detours\detours.lib" />
+    <None Include="Detours\detours.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

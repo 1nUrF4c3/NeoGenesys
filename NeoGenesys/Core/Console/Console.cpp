@@ -638,38 +638,38 @@ namespace NeoGenesys
 
 		else if (!Stricmp(CmdLine.szCmdName, "neo_antileave"))
 		{
-		if (CmdLine.iArgNum > 0)
-		{
-			if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+			if (CmdLine.iArgNum > 0)
 			{
-				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-				_profiler.gAntiLeave->Current.bValue = true;
+					_profiler.gAntiLeave->Current.bValue = true;
 
-				AddLog("Anti-leave has been enabled.");
-				AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
-			}
+					AddLog("Anti-leave has been enabled.");
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
 
-			else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
-			{
-				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-				_profiler.gAntiLeave->Current.bValue = false;
+					_profiler.gAntiLeave->Current.bValue = false;
 
-				AddLog("Anti-leave has been disabled.");
-				AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					AddLog("Anti-leave has been disabled.");
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("[ERROR] Invalid argument(s).");
+				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Invalid argument(s).");
+				AddLog("[ERROR] Missing argument(s).");
 			}
-		}
-
-		else
-		{
-			AddLog("[ERROR] Missing argument(s).");
-		}
 		}
 
 		else if (!Stricmp(CmdLine.szCmdName, "neo_bhop"))

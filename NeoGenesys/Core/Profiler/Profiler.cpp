@@ -36,9 +36,9 @@ namespace NeoGenesys
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Boxes", gPlayerBoxes->Current.iValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Bones", gPlayerBones->Current.iValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.SnapLines", gPlayerSnapLines->Current.iValue);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Distances", gPlayerDistances->Current.bValue);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Names", gPlayerNames->Current.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Information", gPlayerInformation->Current.bValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Weapons", gPlayerWeapons->Current.bValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.BulletTracers", gPlayerBulletTracers->Current.bValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Agents", gAgents->Current.bValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Missiles", gMissiles->Current.bValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Items", gItems->Current.bValue);
@@ -51,7 +51,7 @@ namespace NeoGenesys
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.RiotShield", gRiotShield->Current.iValue);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimBone", gAimBone->Current.iValue);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Current.flValue);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Current.iValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimPower", gAimPower->Current.iValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimTime", gAutoAimTime->Current.iValue);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimDelay", gAutoAimDelay->Current.iValue);
@@ -73,10 +73,10 @@ namespace NeoGenesys
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Current.cValue[2]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Alpha", gColorAllies->Current.cValue[3]);
 
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Current.cValue[0]);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Current.cValue[1]);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Current.cValue[2]);
-			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Alpha", gColorRiotShield->Current.cValue[3]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Red", gColorAccents->Current.cValue[0]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Green", gColorAccents->Current.cValue[1]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Blue", gColorAccents->Current.cValue[2]);
+			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Alpha", gColorAccents->Current.cValue[3]);
 
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Current.cValue[0]);
 			XML.set(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Current.cValue[1]);
@@ -140,9 +140,9 @@ namespace NeoGenesys
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Boxes", gPlayerBoxes->Current.iValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Bones", gPlayerBones->Current.iValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.SnapLines", gPlayerSnapLines->Current.iValue);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Distances", gPlayerDistances->Current.bValue);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Names", gPlayerNames->Current.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Information", gPlayerInformation->Current.bValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Weapons", gPlayerWeapons->Current.bValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.BulletTracers", gPlayerBulletTracers->Current.bValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Agents", gAgents->Current.bValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Missiles", gMissiles->Current.bValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".WallHack.Items", gItems->Current.bValue);
@@ -155,7 +155,7 @@ namespace NeoGenesys
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Miscellaneous.RiotShield", gRiotShield->Current.iValue);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimBone", gAimBone->Current.iValue);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Current.flValue);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimAngle", gAimAngle->Current.iValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AimPower", gAimPower->Current.iValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimTime", gAutoAimTime->Current.iValue);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Tweaks.AutoAimDelay", gAutoAimDelay->Current.iValue);
@@ -177,10 +177,10 @@ namespace NeoGenesys
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Blue", gColorAllies->Current.cValue[2]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Allies.Alpha", gColorAllies->Current.cValue[3]);
 
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Red", gColorRiotShield->Current.cValue[0]);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Green", gColorRiotShield->Current.cValue[1]);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Blue", gColorRiotShield->Current.cValue[2]);
-			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.RiotShield.Alpha", gColorRiotShield->Current.cValue[3]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Red", gColorAccents->Current.cValue[0]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Green", gColorAccents->Current.cValue[1]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Blue", gColorAccents->Current.cValue[2]);
+			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.Accents.Alpha", gColorAccents->Current.cValue[3]);
 
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Red", gColorCrossHair->Current.cValue[0]);
 			XML.get_if_present(acut::FindAndReplaceString(PROGRAM_NAME, " ", "") + ".Colors.CrossHair.Green", gColorCrossHair->Current.cValue[1]);
@@ -227,9 +227,9 @@ namespace NeoGenesys
 		gPlayerBoxes->Current.iValue = gPlayerBoxes->Reset.iValue;
 		gPlayerBones->Current.iValue = gPlayerBones->Reset.iValue;
 		gPlayerSnapLines->Current.iValue = gPlayerSnapLines->Reset.iValue;
-		gPlayerDistances->Current.bValue = gPlayerDistances->Reset.bValue;
-		gPlayerNames->Current.bValue = gPlayerNames->Reset.bValue;
+		gPlayerInformation->Current.bValue = gPlayerInformation->Reset.bValue;
 		gPlayerWeapons->Current.bValue = gPlayerWeapons->Reset.bValue;
+		gPlayerBulletTracers->Current.bValue = gPlayerBulletTracers->Reset.bValue;
 		gAgents->Current.bValue = gAgents->Reset.bValue;
 		gMissiles->Current.bValue = gMissiles->Reset.bValue;
 		gItems->Current.bValue = gItems->Reset.bValue;

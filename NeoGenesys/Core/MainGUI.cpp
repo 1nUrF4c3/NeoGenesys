@@ -332,6 +332,7 @@ namespace NeoGenesys
 				_drawing.DrawCompass();
 				_drawing.DrawRadar();
 				_drawing.DrawCrosshair();
+				_drawing.DrawTracers();
 			}
 
 			std::string szWatermark(VariadicText("%s - COD GHOSTS by: InUrFace | Frametime: %s, Ping: %s", acut::ToUpper(PROGRAM_NAME).c_str(),
@@ -493,17 +494,17 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-					if (ImGui::Checkbox(_profiler.gPlayerDistances->szName.c_str(), &_profiler.gPlayerDistances->Current.bValue))
+					if (ImGui::Checkbox(_profiler.gPlayerInformation->szName.c_str(), &_profiler.gPlayerInformation->Current.bValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::SameLine(296.0f);
 
-					if (ImGui::Checkbox(_profiler.gPlayerNames->szName.c_str(), &_profiler.gPlayerNames->Current.bValue))
+					if (ImGui::Checkbox(_profiler.gPlayerWeapons->szName.c_str(), &_profiler.gPlayerWeapons->Current.bValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::Checkbox(_profiler.gPlayerWeapons->szName.c_str(), &_profiler.gPlayerWeapons->Current.bValue))
+					if (ImGui::Checkbox(_profiler.gPlayerBulletTracers->szName.c_str(), &_profiler.gPlayerBulletTracers->Current.bValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::SameLine(296.0f);
@@ -589,12 +590,12 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::SliderFloat(_profiler.gAimAngle->szName.c_str(), &_profiler.gAimAngle->Current.flValue, _profiler.gAimAngle->Domain.flMin, _profiler.gAimAngle->Domain.flMax, "%.0f degrees"))
+					if (ImGui::SliderInt(_profiler.gAimAngle->szName.c_str(), &_profiler.gAimAngle->Current.iValue, _profiler.gAimAngle->Domain.iMin, _profiler.gAimAngle->Domain.iMax, "%d degrees"))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					if (ImGui::SliderInt(_profiler.gAimPower->szName.c_str(), &_profiler.gAimPower->Current.iValue, _profiler.gAimPower->Domain.iMin, _profiler.gAimPower->Domain.iMax, "%d%%"))
+					if (ImGui::SliderInt(_profiler.gAimPower->szName.c_str(), &_profiler.gAimPower->Current.iValue, _profiler.gAimPower->Domain.iMin, _profiler.gAimPower->Domain.iMax, "%d percent"))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
@@ -642,7 +643,7 @@ namespace NeoGenesys
 					if (ImGui::Button("Reset to Default", ImVec2(446.0f, 35.0f)))
 					{
 						_profiler.gAimBone->Current.iValue = _profiler.gAimBone->Reset.iValue;
-						_profiler.gAimAngle->Current.flValue = _profiler.gAimAngle->Reset.flValue;
+						_profiler.gAimAngle->Current.iValue = _profiler.gAimAngle->Reset.iValue;
 						_profiler.gAimPower->Current.iValue = _profiler.gAimPower->Reset.iValue;
 						_profiler.gAutoAimTime->Current.iValue = _profiler.gAutoAimTime->Reset.iValue;
 						_profiler.gAutoAimDelay->Current.iValue = _profiler.gAutoAimDelay->Reset.iValue;
@@ -676,10 +677,10 @@ namespace NeoGenesys
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
 
-					_drawing.ColorPicker(_profiler.gColorRiotShield->szName, _profiler.gColorRiotShield->Current.cValue);
+					_drawing.ColorPicker(_profiler.gColorAccents->szName, _profiler.gColorAccents->Current.cValue);
 					ImGui::SameLine(0.0f, 4.0f);
 
-					if (ImGui::ColorEdit4(_profiler.gColorRiotShield->szName.c_str(), _profiler.gColorRiotShield->Current.cValue))
+					if (ImGui::ColorEdit4(_profiler.gColorAccents->szName.c_str(), _profiler.gColorAccents->Current.cValue))
 					{
 						Menu.bWriteLog = true;
 					} ImGui::NewLine();
@@ -736,7 +737,7 @@ namespace NeoGenesys
 					{
 						_profiler.gColorAxis->Current.cValue = _profiler.gColorAxis->Reset.cValue;
 						_profiler.gColorAllies->Current.cValue = _profiler.gColorAllies->Reset.cValue;
-						_profiler.gColorRiotShield->Current.cValue = _profiler.gColorRiotShield->Reset.cValue;
+						_profiler.gColorAccents->Current.cValue = _profiler.gColorAccents->Reset.cValue;
 						_profiler.gColorCrossHair->Current.cValue = _profiler.gColorCrossHair->Reset.cValue;
 						_profiler.gColorText->Current.cValue = _profiler.gColorText->Reset.cValue;
 						_profiler.gColorShadow->Current.cValue = _profiler.gColorShadow->Reset.cValue;

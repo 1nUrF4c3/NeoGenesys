@@ -10,17 +10,22 @@ namespace NeoGenesys
 
 	void cHooks::Refresh(int localnum)
 	{
-		dwThreadLocalStoragePointer = Sys_GetValue(3);
+		dwSysValue = Sys_GetValue(3);
 
 		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
 		{
 			_targetList.GetInformation();
+			_drawing.CalculateTracers();
+			_aimBot.SetAimState();
 
 			if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
 				_aimBot.StandardAim();
 
 			_removals.RecoilCompensation();
 		}
+
+		else
+			_drawing.vTracers.clear();
 
 		_host.PlayerMods();
 	}
@@ -84,6 +89,51 @@ namespace NeoGenesys
 
 				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
 				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Current.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
+			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cHooks::BulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents)
+	{
+		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+		{
+			if (_profiler.gPlayerBulletTracers->Current.bValue)
+			{
+				if (sourcenum == CG->PlayerState.iClientNum &&
+					_targetList.EntityIsEnemy(targetnum) &&
+					(CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER ||
+					(_profiler.gTargetMissiles->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_MISSILE &&
+					(CEntity[targetnum].NextEntityState.iWeapon == WEAPON_C4 || CEntity[targetnum].NextEntityState.iWeapon == WEAPON_IED)) ||
+					(_profiler.gTargetAgents->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
+				{
+					Vector3 vTracerStart;
+					GetPlayerViewOrigin(&CG->PlayerState, vTracerStart);
+
+					sOrientation Orientation;
+					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)));
+
+					if (GetTagOrientation((int)(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
+					{
+						cDrawing::sTracer Tracer;
+
+						if (IsThirdPersonMode(&CG->PlayerState))
+							VectorMA(vTracerStart, 30.0f, Orientation.vAxis[0], vTracerStart);
+						else
+							VectorCopy(Orientation.vOrigin, vTracerStart);
+
+						VectorCopy(vTracerStart, Tracer.vStartPos3D);
+						VectorCopy(position, Tracer.vHitPos3D);
+
+						Tracer.cColorShadow = _profiler.gColorShadow->Current.cValue;
+						Tracer.cColorHitMarker = _profiler.gColorText->Current.cValue;
+						Tracer.cColorTracer = _profiler.gColorAccents->Current.cValue;
+						Tracer.iStartTime = CG->PlayerState.iCommandTime;
+
+						_drawing.vTracers.push_back(Tracer);
+					}
+				}
 			}
 		}
 	}
@@ -196,8 +246,15 @@ namespace NeoGenesys
 		{
 			if (ExceptionInfo->ContextRecord->Rip == OFF_SYSGETVALUEEXCEPTION)
 			{
-				ExceptionInfo->ContextRecord->Rax = dwThreadLocalStoragePointer;
+				ExceptionInfo->ContextRecord->Rax = dwSysValue;
 				ExceptionInfo->ContextRecord->Rip += 0x4;
+
+				return EXCEPTION_CONTINUE_EXECUTION;
+			}
+
+			else
+			{
+				Com_Error(ERR_DROP, "STATUS_ACCESS_VIOLATION @ 0x%X", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 				return EXCEPTION_CONTINUE_EXECUTION;
 			}

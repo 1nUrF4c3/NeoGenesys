@@ -77,11 +77,11 @@
 #define OFF_PREDICTPLAYERSTATE 0x1402830B0
 #define OFF_CREATENEWCOMMANDS 0x1402BEE80
 #define OFF_BULLETFIREPENETRATE 0x1402ACBF0
+#define OFF_BULLETHITEVENT 0x1402A68F0
 #define OFF_CALCENTITYLERPPOSITIONS 0x140262F60
 #define OFF_OBITUARY 0x14026A010
 #define OFF_ADDCMDDRAWTEXT 0x140601070
 #define OFF_CLIENTFRAME 0x140382890
-#define OFF_AISYSTEMENABLED 0x140216DC0
 #define OFF_LOCALCLIENTISINGAME 0x1402CFE50
 #define OFF_ISMAINTHREAD 0x140423950
 #define OFF_ISRENDERTHREAD 0x1404239A0
@@ -89,6 +89,7 @@
 #define OFF_ISDATABASETHREAD 0x140424990
 #define OFF_ENABLECONSOLE 0x140503130
 #define OFF_PRINTTOCONSOLE 0x140502A80
+#define OFF_COMERROR 0x140412740
 #define OFF_CBUFADDCALL 0x1403F6AD0
 #define OFF_CBUFADDTEXT 0x1403F6B50
 #define OFF_GAMESENDSERVERCOMMAND 0x1404758C0
@@ -125,6 +126,7 @@
 #define OFF_GETTHIRDPERSONCROSSHAIROFFSET 0x140219090
 #define OFF_GETENTITYDOBJ 0x140416490
 #define OFF_GETTAGPOSITION 0x140263F50
+#define OFF_GETTAGORIENTATION 0x140269980
 #define OFF_LOCATIONALTRACE 0x1402B6020
 #define OFF_VECTORANGLES 0x1404E36A0
 #define OFF_ANGLEVECTORS 0x1404E39E0
@@ -215,6 +217,21 @@ namespace NeoGenesys
 	typedef Vector Vector4[4];
 	typedef Vector3 RGB;
 	typedef Vector4 RGBA;
+	/*
+	//=====================================================================================
+	*/
+	typedef enum
+	{
+		ERR_FATAL,
+		ERR_DROP,
+		ERR_SERVERDISCONNECT,
+		ERR_DISCONNECT,
+		ERR_SCRIPT,
+		ERR_SCRIPT_DROP,
+		ERR_LOCALIZATION,
+		ERR_MAPLOADERRORSUMMARY,
+		ERR_MAX
+	} eErrorParam;
 	/*
 	//=====================================================================================
 	*/
@@ -983,6 +1000,19 @@ namespace NeoGenesys
 	*/
 	typedef struct
 	{
+		sTrace Trace;
+		char _0x2C[0x4];
+		sGEntity* pHitEnt;
+		Vector3 vHitPos;
+		int iIgnoreHitEnt;
+		int iDepthSurfaceType;
+		int iHitClientNum;
+	} sBulletTraceResults;
+	/*
+	//=====================================================================================
+	*/
+	typedef struct
+	{
 		int iMaxEntNum;
 		int iEntityNum;
 		float flPower;
@@ -998,14 +1028,9 @@ namespace NeoGenesys
 	*/
 	typedef struct
 	{
-		sTrace Trace;
-		char _0x2C[0x4];
-		sGEntity* pHitEnt;
-		Vector3 vHitPos;
-		int iIgnoreHitEnt;
-		int iDepthSurfaceType;
-		int iHitClientNum;
-	} sBulletTraceResults;
+		Vector3 vOrigin;
+		Vector3 vAxis[3];
+	} sOrientation;
 	/*
 	//=====================================================================================
 	*/
@@ -1026,9 +1051,9 @@ namespace NeoGenesys
 		short wEntityNum;
 		short wClassNum;
 
-		sEntRef(short entitynum, short classnum) :
+		sEntRef(short entitynum, short classnum) : 
 			wEntityNum(entitynum),
-			wClassNum(classnum)
+			wClassNum(classnum) 
 		{
 
 		}
@@ -1121,7 +1146,7 @@ namespace NeoGenesys
 	static bool bGameOverlayRenderer64 = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage);
 
 	static DWORD_PTR dwPresent = bGameOverlayRenderer64 ?
-		ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) : 
+		ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
 		*(DWORD_PTR*)OFF_SWAPCHAIN;
 	/*
 	//=====================================================================================
@@ -1139,6 +1164,14 @@ namespace NeoGenesys
 	static sWindow* Window = (sWindow*)OFF_WINDOW;
 	static sViewMatrix* ViewMatrix = (sViewMatrix*)OFF_VIEWMATRIX;
 	static sPunch* Punch = (sPunch*)OFF_PUNCH;
+	/*
+	//=====================================================================================
+	*/
+	template <typename... Parameters>
+	inline void Com_Error(eErrorParam code, LPCSTR format, Parameters... params)
+	{
+		return VariadicCall<void>(OFF_COMERROR, code, format, params...);
+	}
 	/*
 	//=====================================================================================
 	*/
@@ -1440,6 +1473,13 @@ namespace NeoGenesys
 	inline int GetTagPosition(sCEntity* entity, LPVOID entitydobj, int tag, Vector3 position)
 	{
 		return VariadicCall<int>(OFF_GETTAGPOSITION, entity, entitydobj, tag, position);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline bool GetTagOrientation(int entitynum, int tag, sOrientation* orientation)
+	{
+		return VariadicCall<bool>(OFF_GETTAGORIENTATION, 0, entitynum, tag, orientation);
 	}
 	/*
 	//=====================================================================================
