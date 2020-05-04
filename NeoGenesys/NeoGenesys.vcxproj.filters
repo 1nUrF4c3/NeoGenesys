@@ -139,9 +139,6 @@
     <ClCompile Include="Core\Profiler\RapidXML\Utilities\FileUtility.cpp">
       <Filter>Core\Profiler\RapidXML\Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Addons\WICTextureLoader.cpp">
-      <Filter>ImGui\Addons</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.hpp" />
@@ -261,9 +258,6 @@
     </ClInclude>
     <ClInclude Include="Detours\detours.h">
       <Filter>Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Addons\WICTextureLoader.h">
-      <Filter>ImGui\Addons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
