@@ -72,7 +72,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::BulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sGEntity* attacker, int servertime)
+	void cHooks::BulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sCEntity* attacker, int servertime)
 	{
 		if (LocalClientIsInGame())
 		{

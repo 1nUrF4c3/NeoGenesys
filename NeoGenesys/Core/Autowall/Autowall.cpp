@@ -76,7 +76,6 @@ namespace NeoGenesys
 				{
 					if (bStaticModel)
 						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
-
 					else
 						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
 
@@ -99,6 +98,21 @@ namespace NeoGenesys
 
 					if (FP_Enter.flPower <= 0.0f)
 						return 0.0f;
+
+					if (!bStaticModel)
+					{
+						Vector3 vLength;
+
+						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
+
+						float flLength = DotProduct(vLength, vLength);
+
+						if (flLength > 900.0f)
+						{
+							if (!bEnterHit)
+								return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
+						}
+					}
 				}
 
 				else if (!bEnterHit)
@@ -226,7 +240,6 @@ namespace NeoGenesys
 				{
 					if (bStaticModel)
 						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
-
 					else
 						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
 
@@ -249,6 +262,21 @@ namespace NeoGenesys
 
 					if (FP_Enter.flPower <= 0.0f)
 						return 0.0f;
+
+					if (!bStaticModel)
+					{
+						Vector3 vLength;
+
+						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
+
+						float flLength = DotProduct(vLength, vLength);
+
+						if (flLength > 900.0f)
+						{
+							if (!bEnterHit)
+								return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, CEntity[CG->PlayerState.iClientNum].NextEntityState.iWeapon, CEntity[CG->PlayerState.iClientNum].NextEntityState.iInAltWeaponMode);
+						}
+					}
 				}
 
 				else if (!bEnterHit)

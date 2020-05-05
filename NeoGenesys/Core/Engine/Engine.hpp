@@ -1003,7 +1003,7 @@ namespace NeoGenesys
 	{
 		sTrace Trace;
 		char _0x2C[0x4];
-		sGEntity* pHitEnt;
+		sCEntity* pHitEnt;
 		Vector3 vHitPos;
 		int iIgnoreHitEnt;
 		int iDepthSurfaceType;

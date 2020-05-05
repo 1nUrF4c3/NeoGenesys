@@ -250,19 +250,7 @@ namespace NeoGenesys
 	*/
 	bool cTargetList::EntityIsValid(int index)
 	{
-		if (CEntity[index].NextEntityState.iEntityType == ET_PLAYER)
-		{
-			if (index != CG->PlayerState.iClientNum && CEntity[index].iIsAlive & 1 && CharacterInfo[index].iInfoValid && !(CEntity[index].NextEntityState.LerpEntityState.iEntityFlags & EF_DEAD))
-				return true;
-		}
-
-		else
-		{
-			if (index != CG->PlayerState.iClientNum && CEntity[index].iIsAlive & 1 && CEntity[index].wValid)
-				return true;
-		}
-
-		return false;
+		return ((index != CG->PlayerState.iClientNum) && (CEntity[index].iIsAlive & 1) && !(CEntity[index].NextEntityState.LerpEntityState.iEntityFlags & EF_DEAD));
 	}
 	/*
 	//=====================================================================================
@@ -271,14 +259,32 @@ namespace NeoGenesys
 	{
 		if (CEntity[index].NextEntityState.iEntityType == ET_PLAYER)
 		{
-			if (CharacterInfo[index].iTeam == TEAM_FREE || CharacterInfo[index].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
-				return true;
+			if (CharacterInfo[index].iTeam > TEAM_FREE)
+			{
+				if (CharacterInfo[index].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+					return true;
+			}
+
+			else
+			{
+				if (index != CG->PlayerState.iClientNum)
+					return true;
+			}
 		}
 
 		else
 		{
-			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam == TEAM_FREE || CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
-				return true;
+			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam > TEAM_FREE)
+			{
+				if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+					return true;
+			}
+
+			else
+			{
+				if (CEntity[index].NextEntityState.iOtherEntityNum != CG->PlayerState.iClientNum)
+					return true;
+			}
 		}
 
 		return false;
