@@ -170,42 +170,22 @@ namespace NeoGenesys
 	void cHost::SpawnBots(int count)
 	{
 		int iCurrentIndex = 0;
-		std::vector<sGEntity*> vSpawnedBots;
+		vSpawnedBots.clear();
 
-		auto AddEntities = [&]()
+		for (int i = 0; i < count; iCurrentIndex++)
 		{
-			for (auto& SpawnedBot : vSpawnedBots)
-			{
-				AddEntity(SpawnedBot);
-			}
-		};
+			if (CharacterInfo[iCurrentIndex].iInfoValid)
+				continue;
 
-		auto SpawnTestClients = [&]()
-		{
-			for (auto& SpawnedBot : vSpawnedBots)
-			{
-				SpawnTestClient(SpawnedBot);
-			}
-		};
+			sGEntity* pGEntity = AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, sEntRef(iCurrentIndex, 0));
 
-		auto AddTestClients = [&]()
-		{
-			vSpawnedBots.clear();
+			AddEntity(pGEntity);
+			SpawnTestClient(pGEntity);
 
-			for (int i = 0; i < count; iCurrentIndex++)
-			{
-				if (CharacterInfo[iCurrentIndex].iInfoValid)
-					continue;
+			vSpawnedBots.push_back(pGEntity);
 
-				vSpawnedBots.push_back(AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, sEntRef(iCurrentIndex, 0)));
-
-				i++;
-			}
-		};
-
-		AddTestClients();
-		AddEntities();
-		SpawnTestClients();
+			i++;
+		}
 	}
 }
 

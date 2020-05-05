@@ -12,6 +12,8 @@ namespace NeoGenesys
 	{
 	public:
 
+		std::vector<sGEntity*> vSpawnedBots;
+
 		void PlayerMods();
 		void StartMatch();
 		void MassKill();

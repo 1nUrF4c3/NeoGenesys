@@ -150,7 +150,8 @@
 #define OFF_EVALUATETRAJECTORY 0x140218240
 #define OFF_TEAMCHANGED 0x1403880D0
 #define OFF_ADDSTRING 0x1404381D0
-#define OFF_NOTIFY 0x1403D3CD0
+#define OFF_NOTIFY 0x1404397E0
+#define OFF_ADDBOT 0x140470920
 #define OFF_ADDTESTCLIENT 0x140470B70
 #define OFF_SPAWNTESTCLIENT 0x1404740A0
 #define OFF_ADDENTITY 0x1403D3480
@@ -1647,7 +1648,14 @@ namespace NeoGenesys
 	*/
 	inline void Notify(int entitynum, DWORD stringvalue, int paramnum)
 	{
-		return VariadicCall<void>(OFF_NOTIFY, entitynum, stringvalue, paramnum);
+		return VariadicCall<void>(OFF_NOTIFY, entitynum, 0, stringvalue, paramnum);
+	}
+	/*
+	//=====================================================================================
+	*/
+	inline sGEntity* AddBot(std::string name, int head, int body, int helmet)
+	{
+		return VariadicCall<sGEntity*>(OFF_ADDBOT, name.c_str(), head, body, helmet);
 	}
 	/*
 	//=====================================================================================
