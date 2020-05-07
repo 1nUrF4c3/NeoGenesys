@@ -301,7 +301,7 @@ namespace NeoGenesys
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
 		{
-			bool bTraceHit = _autoWall.TraceLine(RefDef->vViewOrigin, position, entity->NextEntityState.iEntityNum);
+			bool bTraceHit = _autoWall.TraceLine(entity, RefDef->vViewOrigin, position);
 
 			if (bTraceHit)
 				return true;
@@ -309,7 +309,7 @@ namespace NeoGenesys
 
 		else if (autowall)
 		{
-			float flDamage = _autoWall.C_Autowall(vViewOrigin, position, hitloc);
+			float flDamage = _autoWall.C_Autowall(entity, vViewOrigin, position, hitloc);
 
 			if (damage)
 				*damage = flDamage;
@@ -320,7 +320,7 @@ namespace NeoGenesys
 
 		else
 		{
-			float flDamage = _autoWall.C_TraceBullet(vViewOrigin, position, hitloc, entity->NextEntityState.iEntityNum);
+			float flDamage = _autoWall.C_TraceBullet(entity, vViewOrigin, position, hitloc);
 
 			if (damage)
 				*damage = flDamage;

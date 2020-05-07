@@ -17,7 +17,7 @@ namespace NeoGenesys
 		float G_Autowall(sCEntity* entity, Vector3 start, Vector3 end);
 		float G_TraceBullet(sCEntity* entity, Vector3 start, Vector3 end);
 		float GetRemainingDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, short partgroup, int weapon, bool alternate);
-		bool TraceLine(Vector3 start, Vector3 end, int entitynum);
+		bool TraceLine(sCEntity* entity, Vector3 start, Vector3 end);
 	} extern _autoWall;
 }
 

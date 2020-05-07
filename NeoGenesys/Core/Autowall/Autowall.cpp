@@ -368,13 +368,13 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cAutowall::TraceLine(Vector3 start, Vector3 end, int entitynum)
+	bool cAutowall::TraceLine(sCEntity* entity, Vector3 start, Vector3 end)
 	{
 		sTrace Trace;
 
 		LocationalTrace(&Trace, start, end, CG->PlayerState.iClientNum, MASK_CONTENTS);
 
-		return (Trace.wHitID == entitynum || Trace.flFraction == 1.0f);
+		return (Trace.wHitID == entity->NextEntityState.iEntityNum || Trace.flFraction == 1.0f);
 	}
 }
 
