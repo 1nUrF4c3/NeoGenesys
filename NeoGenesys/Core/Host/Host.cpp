@@ -63,7 +63,7 @@ namespace NeoGenesys
 					VectorCopy(PlayerState[i].vOrigin, _mainGui.Menu.HostMenu.PlayerMod[i].szPosition);
 
 				if (_profiler.gAntiLeave->Current.bValue)
-					if (i != CG->PlayerState.iClientNum)
+					if (i != CG->PredictedPlayerState.iClientNum)
 						GameSendServerCommand(i, SV_CMD_RELIABLE, "o 11 1");
 			}
 
@@ -126,10 +126,10 @@ namespace NeoGenesys
 			}
 		}
 
-		if (PlayerState[CG->PlayerState.iClientNum].ClientState.iTeam == TEAM_FREE)
+		if (PlayerState[CG->PredictedPlayerState.iClientNum].ClientState.iTeam == TEAM_FREE)
 		{
-			PlayerState[CG->PlayerState.iClientNum].ClientState.iTeam = TEAM_ALLIES;
-			TeamChanged(CG->PlayerState.iClientNum);
+			PlayerState[CG->PredictedPlayerState.iClientNum].ClientState.iTeam = TEAM_ALLIES;
+			TeamChanged(CG->PredictedPlayerState.iClientNum);
 		}
 
 		_mutex.unlock();
@@ -145,7 +145,7 @@ namespace NeoGenesys
 		static int iCounter = 0;
 		int iTargetNum = iCounter % FindVariable("sv_maxclients")->Current.iValue;
 
-		if (iTargetNum != CG->PlayerState.iClientNum && CEntity[iTargetNum].NextEntityState.iWeapon)
+		if (iTargetNum != CG->PredictedPlayerState.iClientNum && CEntity[iTargetNum].NextEntityState.iWeapon)
 		{
 			if (CharacterInfo[iTargetNum].iInfoValid && CharacterInfo[iTargetNum].iNextValid)
 			{
@@ -155,9 +155,9 @@ namespace NeoGenesys
 				{
 					PlayerKill(&GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? NULL : &GEntity[iTargetNum],
-						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PlayerState.iClientNum] : &GEntity[iTargetNum],
+						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PredictedPlayerState.iClientNum] : &GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? 9 : 14,
-						_targetList.EntityIsEnemy(iTargetNum) ? GetViewmodelWeapon(&CG->PlayerState) : 0);
+						_targetList.EntityIsEnemy(iTargetNum) ? GetViewmodelWeapon(&CG->PredictedPlayerState) : 0);
 				}
 			}
 		}

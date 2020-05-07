@@ -12,13 +12,13 @@ namespace NeoGenesys
 	{
 		dwSysValue = Sys_GetValue(3);
 
-		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
 			_targetList.GetInformation();
 			_drawing.CalculateTracers();
 			_aimBot.SetAimState();
 
-			if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
+			if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState))
 				_aimBot.StandardAim();
 
 			_removals.RecoilCompensation();
@@ -34,7 +34,7 @@ namespace NeoGenesys
 	*/
 	void cHooks::WritePacket(int localnum)
 	{
-		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
 			sUserCmd* pCurrentCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
 
@@ -46,7 +46,7 @@ namespace NeoGenesys
 	*/
 	void cHooks::PredictPlayerState(int localnum)
 	{
-		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
 			static int iBackupAngles[3];
 
@@ -76,18 +76,18 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (bp->iEntityNum == CG->PlayerState.iClientNum)
+			if (bp->iEntityNum == CG->PredictedPlayerState.iClientNum)
 			{
-				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)));
-				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
+				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
 
 				Vector3 vAngles, vForward, vRight, vUp;
 				VectorCopy(_aimBot.AimState.vAimAngles, vAngles);
 
-				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
-				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
+				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
+				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
 
-				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
+				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
 				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Current.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
 			}
 		}
@@ -97,11 +97,11 @@ namespace NeoGenesys
 	*/
 	void cHooks::BulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents)
 	{
-		if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
 			if (_profiler.gPlayerBulletTracers->Current.bValue)
 			{
-				if (sourcenum == CG->PlayerState.iClientNum &&
+				if (sourcenum == CG->PredictedPlayerState.iClientNum &&
 					_targetList.EntityIsEnemy(targetnum) &&
 					_aimBot.AimState.bIsAutoFiring &&
 					(CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER ||
@@ -110,16 +110,16 @@ namespace NeoGenesys
 					(_profiler.gTargetAgents->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
 				{
 					Vector3 vTracerStart;
-					GetPlayerViewOrigin(&CG->PlayerState, vTracerStart);
+					GetPlayerViewOrigin(&CG->PredictedPlayerState, vTracerStart);
 
 					sOrientation Orientation;
-					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)));
+					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
 
-					if (GetTagOrientation((WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
+					if (GetTagOrientation((WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
 					{
 						cDrawing::sTracer Tracer;
 
-						if (IsThirdPersonMode(&CG->PlayerState))
+						if (IsThirdPersonMode(&CG->PredictedPlayerState))
 							VectorMA(vTracerStart, 30.0f, Orientation.vAxis[0], vTracerStart);
 						else
 							VectorCopy(Orientation.vOrigin, vTracerStart);
@@ -130,7 +130,7 @@ namespace NeoGenesys
 						Tracer.cColorShadow = _profiler.gColorShadow->Current.cValue;
 						Tracer.cColorHitMarker = _profiler.gColorText->Current.cValue;
 						Tracer.cColorTracer = _profiler.gColorAccents->Current.cValue;
-						Tracer.iStartTime = CG->PlayerState.iCommandTime;
+						Tracer.iStartTime = CG->PredictedPlayerState.iCommandTime;
 
 						_drawing.vTracers.push_back(Tracer);
 					}
@@ -147,11 +147,11 @@ namespace NeoGenesys
 		{
 			if (_profiler.gThirdPersonAntiAim->Current.bValue && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
 			{
-				if (entity->NextEntityState.iEntityNum == CG->PlayerState.iClientNum)
+				if (entity->NextEntityState.iEntityNum == CG->PredictedPlayerState.iClientNum)
 				{
-					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->PlayerState.vDeltaAngles[0];
-					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->PlayerState.vDeltaAngles[1];
-					entity->vViewAngles[2] = _antiAim.vAntiAimAngles[2] + CG->PlayerState.vDeltaAngles[2];
+					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->PredictedPlayerState.vDeltaAngles[0];
+					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->PredictedPlayerState.vDeltaAngles[1];
+					entity->vViewAngles[2] = _antiAim.vAntiAimAngles[2] + CG->PredictedPlayerState.vDeltaAngles[2];
 				}
 			}
 		}
@@ -163,7 +163,7 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (entitystate->iAttackerEntityNum == CG->PlayerState.iClientNum)
+			if (entitystate->iAttackerEntityNum == CG->PredictedPlayerState.iClientNum)
 			{
 				if (_profiler.gTeaBag->Current.bValue && *(int*)OFF_ISCURRENTHOST)
 				{

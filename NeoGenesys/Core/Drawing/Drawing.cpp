@@ -342,7 +342,7 @@ namespace NeoGenesys
 			DrawLine(ImVec2(center.x, center.y + flHeight / 2.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y), color);
 
 		else if (_profiler.gPlayerSnapLines->Current.iValue == cProfiler::PLAYER_SNAPLINES_CROSSHAIR)
-			DrawLine(ImVec2(center.x, center.y), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f - ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)), color);
+			DrawLine(ImVec2(center.x, center.y), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f, ImGui::GetIO().DisplaySize.y / 2.0f - ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)), color);
 
 		if (_profiler.gPlayerInformation->Current.bValue)
 		{
@@ -504,7 +504,7 @@ namespace NeoGenesys
 	{
 		for (auto Tracer = vTracers.begin(); Tracer != vTracers.end();)
 		{
-			int iDeltaTime = CG->PlayerState.iCommandTime - Tracer->iStartTime;
+			int iDeltaTime = CG->PredictedPlayerState.iCommandTime - Tracer->iStartTime;
 
 			if (Tracer->bW2SSuccess = WorldToScreen(GetScreenMatrix(), Tracer->vHitPos3D, Tracer->vHitPos2D))
 			{
@@ -540,26 +540,26 @@ namespace NeoGenesys
 						_profiler.gWallHackMode->Current.iValue == cProfiler::WALLHACK_MODE_ALL)
 					{
 						DrawPlayer(&CEntity[i], _targetList.EntityList[i].vBones2D, _targetList.EntityList[i].vCorners2D, _targetList.EntityList[i].vCenter2D, _targetList.EntityList[i].vLower.y - _targetList.EntityList[i].vUpper.y,
-							_mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin), ClientInfo[i].szName, _targetList.EntityList[i].cColor);
+							_mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), ClientInfo[i].szName, _targetList.EntityList[i].cColor);
 					}
 				} break;
 
 				case ET_ITEM:
 				{
 					if (_profiler.gItems->Current.bValue)
-						DrawItem(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin), _profiler.gColorText->Current.cValue);
+						DrawItem(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), _profiler.gColorText->Current.cValue);
 				} break;
 
 				case ET_MISSILE:
 				{
 					if (_profiler.gMissiles->Current.bValue && _targetList.EntityIsEnemy(i) && CEntity[i].NextEntityState.iOtherEntityNum < FindVariable("sv_maxclients")->Current.iValue)
-						DrawMissile(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin), _profiler.gColorText->Current.cValue);
+						DrawMissile(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), _profiler.gColorText->Current.cValue);
 				} break;
 
 				case ET_AGENT:
 				{
 					if (_profiler.gAgents->Current.bValue && _targetList.EntityIsEnemy(i))
-						DrawAgent(&CEntity[i], _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin), _profiler.gColorText->Current.cValue);
+						DrawAgent(&CEntity[i], _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), _profiler.gColorText->Current.cValue);
 				} break;
 				}
 			}
@@ -660,13 +660,13 @@ namespace NeoGenesys
 	{
 		if (_profiler.gPlayerCrossHair->Current.bValue)
 		{
-			if (!(CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM))
+			if (!(CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM))
 			{
-				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 12.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 1.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 4.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 1.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
-				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f + 3.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 1.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f + 11.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 1.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
+				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 12.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 1.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 4.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 1.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
+				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f + 3.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 1.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f + 11.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 1.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
 
-				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 12.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) - 4.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
-				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) + 3.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PlayerState)) + 11.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
+				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 12.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) - 4.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
+				ImGui::GetWindowDrawList()->AddLine(ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) + 3.0f), ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - 1.0f, (ImGui::GetIO().DisplaySize.y / 2.0f) - (ImGui::GetIO().DisplaySize.y / 2.0f * GetThirdPersonCrosshairOffset(&CG->PredictedPlayerState)) + 11.0f), ImGui::GetColorU32(_profiler.gColorCrossHair->Current.cValue));
 			}
 		}
 	}

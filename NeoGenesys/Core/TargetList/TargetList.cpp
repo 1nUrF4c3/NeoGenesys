@@ -113,7 +113,7 @@ namespace NeoGenesys
 
 			Vector3 vDirection, vAngles, vDelta;
 
-			VectorSubtract(CEntity[i].vOrigin, CG->PlayerState.vOrigin, vDirection);
+			VectorSubtract(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin, vDirection);
 
 			VectorNormalize(vDirection);
 			VectorAngles(vDirection, vAngles);
@@ -220,7 +220,7 @@ namespace NeoGenesys
 				TargetInfo.iIndex = i;
 
 				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
-				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PlayerState.vOrigin);
+				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
 
 				vTargetInfo.push_back(TargetInfo);
 			}
@@ -250,7 +250,7 @@ namespace NeoGenesys
 	*/
 	bool cTargetList::EntityIsValid(int index)
 	{
-		return ((index != CG->PlayerState.iClientNum) && (CEntity[index].iIsAlive & 1) && !(CEntity[index].NextEntityState.LerpEntityState.iEntityFlags & EF_DEAD));
+		return ((index != CG->PredictedPlayerState.iClientNum) && (CEntity[index].iIsAlive & 1) && !(CEntity[index].NextEntityState.LerpEntityState.iEntityFlags & EF_DEAD));
 	}
 	/*
 	//=====================================================================================
@@ -261,13 +261,13 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[index].iTeam > TEAM_FREE)
 			{
-				if (CharacterInfo[index].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+				if (CharacterInfo[index].iTeam != CharacterInfo[CG->PredictedPlayerState.iClientNum].iTeam)
 					return true;
 			}
 
 			else
 			{
-				if (index != CG->PlayerState.iClientNum)
+				if (index != CG->PredictedPlayerState.iClientNum)
 					return true;
 			}
 		}
@@ -276,13 +276,13 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam > TEAM_FREE)
 			{
-				if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PlayerState.iClientNum].iTeam)
+				if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PredictedPlayerState.iClientNum].iTeam)
 					return true;
 			}
 
 			else
 			{
-				if (CEntity[index].NextEntityState.iOtherEntityNum != CG->PlayerState.iClientNum)
+				if (CEntity[index].NextEntityState.iOtherEntityNum != CG->PredictedPlayerState.iClientNum)
 					return true;
 			}
 		}
@@ -296,10 +296,10 @@ namespace NeoGenesys
 	{
 		Vector3 vViewOrigin;
 
-		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
 		ApplyPrediction(entity, position);
 
-		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
+		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 		{
 			bool bTraceHit = _autoWall.TraceLine(entity, RefDef->vViewOrigin, position);
 
@@ -382,8 +382,8 @@ namespace NeoGenesys
 	{
 		Vector3 vOldPosition, vNewPosition, vVelocity;
 
-		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PlayerState.OldSnapShot->iServerTime, vOldPosition);
-		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PlayerState.NewSnapShot->iServerTime, vNewPosition);
+		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, vOldPosition);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, vNewPosition);
 
 		VectorSubtract(vNewPosition, vOldPosition, vVelocity);
 

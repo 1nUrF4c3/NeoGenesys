@@ -141,7 +141,7 @@
 #define OFF_ADVANCETRACE 0x14023B010
 #define OFF_GETSURFACEPENETRATIONDEPTH 0x140238FD0
 #define OFF_GETWEAPONHITLOCATIONMULTIPLIER 0x140395AE0
-#define OFF_GETWEAPONDAMAGE 0x140377420
+#define OFF_GETBULLETDAMAGEFORPROJECTILE 0x14023DE60
 #define OFF_PENETRATIONCHECK 0x1402AB6C0
 #define OFF_GETHIPFIRESPREADFORWEAPON 0x1402409B0
 #define OFF_GETZOOMSPREADFORWEAPON 0x14023A5A0
@@ -248,18 +248,6 @@ namespace NeoGenesys
 	*/
 	typedef enum
 	{
-		WEAPTYPE_NONE,
-		WEAPTYPE_BULLET,
-		WEAPTYPE_GRENADE,
-		WEAPTYPE_PROJECTILE,
-		WEAPTYPE_RIOTSHIELD,
-		WEAPTYPE_MAX
-	} eWeaponType;
-	/*
-	//=====================================================================================
-	*/
-	typedef enum
-	{
 		WEAPON_ICON_RATIO_1TO1,
 		WEAPON_ICON_RATIO_2TO1,
 		WEAPON_ICON_RATIO_4TO1,
@@ -298,6 +286,29 @@ namespace NeoGenesys
 		TRACE_HITTYPE_GLASS,
 		TRACE_HITTYPE_MAX
 	} eTraceHitType;
+	/*
+	//=====================================================================================
+	*/
+	typedef enum
+	{
+		PENETRATE_TYPE_NONE,
+		PENETRATE_TYPE_SMALL,
+		PENETRATE_TYPE_MEDIUM,
+		PENETRATE_TYPE_LARGE,
+		PENETRATE_TYPE_MAX
+	} ePenetrateType;
+	/*
+	//=====================================================================================
+	*/
+	typedef enum
+	{
+		WEAPTYPE_NONE,
+		WEAPTYPE_BULLET,
+		WEAPTYPE_GRENADE,
+		WEAPTYPE_PROJECTILE,
+		WEAPTYPE_RIOTSHIELD,
+		WEAPTYPE_MAX
+	} eWeaponType;
 	/*
 	//=====================================================================================
 	*/
@@ -815,7 +826,7 @@ namespace NeoGenesys
 	*/
 	typedef struct
 	{
-		sPlayerState PlayerState;
+		sPlayerState PredictedPlayerState;
 		char _0x3A68[0xA6028];
 		Vector3 vRefDefViewAngles;
 		Vector3 vWeaponAngles;
@@ -932,7 +943,7 @@ namespace NeoGenesys
 	{
 		sEntityState EntityState;
 		char _0x108[0x60];
-		sPlayerState* PlayerState;
+		sPlayerState* pPlayerState;
 		char _0x170[0x50];
 		int iFlags;
 		char _0x1C4[0x18];
@@ -1067,7 +1078,9 @@ namespace NeoGenesys
 	{
 		char _0x0[0x94];
 		eWeaponType iWeaponType;
-		char _0x98[0x2D8];
+		char _0x98[0x4];
+		ePenetrateType iPenetrateType;
+		char _0x100[0x2D0];
 		LPVOID pHUDIcon;
 		eWeaponIconRatio iHUDIconRatio;
 		char _0x37C[0x4];
@@ -1153,19 +1166,19 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	static sCG* CG = (sCG*)OFF_CG;
-	static sRefDef* RefDef = (sRefDef*)OFF_REFDEF;
-	static sCharacterInfo* CharacterInfo = (sCharacterInfo*)OFF_CHARACTERINFO;
-	static sCEntity* CEntity = (sCEntity*)OFF_CENTITY;
-	static sGEntity* GEntity = (sGEntity*)OFF_GENTITY;
-	static sPlayerState* PlayerState = (sPlayerState*)OFF_PLAYERSTATE;
-	static sClientActive* ClientActive = (sClientActive*)OFF_CLIENTACTIVE;
-	static sClientInfo* ClientInfo = (sClientInfo*)OFF_CLIENTINFO;
-	static sWeapons* Weapons = (sWeapons*)OFF_WEAPONDEF;
-	static sCompleteWeapons* CompleteWeapons = (sCompleteWeapons*)OFF_WEAPONCOMPLETEDEF;
-	static sWindow* Window = (sWindow*)OFF_WINDOW;
-	static sViewMatrix* ViewMatrix = (sViewMatrix*)OFF_VIEWMATRIX;
-	static sPunch* Punch = (sPunch*)OFF_PUNCH;
+#define CG ((sCG*)OFF_CG)
+#define RefDef ((sRefDef*)OFF_REFDEF)
+#define CharacterInfo ((sCharacterInfo*)OFF_CHARACTERINFO)
+#define CEntity ((sCEntity*)OFF_CENTITY)
+#define GEntity ((sGEntity*)OFF_GENTITY)
+#define PlayerState ((sPlayerState*)OFF_PLAYERSTATE)
+#define ClientActive ((sClientActive*)OFF_CLIENTACTIVE)
+#define ClientInfo ((sClientInfo*)OFF_CLIENTINFO)
+#define Weapons ((sWeapons*)OFF_WEAPONDEF)
+#define CompleteWeapons ((sCompleteWeapons*)OFF_WEAPONCOMPLETEDEF)
+#define Window ((sWindow*)OFF_WINDOW)
+#define ViewMatrix ((sViewMatrix*)OFF_VIEWMATRIX)
+#define Punch ((sPunch*)OFF_PUNCH)
 	/*
 	//=====================================================================================
 	*/
@@ -1570,16 +1583,16 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	inline float GetWeaponHitLocationMultiplier(int partgroup, int weapon, bool alternate)
+	inline float GetWeaponHitLocationMultiplier(int hitloc, int weapon, bool alternate)
 	{
-		return VariadicCall<float>(OFF_GETWEAPONHITLOCATIONMULTIPLIER, partgroup, weapon, alternate);
+		return VariadicCall<float>(OFF_GETWEAPONHITLOCATIONMULTIPLIER, hitloc, weapon, alternate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GetWeaponDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, int weapon, bool alternate, sGEntity* attacker)
+	inline int GetBulletDamageForProjectile(sPlayerState* playerstate, int weapon, bool alternate, Vector3 startpos, Vector3 hitpos)
 	{
-		return VariadicCall<int>(OFF_GETWEAPONDAMAGE, fireparams, traceresults, weapon, alternate, attacker);
+		return VariadicCall<int>(OFF_GETBULLETDAMAGEFORPROJECTILE, playerstate, weapon, alternate, startpos, hitpos);
 	}
 	/*
 	//=====================================================================================

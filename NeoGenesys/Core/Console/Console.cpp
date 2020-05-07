@@ -485,7 +485,7 @@ namespace NeoGenesys
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
 					Cbuf_AddText("perk_bulletPenetrationMultiplier 30.0\n");
-					EnablePerk(CG->PlayerState.iClientNum, PERK_EXTRABP);
+					EnablePerk(CG->PredictedPlayerState.iClientNum, PERK_EXTRABP);
 
 					AddLog("Host autowall has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -496,7 +496,7 @@ namespace NeoGenesys
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
 					Cbuf_AddText("perk_bulletPenetrationMultiplier 2.0\n");
-					DisablePerk(CG->PlayerState.iClientNum, PERK_EXTRABP);
+					DisablePerk(CG->PredictedPlayerState.iClientNum, PERK_EXTRABP);
 
 					AddLog("Host autowall has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -523,7 +523,7 @@ namespace NeoGenesys
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
 					Cbuf_AddText("perk_weapRateMultiplier 0.0\n");
-					EnablePerk(CG->PlayerState.iClientNum, PERK_RATEOFFIRE);
+					EnablePerk(CG->PredictedPlayerState.iClientNum, PERK_RATEOFFIRE);
 
 					AddLog("Rapidfire has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -534,7 +534,7 @@ namespace NeoGenesys
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
 					Cbuf_AddText("perk_weapRateMultiplier 0.75\n");
-					DisablePerk(CG->PlayerState.iClientNum, PERK_RATEOFFIRE);
+					DisablePerk(CG->PredictedPlayerState.iClientNum, PERK_RATEOFFIRE);
 
 					AddLog("Rapidfire has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -928,7 +928,7 @@ namespace NeoGenesys
 				*(BYTE*)(OFF_CHALLENGES + i) = 0xFF;
 
 			for (auto& Achievement : szAchievements)
-				GameSendServerCommand(CG->PlayerState.iClientNum, SV_CMD_RELIABLE, VariadicText("3 %s", Achievement.c_str()));
+				GameSendServerCommand(CG->PredictedPlayerState.iClientNum, SV_CMD_RELIABLE, VariadicText("3 %s", Achievement.c_str()));
 
 			AddLog("All challenges/achievements have been unlocked.");
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -992,7 +992,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], NULL, 0, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], NULL, 0, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1017,7 +1017,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], NULL, 1, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], NULL, 1, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1042,7 +1042,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], NULL, 2, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], NULL, 2, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1075,7 +1075,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 0, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 0, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1100,7 +1100,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 1, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 1, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1125,7 +1125,7 @@ namespace NeoGenesys
 							{
 								AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-								Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 2, szMessage);
+								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 2, szMessage);
 
 								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());

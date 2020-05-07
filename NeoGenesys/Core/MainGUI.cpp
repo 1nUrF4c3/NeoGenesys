@@ -253,10 +253,10 @@ namespace NeoGenesys
 			_profiler.DisableAll();
 
 		if (GetKeyPress(VK_PRIOR, false) && *(int*)OFF_ISCURRENTHOST)
-			VectorCopy(PlayerState[CG->PlayerState.iClientNum].vOrigin, Menu.HostMenu.vTeleport);
+			VectorCopy(PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin, Menu.HostMenu.vTeleport);
 
 		if (GetKeyPress(VK_NEXT, false) && *(int*)OFF_ISCURRENTHOST)
-			VectorCopy(Menu.HostMenu.vTeleport, PlayerState[CG->PlayerState.iClientNum].vOrigin);
+			VectorCopy(Menu.HostMenu.vTeleport, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
 
 		*(bool*)OFF_MOUSEINPUT = !Menu.bShowWindow;
 		FindVariable("cl_bypassMouseInput")->Current.iValue = Menu.bShowWindow;
@@ -326,7 +326,7 @@ namespace NeoGenesys
 
 			ImGui::PopStyleColor(2);
 
-			if (LocalClientIsInGame() && CG->PlayerState.iOtherFlags & 0x4000)
+			if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 			{
 				_drawing.DrawESP();
 				_drawing.DrawCompass();
@@ -837,7 +837,7 @@ namespace NeoGenesys
 
 								if (ImGui::Button("Crash", ImVec2(50.0f, 0.0f)))
 								{
-									Say(&GEntity[CG->PlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
+									Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
 									Menu.PlayerList.bWriteLog = true;
 								} ImGui::PopID(); ImGui::SameLine();
 							}
@@ -992,13 +992,13 @@ namespace NeoGenesys
 
 					if (ImGui::Button("Teleport To", ImVec2(150.0f, 25.0f)))
 					{
-						VectorCopy(PlayerState[Menu.HostMenu.iPlayer].vOrigin, PlayerState[CG->PlayerState.iClientNum].vOrigin);
+						VectorCopy(PlayerState[Menu.HostMenu.iPlayer].vOrigin, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
 						Menu.HostMenu.bWriteLog = true;
 					} ImGui::SameLine(0.0f, 4.0f);
 
 					if (ImGui::Button("Teleport From", ImVec2(150.0f, 25.0f)))
 					{
-						VectorCopy(PlayerState[CG->PlayerState.iClientNum].vOrigin, PlayerState[Menu.HostMenu.iPlayer].vOrigin);
+						VectorCopy(PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin, PlayerState[Menu.HostMenu.iPlayer].vOrigin);
 						Menu.HostMenu.bWriteLog = true;
 					} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
@@ -1044,7 +1044,7 @@ namespace NeoGenesys
 
 			if (clock() - iTime > max(*(int*)OFF_FRAMETIME, *(int*)OFF_PING))
 			{
-				if (LocalClientIsInGame() && !IsMigrating() && CG->PlayerState.iOtherFlags & 0x4000)
+				if (LocalClientIsInGame() && !IsMigrating() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 				{
 					if (_profiler.gNameSpam->Current.bValue)
 					{

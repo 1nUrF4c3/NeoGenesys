@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cAimbot::StandardAim()
 	{
-		if ((!_profiler.gSilentAim->Current.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState))) && AimState.bTargetAcquired)
+		if ((!_profiler.gSilentAim->Current.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState))) && AimState.bTargetAcquired)
 		{
 			AimState.vAimAngles[0] *= _profiler.gAimPower->Current.iValue / 100.0f;
 			AimState.vAimAngles[1] *= _profiler.gAimPower->Current.iValue / 100.0f;
@@ -40,7 +40,7 @@ namespace NeoGenesys
 	*/
 	void cAimbot::SilentAim(sUserCmd* usercmd)
 	{
-		if (_profiler.gSilentAim->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) && AimState.bTargetAcquired)
+		if (_profiler.gSilentAim->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) && AimState.bTargetAcquired)
 		{
 			if (AimState.bLockonTarget)
 			{
@@ -68,7 +68,7 @@ namespace NeoGenesys
 			{
 				if (AimState.bLockonTarget)
 				{
-					if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)))
+					if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 					{
 						if (AimState.bAkimbo)
 							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT);
@@ -90,7 +90,7 @@ namespace NeoGenesys
 	{
 
 		AimState.bTargetAcquired = (AimState.iTargetNum > -1);
-		AimState.bLockonTarget = (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO || (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_MANUAL && CEntity[CG->PlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
+		AimState.bLockonTarget = (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_AUTO || (_profiler.gAimBotMode->Current.iValue == cProfiler::AIMBOT_MODE_MANUAL && CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
 		AimState.bIsAutoAiming = (AimState.bTargetAcquired && AimState.bLockonTarget);
 		AimState.bIsAutoFiring = (_profiler.gAutoFire->Current.bValue && AimState.bIsAutoAiming);
 
@@ -136,19 +136,19 @@ namespace NeoGenesys
 		if (AimState.bTargetAcquired)
 		{
 			Vector3 vViewOrigin;
-			GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
+			GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
 
 			VectorCopy(_targetList.EntityList[AimState.iTargetNum].vHitLocation, AimState.vAimPosition);
 
-			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAimAngles);
-			_mathematics.CalculateAntiAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAntiAimAngles);
+			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAimAngles);
+			_mathematics.CalculateAntiAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAntiAimAngles);
 		}
 
 		AimState.iFireTMR++;
 
-		if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)))
+		if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 		{
-			if (!(AimState.iFireTMR % ((BYTE)GetViewmodelWeapon(&CG->PlayerState) == WEAPON_44_MAGNUM ? 12 : 6)))
+			if (!(AimState.iFireTMR % ((BYTE)GetViewmodelWeapon(&CG->PredictedPlayerState) == WEAPON_44_MAGNUM ? 12 : 6)))
 				AimState.bAkimbo = !AimState.bAkimbo;
 		}
 

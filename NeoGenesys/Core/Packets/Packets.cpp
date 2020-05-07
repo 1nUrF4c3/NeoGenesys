@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cPackets::WritePacket(sUserCmd* usercmd)
 	{
-		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
+		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 			_aimBot.AutoFire(usercmd);
 
 		_antiAim.AntiAim(usercmd);
@@ -26,7 +26,7 @@ namespace NeoGenesys
 
 		if (clock() - iTeaBagTime < 3000)
 		{
-			VectorCopy(vTeaBagPos, PlayerState[CG->PlayerState.iClientNum].vOrigin);
+			VectorCopy(vTeaBagPos, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
 
 			if (usercmd->iButtons & BUTTON_CROUCH)
 				usercmd->iButtons &= ~BUTTON_CROUCH;
@@ -40,19 +40,19 @@ namespace NeoGenesys
 	*/
 	void cPackets::PredictPlayerState(sUserCmd* usercmd)
 	{
-		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PlayerState))
+		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState))
 		{
 			_aimBot.SilentAim(usercmd);
 
-			if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
+			if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 				_aimBot.AutoFire(usercmd);
 		}
 
 		if (_profiler.gSilentAim->Current.bValue)
-			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		else
-			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 	}
 }
 
