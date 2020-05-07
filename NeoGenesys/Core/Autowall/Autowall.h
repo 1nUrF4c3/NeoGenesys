@@ -12,10 +12,10 @@ namespace NeoGenesys
 	{
 	public:
 
-		float C_Autowall(Vector3 start, Vector3 end, short hitloc);
-		float C_TraceBullet(Vector3 start, Vector3 end, short hitloc, int entitynum);
-		float G_Autowall(Vector3 start, Vector3 end);
-		float G_TraceBullet(Vector3 start, Vector3 end, int entitynum);
+		float C_Autowall(sCEntity* entity, Vector3 start, Vector3 end, short hitloc);
+		float C_TraceBullet(sCEntity* entity, Vector3 start, Vector3 end, short hitloc);
+		float G_Autowall(sCEntity* entity, Vector3 start, Vector3 end);
+		float G_TraceBullet(sCEntity* entity, Vector3 start, Vector3 end);
 		float GetRemainingDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, short partgroup, int weapon, bool alternate);
 		bool TraceLine(Vector3 start, Vector3 end, int entitynum);
 	} extern _autoWall;

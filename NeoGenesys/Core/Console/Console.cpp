@@ -192,11 +192,17 @@ namespace NeoGenesys
 			LPCSTR szItem = vItems[i];
 			ImVec4 cTemp = cDefaultText;
 
-			if (strstr(szItem, "[ERROR]"))
+			if (strncmp(szItem, PREFIX_ERROR, strlen(PREFIX_ERROR)) == 0)
 				cTemp = ImColor(1.0f, 0.4f, 0.4f, 1.0f);
 
-			else if (strncmp(szItem, "# ", 2) == 0)
-				cTemp = ImColor(1.0f, 0.50f, 0.3f, 1.0f);
+			else if (strncmp(szItem, PREFIX_COMMAND, strlen(PREFIX_COMMAND)) == 0)
+				cTemp = ImColor(1.0f, 0.5f, 0.3f, 1.0f);
+
+			else if (strncmp(szItem, PREFIX_WARNING, strlen(PREFIX_WARNING)) == 0)
+				cTemp = ImColor(1.0f, 1.0f, 0.3f, 1.0f);
+
+			else if (strncmp(szItem, PREFIX_LOG, strlen(PREFIX_LOG)) == 0)
+				cTemp = ImColor(0.3f, 0.5f, 1.0f, 1.0f);
 
 			ImGui::PushStyleColor(ImGuiCol_Text, cTemp);
 			ImGui::TextUnformatted(szItem);
@@ -218,7 +224,7 @@ namespace NeoGenesys
 		bool bReclaimFocus = false;
 		ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 
-		if (ImGui::InputText("", szInput, IM_ARRAYSIZE(szInput), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory, &TextEditCallbackStub, (void*)this))
+		if (ImGui::InputText("", szInput, IM_ARRAYSIZE(szInput), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory, _thunkTextCallback.GetThunk(), this))
 		{
 			LPSTR szInputEnd = szInput + strlen(szInput);
 

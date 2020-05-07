@@ -13,7 +13,7 @@ namespace NeoGenesys
 		Vector3 vViewOrigin, vDirection, vAngles, vAimAngles;
 
 		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
-		VectorSubtract(position, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vDirection);
+		VectorSubtract(position, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, vDirection);
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
@@ -21,7 +21,7 @@ namespace NeoGenesys
 		MakeVector(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vAimAngles);
 		MakeVector(vAngles, vAngles);
 
-		float flMag = sqrtf(DotProduct(vAimAngles, vAimAngles)),
+		float flMag = VectorLength(vAimAngles),
 			flDot = DotProduct(vAimAngles, vAngles),
 			flReturn = RadiansToDegrees(acosf(flDot / powf(flMag, 2.0f)));
 
@@ -39,7 +39,7 @@ namespace NeoGenesys
 
 		VectorSubtract(start, end, vDirection);
 
-		return sqrtf(DotProduct(vDirection, vDirection));
+		return VectorLength(vDirection);
 	}
 	/*
 	//=====================================================================================
@@ -122,7 +122,7 @@ namespace NeoGenesys
 	*/
 	void cMathematics::VectorNormalize(Vector3 direction)
 	{
-		float flLen = sqrtf(DotProduct(direction, direction));
+		float flLen = VectorLength(direction);
 
 		if (flLen == 0.0f)
 		{
@@ -247,6 +247,30 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	bool cMathematics::WorldToScreen(Vector3 world, ImVec2& screen)
+	{
+		float flCenterX = RefDef->iWidth / 2.0f,
+			flCenterY = RefDef->iHeight / 2.0f;
+
+		Vector3 vLocal, vTransForm;
+
+		VectorSubtract(world, RefDef->vViewOrigin, vLocal);
+
+		vTransForm[0] = DotProduct(vLocal, RefDef->vViewAxis[1]);
+		vTransForm[1] = DotProduct(vLocal, RefDef->vViewAxis[2]);
+		vTransForm[2] = DotProduct(vLocal, RefDef->vViewAxis[0]);
+
+		if (vTransForm[2] < 0.01f)
+			return false;
+
+		screen.x = flCenterX * (1.0f - (vTransForm[0] / RefDef->flFovX / vTransForm[2]));
+		screen.y = flCenterY * (1.0f - (vTransForm[1] / RefDef->flFovY / vTransForm[2]));
+
+		return true;
+	}
+	/*
+	//=====================================================================================
+	*/
 	void cMathematics::WorldToCompass(Vector3 world, ImVec2 compasspos, float compasssize, ImVec2& screen)
 	{
 		float flAngle;
@@ -254,7 +278,7 @@ namespace NeoGenesys
 		Vector3 vViewOrigin, vDirection, vAngles;
 
 		GetPlayerViewOrigin(&CG->PlayerState, vViewOrigin);
-		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, world, vDirection);
+		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, world, vDirection);
 		
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
@@ -278,8 +302,8 @@ namespace NeoGenesys
 
 		float flCosYaw = cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
 			flSinYaw = sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
-			flDeltaX = world[0] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[0] : vViewOrigin[0]),
-			flDeltaY = world[1] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg[1] : vViewOrigin[1]),
+			flDeltaX = world[0] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin[0] : vViewOrigin[0]),
+			flDeltaY = world[1] - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin[1] : vViewOrigin[1]),
 			flLocationX = (flDeltaY * flCosYaw - flDeltaX * flSinYaw) / scale,
 			flLocationY = (flDeltaX * flCosYaw + flDeltaY * flSinYaw) / scale;
 

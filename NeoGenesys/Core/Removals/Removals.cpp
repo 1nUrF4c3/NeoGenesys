@@ -73,7 +73,7 @@ namespace NeoGenesys
 		int iSeed = TransformSeed(akimbo, servertime);
 
 		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
+		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
 
 		VectorAngles(vDir, angles);
 		_mathematics.ClampAngles(angles);

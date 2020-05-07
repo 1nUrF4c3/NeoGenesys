@@ -109,7 +109,7 @@ namespace NeoGenesys
 		typedef LRESULT(CALLBACK* tWindowProcess)(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 		tWindowProcess oWindowProcess;
 
-		cWin32Thunk<tWindowProcess, cMainGUI> _thunkWindowProcess;
+		StdThunk<tWindowProcess, cMainGUI> _thunkWindowProcess;
 	} extern _mainGui;
 }
 

@@ -140,8 +140,8 @@ namespace NeoGenesys
 
 			VectorCopy(_targetList.EntityList[AimState.iTargetNum].vHitLocation, AimState.vAimPosition);
 
-			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, AimState.vAimAngles);
-			_mathematics.CalculateAntiAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrg : vViewOrigin, AimState.vAntiAimAngles);
+			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAimAngles);
+			_mathematics.CalculateAntiAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAntiAimAngles);
 		}
 
 		AimState.iFireTMR++;

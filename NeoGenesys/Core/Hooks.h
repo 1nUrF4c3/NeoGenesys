@@ -30,7 +30,7 @@ namespace NeoGenesys
 		LONG VectoredExceptionHandler(_In_ LPEXCEPTION_POINTERS ExceptionInfo);
 		typedef LONG(CALLBACK* tVectoredExceptionHandler)(_In_ LPEXCEPTION_POINTERS ExceptionInfo);
 
-		cWin32Thunk<tVectoredExceptionHandler, cHooks> _thunkVectoredExceptionHandler;
+		StdThunk<tVectoredExceptionHandler, cHooks> _thunkVectoredExceptionHandler;
 	} extern _hooks;
 }
 

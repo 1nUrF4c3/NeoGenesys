@@ -256,6 +256,7 @@ namespace NeoGenesys
 
 			else
 			{
+				_console.AddLog("] STATUS_ACCESS_VIOLATION @ 0x%X", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 				Com_Error(ERR_DROP, "STATUS_ACCESS_VIOLATION @ 0x%X", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 				return EXCEPTION_CONTINUE_EXECUTION;

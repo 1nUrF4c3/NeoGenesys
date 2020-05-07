@@ -301,7 +301,7 @@ namespace NeoGenesys
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PlayerState)))
 		{
-			bool bTraceHit = _autoWall.TraceLine(RefDef->vViewOrg, position, entity->NextEntityState.iEntityNum);
+			bool bTraceHit = _autoWall.TraceLine(RefDef->vViewOrigin, position, entity->NextEntityState.iEntityNum);
 
 			if (bTraceHit)
 				return true;

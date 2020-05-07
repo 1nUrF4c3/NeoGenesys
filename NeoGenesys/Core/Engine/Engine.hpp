@@ -59,6 +59,7 @@
 #define	VectorScale(a,b,c) ((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b))
 #define	VectorMA(a,b,c,d) ((d)[0]=(a)[0]+(c)[0]*(b),(d)[1]=(a)[1]+(c)[1]*(b),(d)[2]=(a)[2]+(c)[2]*(b))
 #define VectorAverage(a,b,c) ((c)[0]=((a)[0]+(b)[0])/2.0f,(c)[1]=((a)[1]+(b)[1])/2.0f,(c)[2]=((a)[2]+(b)[2])/2.0f)
+#define VectorLength(a) (sqrtf(powf((a)[0],2.0f)+powf((a)[1],2.0f)+powf((a)[2],2.0f)))
 
 #define OFF_CHATHEIGHT_DVAR 0x1419A9788
 #define OFF_CHATHEIGHT_EXCEPTION 0x14025C709
@@ -830,7 +831,7 @@ namespace NeoGenesys
 		int iHeight;
 		float flFovX;
 		float flFovY;
-		Vector3 vViewOrg;
+		Vector3 vViewOrigin;
 		Vector3 vViewAxis[3];
 	} sRefDef;
 	/*
