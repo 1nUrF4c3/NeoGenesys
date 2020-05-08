@@ -154,6 +154,9 @@ namespace NeoGenesys
 					entity->vViewAngles[2] = _antiAim.vAntiAimAngles[2] + CG->PredictedPlayerState.vDeltaAngles[2];
 				}
 			}
+
+			_targetList.ApplyPositionPrediction(entity);
+			_targetList.ApplyAnglePrediction(entity);
 		}
 	}
 	/*
@@ -256,8 +259,8 @@ namespace NeoGenesys
 
 			else
 			{
-				_console.AddLog("] STATUS_ACCESS_VIOLATION @ 0x%X", ExceptionInfo->ExceptionRecord->ExceptionAddress);
-				Com_Error(ERR_DROP, "STATUS_ACCESS_VIOLATION @ 0x%X", ExceptionInfo->ExceptionRecord->ExceptionAddress);
+				_console.AddLog("] STATUS_ACCESS_VIOLATION @ 0x%llX", ExceptionInfo->ExceptionRecord->ExceptionAddress);
+				Com_Error(ERR_DROP, "STATUS_ACCESS_VIOLATION @ 0x%llX", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 				return EXCEPTION_CONTINUE_EXECUTION;
 			}

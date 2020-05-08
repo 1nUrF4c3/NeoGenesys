@@ -42,12 +42,14 @@
 #define M_PI_DOUBLE ((float)M_PI*2.0f)
 
 #define ByteToFloat(a) ((float)(a)/255.0f)
+#define DwordFromBytes(a) (((BYTE)(a)[0])|((BYTE)(a)[1]<<8)|((BYTE)(a)[2]<<16)|((BYTE)(a)[3]<<24))
 #define GetSign(a) ((a)?((*(int*)&(a)>>31)|1):0)
 #define DegreesToRadians(a) ((a)*((float)M_PI/180.0f))
 #define RadiansToDegrees(a) ((a)*(180.0f/(float)M_PI))
 #define AngleToShort(a) ((int)((a)*(65536/360.0f))&65535)
 #define ShortToAngle(a) ((float)((a)*(360.0f/65536)))
-#define AngleNormalize(a) (ShortToAngle(AngleToShort((a))))
+#define AngleNormalize360(a) (ShortToAngle(AngleToShort((a))))
+#define AngleNormalize180(a) (((a)/360.0f-floorf((a)/360.0f+0.5f))*360.0f)
 #define DotProduct(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
 #define AngleCompare180(a) (((a)<90.0f&&(a)>-90.0f)||((a)>270.0f||(a)<-270.0f))
 #define VectorGetSign(a) ((a)[0]=(float)GetSign((a)[0]),(a)[1]=(float)GetSign((a)[1]),(a)[2]=(float)GetSign((a)[2]))
@@ -1183,7 +1185,7 @@ namespace NeoGenesys
 	//=====================================================================================
 	*/
 	template <typename... Parameters>
-	inline void Com_Error(eErrorParam code, LPCSTR format, Parameters... params)
+	static void Com_Error(eErrorParam code, LPCSTR format, Parameters... params)
 	{
 		return VariadicCall<void>(OFF_COMERROR, code, format, params...);
 	}
@@ -1191,602 +1193,602 @@ namespace NeoGenesys
 	//=====================================================================================
 	*/
 	typedef void(__fastcall* tFunction)(int localnum);
-	inline void Cbuf_AddCall(tFunction function)
+	static void Cbuf_AddCall(tFunction function)
 	{
 		return VariadicCall<void>(OFF_CBUFADDCALL, 0, function);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void Cbuf_AddText(std::string command)
+	static void Cbuf_AddText(std::string command)
 	{
 		return VariadicCall<void>(OFF_CBUFADDTEXT, 0, command.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline QWORD Sys_GetValue(int value)
+	static QWORD Sys_GetValue(int value)
 	{
 		return VariadicCall<QWORD>(OFF_SYSGETVALUE, value);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void GameSendServerCommand(int clientnum, eSvsCMDType type, std::string command)
+	static void GameSendServerCommand(int clientnum, eSvsCMDType type, std::string command)
 	{
 		return VariadicCall<void>(OFF_GAMESENDSERVERCOMMAND, clientnum, type, command.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool LocalClientIsInGame()
+	static bool LocalClientIsInGame()
 	{
 		return VariadicCall<bool>(OFF_LOCALCLIENTISINGAME, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsMainThread()
+	static bool IsMainThread()
 	{
 		return VariadicCall<bool>(OFF_ISMAINTHREAD);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsRenderThread()
+	static bool IsRenderThread()
 	{
 		return VariadicCall<bool>(OFF_ISRENDERTHREAD);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsServerThread()
+	static bool IsServerThread()
 	{
 		return VariadicCall<bool>(OFF_ISSERVERTHREAD);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsDatabaseThread()
+	static bool IsDatabaseThread()
 	{
 		return VariadicCall<bool>(OFF_ISDATABASETHREAD);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LRESULT EnableConsole()
+	static LRESULT EnableConsole()
 	{
 		return VariadicCall<LRESULT>(OFF_ENABLECONSOLE);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void PrintToConsole(std::string message)
+	static void PrintToConsole(std::string message)
 	{
 		return VariadicCall<void>(OFF_PRINTTOCONSOLE, message.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline sDvar* FindVariable(std::string name)
+	static sDvar* FindVariable(std::string name)
 	{
 		return VariadicCall<sDvar*>(OFF_FINDVARIABLE, name.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool GetVariableIndex(sDvar* dvar, DWORD* index)
+	static bool GetVariableIndex(sDvar* dvar, DWORD* index)
 	{
 		return VariadicCall<bool>(OFF_GETVARIABLEINDEX, dvar, index);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void Say(sGEntity* from, sGEntity* to, int mode, std::string message)
+	static void Say(sGEntity* from, sGEntity* to, int mode, std::string message)
 	{
 		return VariadicCall<void>(OFF_SAY, from, to, mode, message.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void SayTo(sGEntity* from, sGEntity* to, int mode, int color, std::string team, std::string name, std::string message)
+	static void SayTo(sGEntity* from, sGEntity* to, int mode, int color, std::string team, std::string name, std::string message)
 	{
 		return VariadicCall<void>(OFF_SAYTO, from, to, mode, color, team.c_str(), name.c_str(), message.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPVOID GetCurrentSession()
+	static LPVOID GetCurrentSession()
 	{
 		return VariadicCall<LPVOID>(OFF_GETCURRENTSESSION);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline sNetAddr* GetPlayerAddr(sNetAddr* netaddr, LPVOID session, int clientnum)
+	static sNetAddr* GetPlayerAddr(sNetAddr* netaddr, LPVOID session, int clientnum)
 	{
 		return VariadicCall<sNetAddr*>(OFF_GETPLAYERADDR, netaddr, session, clientnum);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPCSTR GetCurrentXUID()
+	static LPCSTR GetCurrentXUID()
 	{
 		return VariadicCall<LPCSTR>(OFF_GETCURRENTXUID, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPVOID GetScreenMatrix()
+	static LPVOID GetScreenMatrix()
 	{
 		return VariadicCall<LPVOID>(OFF_GETSCREENMATRIX);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GetViewmodelWeapon(sPlayerState* playerstate)
+	static int GetViewmodelWeapon(sPlayerState* playerstate)
 	{
 		return VariadicCall<int>(OFF_GETVIEWMODELWEAPON, playerstate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPCSTR GetWeaponNameComplete(int weapon, bool alternate, LPSTR name, int length)
+	static LPCSTR GetWeaponNameComplete(int weapon, bool alternate, LPSTR name, int length)
 	{
 		return VariadicCall<LPCSTR>(OFF_GETWEAPONNAMECOMPLETE, weapon, alternate, name, length);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPCSTR GetWeaponDisplayName(int weapon, bool alternate, LPSTR name, int length)
+	static LPCSTR GetWeaponDisplayName(int weapon, bool alternate, LPSTR name, int length)
 	{
 		return VariadicCall<LPCSTR>(OFF_GETWEAPONDISPLAYNAME, weapon, alternate, name, length);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GetWeaponForName(std::string name)
+	static int GetWeaponForName(std::string name)
 	{
 		return VariadicCall<int>(OFF_GETWEAPONFORNAME, name.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool GetPerkName(ePerk perk, LPSTR* name)
+	static bool GetPerkName(ePerk perk, LPSTR* name)
 	{
 		return VariadicCall<bool>(OFF_GETPERKNAME, perk, name);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool GetPerkIndex(LPSTR name, ePerk* perk)
+	static bool GetPerkIndex(LPSTR name, ePerk* perk)
 	{
 		return VariadicCall<bool>(OFF_GETPERKINDEX, name, perk);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsPlayerReloading()
+	static bool IsPlayerReloading()
 	{
 		return VariadicCall<bool>(OFF_ISPLAYERRELOADING, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool WeaponBothClipEmpty(sPlayerState* playerstate)
+	static bool WeaponBothClipEmpty(sPlayerState* playerstate)
 	{
 		return VariadicCall<bool>(OFF_WEAPONBOTHCLIPEMPTY, playerstate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsRifleBullet(int weapon, bool alternate)
+	static bool IsRifleBullet(int weapon, bool alternate)
 	{
 		return VariadicCall<bool>(OFF_ISRIFLEBULLET, weapon, alternate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool WorldToScreen(LPVOID screenmatrix, const Vector3 world, Vector2 screen)
+	static bool WorldToScreen(LPVOID screenmatrix, const Vector3 world, Vector2 screen)
 	{
 		return VariadicCall<bool>(OFF_WORLDTOSCREEN, 0, screenmatrix, world, screen);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int AddMessageIcon(LPSTR icon, int length, LPVOID shader, float width, float height, bool flip)
+	static int AddMessageIcon(LPSTR icon, int length, LPVOID shader, float width, float height, bool flip)
 	{
 		return VariadicCall<int>(OFF_ADDMESSAGEICON, icon, length, 1024, shader, width, height, flip);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPVOID RegisterFont(std::string name)
+	static LPVOID RegisterFont(std::string name)
 	{
 		return VariadicCall<LPVOID>(OFF_REGISTERFONT, name.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPVOID RegisterShader(std::string name)
+	static LPVOID RegisterShader(std::string name)
 	{
 		return VariadicCall<LPVOID>(OFF_REGISTERSHADER, name.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int RegisterTag(std::string name)
+	static int RegisterTag(std::string name)
 	{
 		return VariadicCall<int>(OFF_REGISTERTAG, name.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void DrawStretchPic(float x, float y, float w, float h, RGBA color, LPVOID shader)
+	static void DrawStretchPic(float x, float y, float w, float h, RGBA color, LPVOID shader)
 	{
 		return VariadicCall<void>(OFF_DRAWSTRETCHPIC, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f, color, shader);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void DrawRotatedPic(LPVOID screenmatrix, float x, float y, float w, float h, float angle, RGBA color, LPVOID shader)
+	static void DrawRotatedPic(LPVOID screenmatrix, float x, float y, float w, float h, float angle, RGBA color, LPVOID shader)
 	{
 		return VariadicCall<void>(OFF_DRAWROTATEDPIC, screenmatrix, x, y, w, h, angle, color, shader);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void DrawEngineText(std::string text, LPVOID font, float x, float y, float w, float h, RGBA color, int flags)
+	static void DrawEngineText(std::string text, LPVOID font, float x, float y, float w, float h, RGBA color, int flags)
 	{
 		return VariadicCall<void>(OFF_DRAWENGINETEXT, text.c_str(), text.length(), font, x, y, w, h, 0.0f, color, flags);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int StringHeight(LPVOID font)
+	static int StringHeight(LPVOID font)
 	{
 		return VariadicCall<int>(OFF_STRINGHEIGHT, font);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int StringWidth(std::string text, LPVOID font)
+	static int StringWidth(std::string text, LPVOID font)
 	{
 		return VariadicCall<int>(OFF_STRINGWIDTH, text.c_str(), text.length(), font);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void GetPlayerViewOrigin(sPlayerState* playerstate, Vector3 position)
+	static void GetPlayerViewOrigin(sPlayerState* playerstate, Vector3 position)
 	{
 		return VariadicCall<void>(OFF_GETPLAYERVIEWORIGIN, 0, playerstate, position);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsThirdPersonMode(sPlayerState* playerstate)
+	static bool IsThirdPersonMode(sPlayerState* playerstate)
 	{
 		return VariadicCall<bool>(OFF_ISTHIRDPERSONMODE, playerstate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float GetThirdPersonCrosshairOffset(sPlayerState* playerstate)
+	static float GetThirdPersonCrosshairOffset(sPlayerState* playerstate)
 	{
 		return VariadicCall<float>(OFF_GETTHIRDPERSONCROSSHAIROFFSET, playerstate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline LPVOID GetEntityDObj(int entitynum)
+	static LPVOID GetEntityDObj(int entitynum)
 	{
 		return VariadicCall<LPVOID>(OFF_GETENTITYDOBJ, entitynum);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GetTagPosition(sCEntity* entity, LPVOID entitydobj, int tag, Vector3 position)
+	static int GetTagPosition(sCEntity* entity, LPVOID entitydobj, int tag, Vector3 position)
 	{
 		return VariadicCall<int>(OFF_GETTAGPOSITION, entity, entitydobj, tag, position);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool GetTagOrientation(int entitynum, int tag, sOrientation* orientation)
+	static bool GetTagOrientation(int entitynum, int tag, sOrientation* orientation)
 	{
 		return VariadicCall<bool>(OFF_GETTAGORIENTATION, 0, entitynum, tag, orientation);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int LocationalTrace(sTrace* trace, const Vector3 from, const Vector3 to, int skip, DWORD mask)
+	static int LocationalTrace(sTrace* trace, const Vector3 from, const Vector3 to, int skip, DWORD mask)
 	{
 		return VariadicCall<int>(OFF_LOCATIONALTRACE, trace, from, to, skip, mask);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void VectorAngles(const Vector3 direction, Vector3 angles)
+	static void VectorAngles(const Vector3 direction, Vector3 angles)
 	{
 		return VariadicCall<void>(OFF_VECTORANGLES, direction, angles);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void AngleVectors(const Vector3 angles, Vector3 forward, Vector3 right, Vector3 up)
+	static void AngleVectors(const Vector3 angles, Vector3 forward, Vector3 right, Vector3 up)
 	{
 		return VariadicCall<void>(OFF_ANGLEVECTORS, angles, forward, right, up);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void VectorNormalize(Vector3 angles)
+	static void VectorNormalize(Vector3 angles)
 	{
 		return VariadicCall<void>(OFF_VECTORNORMALIZE, angles);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void ExecuteKey(DWORD keyindex)
+	static void ExecuteKey(DWORD keyindex)
 	{
 		return VariadicCall<void>(OFF_EXECUTEKEY, 0, keyindex, 1, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsGamePadEnabled()
+	static bool IsGamePadEnabled()
 	{
 		return VariadicCall<bool>(OFF_ISGAMEPADENABLED);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void SetZoomState(bool enable)
+	static void SetZoomState(bool enable)
 	{
 		return VariadicCall<void>(OFF_SETZOOMSTATE, 0, enable);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool C_BulletTrace(sBulletFireParams* fireparams, sCEntity* entity, sBulletTraceResults* traceresults, int surfacetype)
+	static bool C_BulletTrace(sBulletFireParams* fireparams, sCEntity* entity, sBulletTraceResults* traceresults, int surfacetype)
 	{
 		return VariadicCall<bool>(OFF_CBULLETTRACE, 0, fireparams, 0, entity, traceresults, surfacetype);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool G_BulletTrace(sBulletFireParams* fireparams, int weapon, bool alternate, sGEntity* entity, sBulletTraceResults* traceresults, int surfacetype)
+	static bool G_BulletTrace(sBulletFireParams* fireparams, int weapon, bool alternate, sGEntity* entity, sBulletTraceResults* traceresults, int surfacetype)
 	{
 		return VariadicCall<bool>(OFF_GBULLETTRACE, fireparams, weapon, alternate, entity, traceresults, surfacetype);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline WORD GetTraceHitType(sBulletTraceResults* traceresults)
+	static WORD GetTraceHitType(sBulletTraceResults* traceresults)
 	{
 		return VariadicCall<WORD>(OFF_GETTRACEHITTYPE, traceresults);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool AdvanceTrace(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, float distance)
+	static bool AdvanceTrace(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, float distance)
 	{
 		return VariadicCall<bool>(OFF_ADVANCETRACE, fireparams, traceresults, distance);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float GetSurfacePenetrationDepth(int weapon, bool alternate, int surfacetype)
+	static float GetSurfacePenetrationDepth(int weapon, bool alternate, int surfacetype)
 	{
 		return VariadicCall<float>(OFF_GETSURFACEPENETRATIONDEPTH, weapon, alternate, surfacetype);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float GetWeaponHitLocationMultiplier(int hitloc, int weapon, bool alternate)
+	static float GetWeaponHitLocationMultiplier(int hitloc, int weapon, bool alternate)
 	{
 		return VariadicCall<float>(OFF_GETWEAPONHITLOCATIONMULTIPLIER, hitloc, weapon, alternate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GetBulletDamageForProjectile(sPlayerState* playerstate, int weapon, bool alternate, Vector3 startpos, Vector3 hitpos)
+	static int GetBulletDamageForProjectile(sPlayerState* playerstate, int weapon, bool alternate, Vector3 startpos, Vector3 hitpos)
 	{
 		return VariadicCall<int>(OFF_GETBULLETDAMAGEFORPROJECTILE, playerstate, weapon, alternate, startpos, hitpos);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool PenetrationCheck(sBulletFireParams* fireparams)
+	static bool PenetrationCheck(sBulletFireParams* fireparams)
 	{
 		return VariadicCall<bool>(OFF_PENETRATIONCHECK, 0, fireparams);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float GetHipfireSpreadForWeapon(sPlayerState* playerstate, int weapon, float* minimum, float* maximum)
+	static float GetHipfireSpreadForWeapon(sPlayerState* playerstate, int weapon, float* minimum, float* maximum)
 	{
 		return VariadicCall<float>(OFF_GETHIPFIRESPREADFORWEAPON, playerstate, weapon, minimum, maximum);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float GetZoomSpreadForWeapon(sPlayerState* playerstate, int weapon, bool alternate)
+	static float GetZoomSpreadForWeapon(sPlayerState* playerstate, int weapon, bool alternate)
 	{
 		return VariadicCall<float>(OFF_GETZOOMSPREADFORWEAPON, playerstate, weapon, alternate);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int BulletEndPosition(int* seed, float spread, const Vector3 vieworg, Vector3 end, Vector3 direction, const Vector3 forward, const Vector3 right, const Vector3 up)
+	static int BulletEndPosition(int* seed, float spread, const Vector3 vieworg, Vector3 end, Vector3 direction, const Vector3 forward, const Vector3 right, const Vector3 up)
 	{
 		return VariadicCall<int>(OFF_BULLETENDPOSITION, seed, 0.0f, spread, vieworg, end, direction, 0.0f, 360.0f, forward, right, up, 8192.0f);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int SeedRandom(int* servertime)
+	static int SeedRandom(int* servertime)
 	{
 		return VariadicCall<int>(OFF_SEEDRANDOM, servertime);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline float RandomFloat(int* seed)
+	static float RandomFloat(int* seed)
 	{
 		return VariadicCall<float>(OFF_RANDOM, seed);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void EvaluateTrajectory(sTrajectory* trajectory, int time, Vector3 result)
+	static void EvaluateTrajectory(sTrajectory* trajectory, int time, Vector3 result)
 	{
 		return VariadicCall<void>(OFF_EVALUATETRAJECTORY, trajectory, time, result);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void TeamChanged(int clientnum)
+	static void TeamChanged(int clientnum)
 	{
 		return VariadicCall<void>(OFF_TEAMCHANGED, clientnum);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void AddString(std::string value)
+	static void AddString(std::string value)
 	{
 		return VariadicCall<void>(OFF_ADDSTRING, value.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void Notify(int entitynum, DWORD stringvalue, int paramnum)
+	static void Notify(int entitynum, DWORD stringvalue, int paramnum)
 	{
 		return VariadicCall<void>(OFF_NOTIFY, entitynum, 0, stringvalue, paramnum);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline sGEntity* AddBot(std::string name, int head, int body, int helmet)
+	static sGEntity* AddBot(std::string name, int head, int body, int helmet)
 	{
 		return VariadicCall<sGEntity*>(OFF_ADDBOT, name.c_str(), head, body, helmet);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline sGEntity* AddTestClient(eTestClientType type, eTeam team, int index, sEntRef entref)
+	static sGEntity* AddTestClient(eTestClientType type, eTeam team, int index, sEntRef entref)
 	{
 		return VariadicCall<sGEntity*>(OFF_ADDTESTCLIENT, type, team, index, entref);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline sEntRef AddEntity(sGEntity* entity)
+	static sEntRef AddEntity(sGEntity* entity)
 	{
 		return VariadicCall<sEntRef>(OFF_ADDENTITY, entity);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool SpawnTestClient(sGEntity* entity)
+	static bool SpawnTestClient(sGEntity* entity)
 	{
 		return VariadicCall<bool>(OFF_SPAWNTESTCLIENT, entity);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int TakePlayerWeapon(sPlayerState* playerstate, int weapon)
+	static int TakePlayerWeapon(sPlayerState* playerstate, int weapon)
 	{
 		return VariadicCall<int>(OFF_TAKEPLAYERWEAPON, playerstate, weapon);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int GivePlayerWeapon(sPlayerState* playerstate, int weapon, bool akimbo, bool alternate, bool previous)
+	static int GivePlayerWeapon(sPlayerState* playerstate, int weapon, bool akimbo, bool alternate, bool previous)
 	{
 		return VariadicCall<int>(OFF_GIVEPLAYERWEAPON, playerstate, weapon, akimbo, alternate, previous);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline int AddAmmo(sPlayerState* playerstate, int weapon, bool alternate, int count, bool fill)
+	static int AddAmmo(sPlayerState* playerstate, int weapon, bool alternate, int count, bool fill)
 	{
 		return VariadicCall<int>(OFF_ADDAMMO, playerstate, weapon, alternate, count, fill);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool IsMigrating()
+	static bool IsMigrating()
 	{
 		return VariadicCall<bool>(OFF_ISMIGRATING);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void GameDropClient(int clientnum, std::string reason)
+	static void GameDropClient(int clientnum, std::string reason)
 	{
 		return VariadicCall<void>(OFF_GAMEDROPCLIENT, clientnum, reason.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void KickClientNum(int clientnum, std::string reason)
+	static void KickClientNum(int clientnum, std::string reason)
 	{
 		return VariadicCall<void>(OFF_KICKCLIENTNUM, clientnum, reason.c_str());
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void PlayerDie(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
+	static void PlayerDie(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
 	{
 		return VariadicCall<void>(OFF_PLAYERDIE, target, inflictor, attacker, 100000, method, weapon, 0, 0, 0, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void PlayerKill(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
+	static void PlayerKill(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
 	{
 		return VariadicCall<void>(OFF_PLAYERKILL, target, inflictor, attacker, 100000, method, weapon, 0, 0, 0, 0, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool EntityHasRiotShield(sCEntity* entity)
+	static bool EntityHasRiotShield(sCEntity* entity)
 	{
 		return ((BYTE)entity->NextEntityState.iWeapon == WEAPON_RIOT_SHIELD || (BYTE)entity->NextEntityState.LerpEntityState.iSecondaryWeapon == WEAPON_RIOT_SHIELD);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool WeaponIsAkimbo(int weapon)
+	static bool WeaponIsAkimbo(int weapon)
 	{
 		return (((BYTE)weapon == WEAPON_M9A1 || (BYTE)weapon == WEAPON_44_MAGNUM || (BYTE)weapon == WEAPON_MP_443_GRACH || (BYTE)weapon == WEAPON_P226) && weapon & WF_AKIMBO);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool WeaponIsVehicle(int weapon)
+	static bool WeaponIsVehicle(int weapon)
 	{
 		return ((BYTE)weapon == WEAPON_HELO_PILOT || (BYTE)weapon == WEAPON_LOKI || (BYTE)weapon == WEAPON_ODIN || (BYTE)weapon == WEAPON_TRINITY_ROCKET || (BYTE)weapon == WEAPON_GRYPHON);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline bool HasPerk(int clientnum, ePerk perk)
+	static bool HasPerk(int clientnum, ePerk perk)
 	{
 		return (*(DWORD_PTR*)&CharacterInfo[clientnum].iPerks >> perk) & 0x1;
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void EnablePerk(int clientnum, ePerk perk)
+	static void EnablePerk(int clientnum, ePerk perk)
 	{
 		*(int*)((DWORD_PTR)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) |= 0x1 << (perk & 0x1F);
 	}
 	/*
 	//=====================================================================================
 	*/
-	inline void DisablePerk(int clientnum, ePerk perk)
+	static void DisablePerk(int clientnum, ePerk perk)
 	{
 		*(int*)((DWORD_PTR)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) &= ~(0x1 << (perk & 0x1F));
 	}

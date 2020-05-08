@@ -180,7 +180,7 @@ namespace NeoGenesys
 
 		C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
-		if (GetTraceHitType(&TR_Enter) == entity->NextEntityState.iEntityNum)
+		if (GetTraceHitType(&TR_Enter) == entity->NextEntityState.iEntityNum || TR_Enter.Trace.flFraction == 1.0f)
 			return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 
 		return 0.0f;
@@ -372,7 +372,7 @@ namespace NeoGenesys
 		if (TR_Enter.Trace.wPartGroup == 19)
 			return 0.0f;
 
-		if (GetTraceHitType(&TR_Enter) == entity->EntityState.iEntityNum)
+		if (GetTraceHitType(&TR_Enter) == entity->EntityState.iEntityNum || TR_Enter.Trace.flFraction == 1.0f)
 			return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 		return 0.0f;

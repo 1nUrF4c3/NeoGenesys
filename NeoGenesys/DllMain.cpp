@@ -8,8 +8,8 @@ using namespace NeoGenesys;
 
 #define HOOKCALL __fastcall
 
-#define Hook(original, hook) (DetourTransactionBegin(), DetourUpdateThread(GetCurrentThread()), DetourAttach((LPVOID*)&original, (LPVOID)hook), DetourTransactionCommit())
-#define UnHook(original, hook) (DetourTransactionBegin(), DetourUpdateThread(GetCurrentThread()), DetourDetach((LPVOID*)&original, (LPVOID)hook), DetourTransactionCommit())
+#define AttachHook(original, hook) (DetourTransactionBegin(), DetourUpdateThread(GetCurrentThread()), DetourAttach((LPVOID*)&original, (LPVOID)hook), DetourTransactionCommit())
+#define DetachHook(original, hook) (DetourTransactionBegin(), DetourUpdateThread(GetCurrentThread()), DetourDetach((LPVOID*)&original, (LPVOID)hook), DetourTransactionCommit())
 
 //=====================================================================================
 
@@ -150,15 +150,15 @@ void Initialize()
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
-	Hook(oRefresh, hRefresh);
-	Hook(oWritePacket, hWritePacket);
-	Hook(oPredictPlayerState, hPredictPlayerState);
-	Hook(oBulletFirePenetrate, hBulletFirePenetrate);
-	Hook(oBulletHitEvent, hBulletHitEvent);
-	Hook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
-	Hook(oObituary, hObituary);
-	Hook(oAddCmdDrawText, hAddCmdDrawText);
-	Hook(oClientFrame, hClientFrame);
+	AttachHook(oRefresh, hRefresh);
+	AttachHook(oWritePacket, hWritePacket);
+	AttachHook(oPredictPlayerState, hPredictPlayerState);
+	AttachHook(oBulletFirePenetrate, hBulletFirePenetrate);
+	AttachHook(oBulletHitEvent, hBulletHitEvent);
+	AttachHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
+	AttachHook(oObituary, hObituary);
+	AttachHook(oAddCmdDrawText, hAddCmdDrawText);
+	AttachHook(oClientFrame, hClientFrame);
 }
 
 //=====================================================================================
@@ -168,15 +168,15 @@ void Deallocate()
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
 	SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)oPresent, bGameOverlayRenderer64 ? 0 : 8);
 
-	UnHook(oRefresh, hRefresh);
-	UnHook(oWritePacket, hWritePacket);
-	UnHook(oPredictPlayerState, hPredictPlayerState);
-	UnHook(oBulletFirePenetrate, hBulletFirePenetrate);
-	UnHook(oBulletHitEvent, hBulletHitEvent);
-	UnHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
-	UnHook(oObituary, hObituary);
-	UnHook(oAddCmdDrawText, hAddCmdDrawText);
-	UnHook(oClientFrame, hClientFrame);
+	DetachHook(oRefresh, hRefresh);
+	DetachHook(oWritePacket, hWritePacket);
+	DetachHook(oPredictPlayerState, hPredictPlayerState);
+	DetachHook(oBulletFirePenetrate, hBulletFirePenetrate);
+	DetachHook(oBulletHitEvent, hBulletHitEvent);
+	DetachHook(oCalcEntityLerpPositions, hCalcEntityLerpPositions);
+	DetachHook(oObituary, hObituary);
+	DetachHook(oAddCmdDrawText, hAddCmdDrawText);
+	DetachHook(oClientFrame, hClientFrame);
 
 	_mainGui.pDevice->Release();
 	_mainGui.pDeviceContext->Release();
