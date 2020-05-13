@@ -336,4 +336,46 @@ namespace NeoGenesys
 		out[1] = center[1] + flAngleCos * flDifferenceX + flAngleSin * flDifferenceY;
 		out[2] = point[2];
 	}
+	/*
+	//=====================================================================================
+	*/
+	void cMathematics::ApplyPositionPrediction(sCEntity* entity)
+	{
+		Vector3 vOldPosition, vNewPosition, vDeltaPosition;
+
+		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, vOldPosition);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, vNewPosition);
+
+		vDeltaPosition[0] = vNewPosition[0] - vOldPosition[0];
+		vDeltaPosition[1] = vNewPosition[1] - vOldPosition[1];
+		vDeltaPosition[2] = vNewPosition[2] - vOldPosition[2];
+
+		VectorGetSign(vDeltaPosition);
+
+		VectorMA(entity->vOrigin, *(float*)OFF_FRAMEINTERPOLATION, vDeltaPosition, entity->vOrigin);
+		VectorMA(entity->vOrigin, *(int*)OFF_FRAMETIME / 1000.0f, vDeltaPosition, entity->vOrigin);
+		VectorMA(entity->vOrigin, *(int*)OFF_PING / 1000.0f, vDeltaPosition, entity->vOrigin);
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMathematics::ApplyAnglePrediction(sCEntity* entity)
+	{
+		Vector3 vOldAngles, vNewAngles, vDeltaAngles;
+
+		EvaluateTrajectory(&entity->CurrentEntityState.AngleTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, vOldAngles);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.AngleTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, vNewAngles);
+
+		vDeltaAngles[0] = AngleNormalize180(vNewAngles[0] - vOldAngles[0]);
+		vDeltaAngles[1] = AngleNormalize180(vNewAngles[1] - vOldAngles[1]);
+		vDeltaAngles[2] = AngleNormalize180(vNewAngles[2] - vOldAngles[2]);
+
+		VectorGetSign(vDeltaAngles);
+
+		VectorMA(entity->vViewAngles, *(float*)OFF_FRAMEINTERPOLATION, vDeltaAngles, entity->vViewAngles);
+		VectorMA(entity->vViewAngles, *(int*)OFF_FRAMETIME / 1000.0f, vDeltaAngles, entity->vViewAngles);
+		VectorMA(entity->vViewAngles, *(int*)OFF_PING / 1000.0f, vDeltaAngles, entity->vViewAngles);
+	}
 }
+
+//=====================================================================================
