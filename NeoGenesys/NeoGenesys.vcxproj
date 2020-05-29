@@ -32,8 +32,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Detours;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Detours;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Detours\Include;$(ProjectDir)VMProtect\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Detours\Lib\x64;$(ProjectDir)VMProtect\Lib\x64;$(LibraryPath)</LibraryPath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -42,7 +42,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;NEOGENESYS_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;VC_EXTRALEAN;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;NEOGENESYS_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;VC_EXTRALEAN;WIN32_LEAN_AND_MEAN;IMGUI_DEFINE_MATH_OPERATORS;VMProtectDecryptString=VMProtectDecryptStringA;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -52,7 +52,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;detours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;WinInet.lib;detours.lib;VMProtectSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -63,10 +63,12 @@
     <ClCompile Include="Core\Console\Console.cpp" />
     <ClCompile Include="Core\Drawing\Drawing.cpp" />
     <ClCompile Include="Core\Hooks.cpp" />
-    <ClCompile Include="Core\Host\Host.cpp" />
+    <ClCompile Include="Core\HostMenu\HostMenu.cpp" />
+    <ClCompile Include="Core\License\License.cpp" />
     <ClCompile Include="Core\MainGUI.cpp" />
     <ClCompile Include="Core\Mathematics\Mathematics.cpp" />
     <ClCompile Include="Core\Packets\Packets.cpp" />
+    <ClCompile Include="Core\PlayerList\PlayerList.cpp" />
     <ClCompile Include="Core\Profiler\Profiler.cpp" />
     <ClCompile Include="Core\Profiler\RapidXML\Utilities\FileUtility.cpp" />
     <ClCompile Include="Core\Removals\Removals.cpp" />
@@ -74,6 +76,7 @@
     <ClCompile Include="DllMain.cpp" />
     <ClCompile Include="ImGui\Addons\FileSystem\imguifilesystem.cpp" />
     <ClCompile Include="ImGui\Addons\TabWindow\imguitabwindow.cpp" />
+    <ClCompile Include="ImGui\Addons\WICTextureLoader.cpp" />
     <ClCompile Include="ImGui\DX11\imgui_impl_dx11.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -90,10 +93,12 @@
     <ClInclude Include="Core\Engine\Helpers.hpp" />
     <ClInclude Include="Core\Engine\Thunk.hpp" />
     <ClInclude Include="Core\Hooks.h" />
-    <ClInclude Include="Core\Host\Host.h" />
+    <ClInclude Include="Core\HostMenu\HostMenu.h" />
+    <ClInclude Include="Core\License\License.h" />
     <ClInclude Include="Core\MainGUI.h" />
     <ClInclude Include="Core\Mathematics\Mathematics.h" />
     <ClInclude Include="Core\Packets\Packets.h" />
+    <ClInclude Include="Core\PlayerList\PlayerList.h" />
     <ClInclude Include="Core\Profiler\Profiler.h" />
     <ClInclude Include="Core\Profiler\RapidXML\rapidxml.hpp" />
     <ClInclude Include="Core\Profiler\RapidXML\rapidxml_iterators.hpp" />
@@ -104,10 +109,11 @@
     <ClInclude Include="Core\Profiler\RapidXML\Utilities\StringUtility.hpp" />
     <ClInclude Include="Core\Removals\Removals.h" />
     <ClInclude Include="Core\TargetList\TargetList.h" />
-    <ClInclude Include="Detours\detours.h" />
+    <ClInclude Include="Detours\Include\detours.h" />
     <ClInclude Include="ImGui\Addons\dirent_portable.h" />
     <ClInclude Include="ImGui\Addons\FileSystem\imguifilesystem.h" />
     <ClInclude Include="ImGui\Addons\TabWindow\imguitabwindow.h" />
+    <ClInclude Include="ImGui\Addons\WICTextureLoader.h" />
     <ClInclude Include="ImGui\DX11\imgui_impl_dx11.h" />
     <ClInclude Include="ImGui\Fonts\Eurostile_Bold.hpp" />
     <ClInclude Include="ImGui\Fonts\Eurostile_Extended.hpp" />
@@ -121,12 +127,19 @@
     <ClInclude Include="ImGui\STB\imstb_truetype.h" />
     <ClInclude Include="ImGui\Win32\imgui_impl_win32.h" />
     <ClInclude Include="StdAfx.hpp" />
+    <ClInclude Include="VMProtect\Include\VMProtectSDK.h" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Detours\detours.lib" />
+    <Library Include="Detours\Lib\x64\detours.lib" />
+    <Library Include="Detours\Lib\x86\detours.lib" />
+    <Library Include="VMProtect\Lib\x64\VMProtectSDK64.lib" />
+    <Library Include="VMProtect\Lib\x86\VMProtectSDK32.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Detours\detours.pdb" />
+    <None Include="Detours\Lib\x64\detours.pdb" />
+    <None Include="Detours\Lib\x86\detours.pdb" />
+    <None Include="VMProtect\Lib\x64\VMProtectSDK64.dll" />
+    <None Include="VMProtect\Lib\x86\VMProtectSDK32.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

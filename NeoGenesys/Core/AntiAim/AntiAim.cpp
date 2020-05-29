@@ -112,9 +112,9 @@ namespace NeoGenesys
 			usercmd->iViewAngles[1] = AngleToShort(vAntiAimAngles[1]);
 			usercmd->iViewAngles[2] = AngleToShort(vAntiAimAngles[2]);
 
-			Vector3 vViewOrigin, vDirection, vAngles, vOneVector = { 1.0f, 1.0f, 1.0f };
+			ImVec3 vViewOrigin, vDirection, vAngles, vOneVector = { 1.0f, 1.0f, 1.0f };
 
-			GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+			GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 			VectorSubtract(vOneVector, vViewOrigin, vDirection);
 
 			_mathematics.VectorNormalize(vDirection);

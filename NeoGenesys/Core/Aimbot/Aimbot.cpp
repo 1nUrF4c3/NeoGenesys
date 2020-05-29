@@ -97,14 +97,14 @@ namespace NeoGenesys
 		if (AimState.bLockonTarget)
 		{
 			if (AimState.iCurrentAimDelay == _profiler.gAutoAimDelay->Current.iValue)
-				AimState.iCurrentAimTime += clock() - AimState.iDeltaTMR;
+				AimState.iCurrentAimTime += Sys_Milliseconds() - AimState.iDeltaTMR;
 
-			AimState.iCurrentAimDelay += clock() - AimState.iDeltaTMR;
-			AimState.iCurrentZoomDelay += clock() - AimState.iDeltaTMR;
-			AimState.iCurrentFireDelay += clock() - AimState.iDeltaTMR;
+			AimState.iCurrentAimDelay += Sys_Milliseconds() - AimState.iDeltaTMR;
+			AimState.iCurrentZoomDelay += Sys_Milliseconds() - AimState.iDeltaTMR;
+			AimState.iCurrentFireDelay += Sys_Milliseconds() - AimState.iDeltaTMR;
 		}
 
-		AimState.iDeltaTMR = clock();
+		AimState.iDeltaTMR = Sys_Milliseconds();
 
 		if (AimState.iLastTarget != AimState.iTargetNum)
 		{
@@ -135,8 +135,8 @@ namespace NeoGenesys
 
 		if (AimState.bTargetAcquired)
 		{
-			Vector3 vViewOrigin;
-			GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+			ImVec3 vViewOrigin;
+			GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 
 			VectorCopy(_targetList.EntityList[AimState.iTargetNum].vHitLocation, AimState.vAimPosition);
 

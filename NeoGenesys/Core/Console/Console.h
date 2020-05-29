@@ -6,10 +6,10 @@
 
 //=====================================================================================
 
-#define PREFIX_ERROR "[ERROR] "
-#define PREFIX_COMMAND "# "
-#define PREFIX_WARNING "] "
-#define PREFIX_LOG "> "
+#define PREFIX_ERROR "[ERROR]"
+#define PREFIX_COMMAND "#"
+#define PREFIX_WARNING "]"
+#define PREFIX_LOG ">"
 
 //=====================================================================================
 
@@ -64,10 +64,10 @@ namespace NeoGenesys
 			return (LPSTR)memcpy(buff, (const void*)str, len);
 		}
 
-		void Init();
+		void InitInterface();
 		void ClearLog();
 		void AddLog(LPCSTR format, ...) IM_FMTARGS(2);
-		void Draw(LPCSTR title, bool* open);
+		void DrawConsole(bool* open);
 
 		void SplitCommandLine(LPCSTR in, sCmdLine* out);
 		void ExecCommand(LPCSTR command);

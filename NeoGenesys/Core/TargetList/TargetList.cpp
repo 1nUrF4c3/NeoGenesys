@@ -33,11 +33,11 @@ namespace NeoGenesys
 				if (!pDObj)
 					continue;
 
-				Vector3 vMinTemp = { FLT_MAX, FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+				ImVec3 vMinTemp = { FLT_MAX, FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 
 				for (auto& Bone : vBones)
 				{
-					GetTagPosition(&CEntity[i], pDObj, RegisterTag(szBones[Bone.first].second), EntityList[i].vBones3D[Bone.first]);
+					GetTagPosition(&CEntity[i], pDObj, RegisterTag(szBones[Bone.first].second), &EntityList[i].vBones3D[Bone.first]);
 
 					for (int j = 0; j < 3; j++)
 					{
@@ -61,15 +61,15 @@ namespace NeoGenesys
 
 			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER)
 			{
-				Vector3 vViewOrigin;
+				ImVec3 vViewOrigin;
 				VectorCopy(CEntity[i].vOrigin, vViewOrigin);
 				vViewOrigin[2] += M_METERS;
 
 				EntityList[i].bW2SSuccess = _drawing.Calculate2D(EntityList[i].vBones3D, EntityList[i].vBones2D, EntityList[i].vPosition, EntityList[i].vDimentions) &&
 					_drawing.Calculate3D(&CEntity[i], EntityList[i].vCenter3D, EntityList[i].vCorners3D, EntityList[i].vCorners2D) &&
-					WorldToScreen(GetScreenMatrix(), EntityList[i].vCenter3D, EntityList[i].vCenter2D) &&
-					WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, EntityList[i].vLower) &&
-					WorldToScreen(GetScreenMatrix(), vViewOrigin, EntityList[i].vUpper);
+					WorldToScreen(GetScreenMatrix(), EntityList[i].vCenter3D, &EntityList[i].vCenter2D) &&
+					WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, &EntityList[i].vLower) &&
+					WorldToScreen(GetScreenMatrix(), vViewOrigin, &EntityList[i].vUpper);
 
 				_mathematics.WorldToCompass(CEntity[i].vOrigin, _drawing.Compass.vCompassPosition, _drawing.Compass.flCompassSize, _drawing.Compass.vArrowPosition[i]);
 				_mathematics.WorldToRadar(CEntity[i].vOrigin, _drawing.Radar.vRadarPosition, _drawing.Radar.flScale, _drawing.Radar.flRadarSize, _drawing.Radar.flBlipSize, _drawing.Radar.vBlipPosition[i]);
@@ -85,13 +85,13 @@ namespace NeoGenesys
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_ITEM)
 			{
-				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, EntityList[i].vCenter2D);
+				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, &EntityList[i].vCenter2D);
 				continue;
 			}
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_MISSILE)
 			{
-				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, EntityList[i].vCenter2D);
+				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), CEntity[i].vOrigin, &EntityList[i].vCenter2D);
 
 				if (!EntityIsEnemy(i))
 					continue;
@@ -99,7 +99,7 @@ namespace NeoGenesys
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
-				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), EntityList[i].vBones3D[vBones[BONE_HEAD].first], EntityList[i].vCenter2D);
+				EntityList[i].bW2SSuccess = WorldToScreen(GetScreenMatrix(), EntityList[i].vBones3D[vBones[BONE_HEAD].first], &EntityList[i].vCenter2D);
 
 				if (!EntityIsEnemy(i))
 					continue;
@@ -111,12 +111,12 @@ namespace NeoGenesys
 					(_profiler.gTargetAgents->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_AGENT)))
 				continue;
 
-			Vector3 vDirection, vAngles, vDelta;
+			ImVec3 vDirection, vAngles, vDelta;
 
 			VectorSubtract(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin, vDirection);
 
-			VectorNormalize(vDirection);
-			VectorAngles(vDirection, vAngles);
+			VectorNormalize(&vDirection);
+			VectorAngles(vDirection, &vAngles);
 			_mathematics.ClampAngles(vAngles);
 
 			VectorSubtract(vAngles, CEntity[i].vViewAngles, vDelta);
@@ -196,7 +196,7 @@ namespace NeoGenesys
 				VectorCopy(CEntity[i].vOrigin, EntityList[i].vHitLocation);
 			}
 
-			if (i < FindVariable("sv_maxclients")->Current.iValue && *(int*)OFF_ISCURRENTHOST)
+			if (i < FindVariable("sv_maxclients")->Current.iValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				if (GEntity[i].iHealth < 1)
 					continue;
 
@@ -292,10 +292,10 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisibleInternal(sCEntity* entity, Vector3 position, short hitloc, bool autowall, float* damage)
+	bool cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, short hitloc, bool autowall, float* damage)
 	{
-		Vector3 vViewOrigin;
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+		ImVec3 vViewOrigin;
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 		{
@@ -332,7 +332,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisible(sCEntity* entity, Vector3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index)
+	bool cTargetList::IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index)
 	{
 		bool bReturn = false;
 

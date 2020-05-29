@@ -18,7 +18,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cConsole::Init()
+	void cConsole::InitInterface()
 	{
 		static bool bFirstTime = true;
 
@@ -92,7 +92,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cConsole::Draw(LPCSTR title, bool* open)
+	void cConsole::DrawConsole(bool* open)
 	{
 		if (bWriteLog)
 		{
@@ -100,9 +100,10 @@ namespace NeoGenesys
 			bWriteLog = false;
 		}
 
+		InitInterface();
 		ImGui::SetNextWindowSize(ImVec2(510.0f, 350.0f));
 
-		if (!ImGui::Begin(title, open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
+		if (!ImGui::Begin("CONSOLE", open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::End();
 			return;
@@ -120,7 +121,7 @@ namespace NeoGenesys
 			bWriteLog = true;
 		}
 
-		ImGui::TextWrapped("\t\t\t%s", PROGRAM_NAME);
+		ImGui::TextWrapped("\t\t\tNeoGenesys");
 		ImGui::Spacing();
 		ImGui::TextWrapped("Press Help for details, press Tab to use text completion.");
 
@@ -193,16 +194,16 @@ namespace NeoGenesys
 			ImVec4 cTemp = cDefaultText;
 
 			if (strncmp(szItem, PREFIX_ERROR, strlen(PREFIX_ERROR)) == 0)
-				cTemp = ImColor(1.0f, 0.4f, 0.4f, 1.0f);
+				cTemp = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
 			else if (strncmp(szItem, PREFIX_COMMAND, strlen(PREFIX_COMMAND)) == 0)
-				cTemp = ImColor(1.0f, 0.5f, 0.3f, 1.0f);
+				cTemp = ImVec4(1.0f, 0.5f, 0.3f, 1.0f);
 
 			else if (strncmp(szItem, PREFIX_WARNING, strlen(PREFIX_WARNING)) == 0)
-				cTemp = ImColor(1.0f, 1.0f, 0.3f, 1.0f);
+				cTemp = ImVec4(1.0f, 1.0f, 0.3f, 1.0f);
 
 			else if (strncmp(szItem, PREFIX_LOG, strlen(PREFIX_LOG)) == 0)
-				cTemp = ImColor(0.3f, 0.5f, 1.0f, 1.0f);
+				cTemp = ImVec4(0.3f, 0.5f, 1.0f, 1.0f);
 
 			ImGui::PushStyleColor(ImGuiCol_Text, cTemp);
 			ImGui::TextUnformatted(szItem);
@@ -285,7 +286,7 @@ namespace NeoGenesys
 	*/
 	void cConsole::ExecCommand(LPCSTR command)
 	{
-		AddLog("# %s\n", command);
+		AddLog("%s %s\n", PREFIX_COMMAND, command);
 
 		sCmdLine CmdLine;
 		SplitCommandLine(command, &CmdLine);
@@ -344,7 +345,7 @@ namespace NeoGenesys
 
 			else
 			{
-				AddLog("[ERROR] Null argument(s).");
+				AddLog("%s Null argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -374,13 +375,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -430,13 +431,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -466,13 +467,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -504,13 +505,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -542,13 +543,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -578,13 +579,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -634,13 +635,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -670,13 +671,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -706,13 +707,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -764,13 +765,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -804,7 +805,7 @@ namespace NeoGenesys
 
 					else
 					{
-						AddLog("[ERROR] Invalid argument(s).");
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 					}
 				}
 
@@ -832,19 +833,19 @@ namespace NeoGenesys
 
 					else
 					{
-						AddLog("[ERROR] Invalid argument(s).");
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 					}
 				}
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -874,13 +875,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -910,13 +911,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -961,13 +962,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -1000,7 +1001,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1025,7 +1026,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1050,13 +1051,13 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
 						else
 						{
-							AddLog("[ERROR] Invalid argument(s).");
+							AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 						}
 					}
 
@@ -1083,7 +1084,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1108,7 +1109,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1133,19 +1134,19 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
 						else
 						{
-							AddLog("[ERROR] Invalid argument(s).");
+							AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 						}
 					}
 
 					else
 					{
-						AddLog("[ERROR] Invalid argument(s).");
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 					}
 				}
 
@@ -1174,7 +1175,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1199,7 +1200,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1224,13 +1225,13 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
 						else
 						{
-							AddLog("[ERROR] Invalid argument(s).");
+							AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 						}
 					}
 
@@ -1257,7 +1258,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1282,7 +1283,7 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
@@ -1307,31 +1308,31 @@ namespace NeoGenesys
 
 							else
 							{
-								AddLog("[ERROR] Null argument(s).");
+								AddLog("%s Null argument(s).", PREFIX_ERROR);
 							}
 						}
 
 						else
 						{
-							AddLog("[ERROR] Invalid argument(s).");
+							AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 						}
 					}
 
 					else
 					{
-						AddLog("[ERROR] Invalid argument(s).");
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 					}
 				}
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -1361,7 +1362,7 @@ namespace NeoGenesys
 
 					else
 					{
-						AddLog("[ERROR] Null argument(s).");
+						AddLog("%s Null argument(s).", PREFIX_ERROR);
 					}
 				}
 
@@ -1378,13 +1379,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -1414,7 +1415,7 @@ namespace NeoGenesys
 
 					else
 					{
-						AddLog("[ERROR] Null argument(s).");
+						AddLog("%s Null argument(s).", PREFIX_ERROR);
 					}
 				}
 
@@ -1431,13 +1432,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -1455,7 +1456,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_host.SpawnBots(FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers);
+					_hostMenu.SpawnBots(FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers);
 
 					AddLog("Spawned %i bots into the match.", FindVariable("sv_maxclients")->Current.iValue - iCurrentPlayers);
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1465,7 +1466,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_host.SpawnBots(atoi(CmdLine.szCmdArgs[0]));
+					_hostMenu.SpawnBots(atoi(CmdLine.szCmdArgs[0]));
 
 					AddLog("Spawned %i bot(s) into the match.", atoi(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1473,13 +1474,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 
@@ -1510,13 +1511,13 @@ namespace NeoGenesys
 
 				else
 				{
-					AddLog("[ERROR] Invalid argument(s).");
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
 				}
 			}
 
 			else
 			{
-				AddLog("[ERROR] Missing argument(s).");
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
 			}
 		}
 

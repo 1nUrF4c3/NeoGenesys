@@ -27,7 +27,7 @@ namespace NeoGenesys
 		else
 			_drawing.vTracers.clear();
 
-		_host.PlayerMods();
+		_hostMenu.PlayerMods();
 	}
 	/*
 	//=====================================================================================
@@ -81,21 +81,21 @@ namespace NeoGenesys
 				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
 				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
 
-				Vector3 vAngles, vForward, vRight, vUp;
+				ImVec3 vAngles, vForward, vRight, vUp;
 				VectorCopy(_aimBot.AimState.vAimAngles, vAngles);
 
 				vAngles[0] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0];
 				vAngles[1] += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1];
 
-				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Current.flValue, bp->vStart, bp->vEnd, bp->vDir, vForward, vRight, vUp);
+				AngleVectors(_profiler.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, &vForward, &vRight, &vUp);
+				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _profiler.gSpreadFactor->Current.flValue, bp->vStart, &bp->vEnd, &bp->vDir, vForward, vRight, vUp);
 			}
 		}
 	}
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::BulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents)
+	void cHooks::BulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, ImVec3 start, ImVec3 position, ImVec3 normal, int surface, int _event, char param, int contents)
 	{
 		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
@@ -109,8 +109,8 @@ namespace NeoGenesys
 					(CEntity[targetnum].NextEntityState.iWeapon == WEAPON_C4 || CEntity[targetnum].NextEntityState.iWeapon == WEAPON_IED)) ||
 					(_profiler.gTargetAgents->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
 				{
-					Vector3 vTracerStart;
-					GetPlayerViewOrigin(&CG->PredictedPlayerState, vTracerStart);
+					ImVec3 vTracerStart;
+					GetPlayerViewOrigin(&CG->PredictedPlayerState, &vTracerStart);
 
 					sOrientation Orientation;
 					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
@@ -130,7 +130,7 @@ namespace NeoGenesys
 						Tracer.cColorShadow = _profiler.gColorShadow->Current.cValue;
 						Tracer.cColorHitMarker = _profiler.gColorText->Current.cValue;
 						Tracer.cColorTracer = _profiler.gColorAccents->Current.cValue;
-						Tracer.iStartTime = CG->PredictedPlayerState.iCommandTime;
+						Tracer.iStartTime = Sys_Milliseconds();
 
 						_drawing.vTracers.push_back(Tracer);
 					}
@@ -168,9 +168,9 @@ namespace NeoGenesys
 		{
 			if (entitystate->iAttackerEntityNum == CG->PredictedPlayerState.iClientNum)
 			{
-				if (_profiler.gTeaBag->Current.bValue && *(int*)OFF_ISCURRENTHOST)
+				if (_profiler.gTeaBag->Current.bValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				{
-					_packets.iTeaBagTime = clock();
+					_packets.iTeaBagTime = Sys_Milliseconds();
 					VectorCopy(PlayerState[entitystate->iOtherEntityNum].vOrigin, _packets.vTeaBagPos);
 
 					std::string szTeaBag = _profiler.gTeaBagMessage->Current.szValue;
@@ -227,7 +227,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cHooks::AddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, RGBA color, int flags)
+	void cHooks::AddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, ImVec4 color, int flags)
 	{
 		LPSTR szInvalidText;
 
@@ -239,8 +239,14 @@ namespace NeoGenesys
 	*/
 	void cHooks::ClientFrame(sGEntity* entity)
 	{
-		if (LocalClientIsInGame())
-			_host.MassKill();
+		if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+		{
+			_hostMenu.MassKill();
+
+			for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+				if (_profiler.gAntiLeave->Current.bValue && i != CG->PredictedPlayerState.iClientNum)
+					GameSendServerCommand(i, SV_CMD_RELIABLE, "o 11 1");
+		}
 	}
 	/*
 	//=====================================================================================
@@ -259,7 +265,7 @@ namespace NeoGenesys
 
 			else
 			{
-				_console.AddLog("] STATUS_ACCESS_VIOLATION @ 0x%llX", ExceptionInfo->ExceptionRecord->ExceptionAddress);
+				_console.AddLog("%s STATUS_ACCESS_VIOLATION @ 0x%llX", PREFIX_WARNING, ExceptionInfo->ExceptionRecord->ExceptionAddress);
 				Com_Error(ERR_DROP, "STATUS_ACCESS_VIOLATION @ 0x%llX", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 				return EXCEPTION_CONTINUE_EXECUTION;

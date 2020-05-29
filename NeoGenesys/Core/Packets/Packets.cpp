@@ -24,7 +24,7 @@ namespace NeoGenesys
 				usercmd->iButtons |= BUTTON_JUMP;
 		}
 
-		if (clock() - iTeaBagTime < 3000)
+		if (Sys_Milliseconds() - iTeaBagTime < 3000)
 		{
 			VectorCopy(vTeaBagPos, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
 

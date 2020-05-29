@@ -8,7 +8,7 @@ namespace NeoGenesys
 {
 	cAutowall _autoWall;
 
-	float cAutowall::C_Autowall(sCEntity* entity, Vector3 start, Vector3 end, short hitloc)
+	float cAutowall::C_Autowall(sCEntity* entity, ImVec3 start, ImVec3 end, short hitloc)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sCEntity* pCEntity = &CEntity[iClientNum];
@@ -39,7 +39,7 @@ namespace NeoGenesys
 
 		VectorSubtract(end, start, FP_Enter.vDir);
 		float flLength = VectorLength(FP_Enter.vDir);
-		VectorNormalize(FP_Enter.vDir);
+		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
@@ -53,7 +53,7 @@ namespace NeoGenesys
 
 			float flEnterDepth = 0.0f, flExitDepth = 0.0f, flSurfaceDepth = 0.0f;
 
-			Vector3 vHitPos = { 0.0f }, vTemp = { 0.0f };
+			ImVec3 vHitPos, vTemp;
 
 			for (int iSurfaceCount = 0; bEnterHit && iSurfaceCount < 5; ++iSurfaceCount)
 			{
@@ -120,7 +120,7 @@ namespace NeoGenesys
 
 					if (!bStaticModel && iWeaponType == WEAPTYPE_BULLET)
 					{
-						Vector3 vLength;
+						ImVec3 vLength;
 
 						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
 
@@ -152,7 +152,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cAutowall::C_TraceBullet(sCEntity* entity, Vector3 start, Vector3 end, short hitloc)
+	float cAutowall::C_TraceBullet(sCEntity* entity, ImVec3 start, ImVec3 end, short hitloc)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sCEntity* pCEntity = &CEntity[iClientNum];
@@ -167,7 +167,7 @@ namespace NeoGenesys
 		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
 		VectorSubtract(end, start, FP_Enter.vDir);
-		VectorNormalize(FP_Enter.vDir);
+		VectorNormalize(&FP_Enter.vDir);
 
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = iClientNum;
@@ -188,7 +188,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cAutowall::G_Autowall(sGEntity* entity, Vector3 start, Vector3 end)
+	float cAutowall::G_Autowall(sGEntity* entity, ImVec3 start, ImVec3 end)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sGEntity* pGEntity = &GEntity[iClientNum];
@@ -219,7 +219,7 @@ namespace NeoGenesys
 
 		VectorSubtract(end, start, FP_Enter.vDir);
 		float flLength = VectorLength(FP_Enter.vDir);
-		VectorNormalize(FP_Enter.vDir);
+		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
@@ -236,7 +236,7 @@ namespace NeoGenesys
 
 			float flEnterDepth = 0.0f, flExitDepth = 0.0f, flSurfaceDepth = 0.0f;
 
-			Vector3 vHitPos = { 0.0f }, vTemp = { 0.0f };
+			ImVec3 vHitPos, vTemp;
 
 			for (int iSurfaceCount = 0; bEnterHit && iSurfaceCount < 5; ++iSurfaceCount)
 			{
@@ -309,7 +309,7 @@ namespace NeoGenesys
 
 					if (!bStaticModel && iWeaponType == WEAPTYPE_BULLET)
 					{
-						Vector3 vLength;
+						ImVec3 vLength;
 
 						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
 
@@ -341,7 +341,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cAutowall::G_TraceBullet(sGEntity* entity, Vector3 start, Vector3 end)
+	float cAutowall::G_TraceBullet(sGEntity* entity, ImVec3 start, ImVec3 end)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sGEntity* pGEntity = &GEntity[iClientNum];
@@ -356,7 +356,7 @@ namespace NeoGenesys
 		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
 		VectorSubtract(end, start, FP_Enter.vDir);
-		VectorNormalize(FP_Enter.vDir);
+		VectorNormalize(&FP_Enter.vDir);
 
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = iClientNum;
@@ -383,7 +383,7 @@ namespace NeoGenesys
 	float cAutowall::GetRemainingDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, short partgroup, int weapon, bool alternate)
 	{
 		float flDamage = 0.0f;
-		Vector3 vHitPos, vStart;
+		ImVec3 vHitPos, vStart;
 
 		if (fireparams->flPower > 0.0f)
 		{
@@ -402,9 +402,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cAutowall::TraceLine(sCEntity* entity, Vector3 start, Vector3 end)
+	bool cAutowall::TraceLine(sCEntity* entity, ImVec3 start, ImVec3 end)
 	{
-		Vector3 vStart, vEnd;
+		ImVec3 vStart, vEnd;
 
 		VectorCopy(start, vStart);
 		VectorCopy(end, vEnd);

@@ -37,7 +37,7 @@ namespace NeoGenesys
 	{
 		FirstBulletFix();
 
-		Vector3 vAngles;
+		ImVec3 vAngles;
 
 		GetSpreadAngles(akimbo, usercmd->iServerTime, GetWeaponSpread(), vAngles);
 
@@ -65,17 +65,17 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cRemovals::GetSpreadAngles(bool akimbo, int servertime, float spread, Vector3 angles)
+	void cRemovals::GetSpreadAngles(bool akimbo, int servertime, float spread, ImVec3& angles)
 	{
-		Vector3 vViewOrigin, vForward, vRight, vUp, vEnd, vDir;
+		ImVec3 vViewOrigin, vForward, vRight, vUp, vEnd, vDir;
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 		int iSeed = TransformSeed(akimbo, servertime);
 
-		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, vForward, vRight, vUp);
-		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, vEnd, vDir, vForward, vRight, vUp);
+		AngleVectors(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, &vForward, &vRight, &vUp);
+		BulletEndPosition(&iSeed, spread, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, &vEnd, &vDir, vForward, vRight, vUp);
 
-		VectorAngles(vDir, angles);
+		VectorAngles(vDir, &angles);
 		_mathematics.ClampAngles(angles);
 	}
 	/*

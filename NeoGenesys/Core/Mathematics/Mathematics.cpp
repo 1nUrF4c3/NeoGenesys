@@ -8,11 +8,11 @@ namespace NeoGenesys
 {
 	cMathematics _mathematics;
 
-	float cMathematics::CalculateFOV(Vector3 position)
+	float cMathematics::CalculateFOV(ImVec3 position)
 	{
-		Vector3 vViewOrigin, vDirection, vAngles, vAimAngles;
+		ImVec3 vViewOrigin, vDirection, vAngles, vAimAngles;
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 		VectorSubtract(position, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, vDirection);
 
 		VectorNormalize(vDirection);
@@ -33,9 +33,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cMathematics::CalculateDistance(Vector3 start, Vector3 end)
+	float cMathematics::CalculateDistance(ImVec3 start, ImVec3 end)
 	{
-		Vector3 vDirection;
+		ImVec3 vDirection;
 
 		VectorSubtract(start, end, vDirection);
 
@@ -44,7 +44,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::VectorAngles(Vector3 direction, Vector3 angles)
+	void cMathematics::VectorAngles(ImVec3 direction, ImVec3& angles)
 	{
 		float flTemp, flYaw, flPitch;
 
@@ -80,7 +80,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::AngleVectors(Vector3 angles, Vector3 forward, Vector3 right, Vector3 up)
+	void cMathematics::AngleVectors(ImVec3 angles, ImVec3& forward, ImVec3& right, ImVec3& up)
 	{
 		float flAngle, flSinRoll, flSinPitch, flSinYaw, flCosRoll, flCosPitch, flCosYaw;
 
@@ -120,7 +120,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::VectorNormalize(Vector3 direction)
+	void cMathematics::VectorNormalize(ImVec3& direction)
 	{
 		float flLen = VectorLength(direction);
 
@@ -143,7 +143,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::ClampAngles(Vector3 angles)
+	void cMathematics::ClampAngles(ImVec3& angles)
 	{
 		while (angles[0] < -180.0f) 
 			angles[0] += 360.0f;
@@ -183,9 +183,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::CalculateAimAngles(Vector3 start, Vector3 end, Vector3 angles)
+	void cMathematics::CalculateAimAngles(ImVec3 start, ImVec3 end, ImVec3& angles)
 	{
-		Vector3 vDirection;
+		ImVec3 vDirection;
 
 		VectorSubtract(start, end, vDirection);
 
@@ -202,9 +202,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::CalculateAntiAimAngles(Vector3 start, Vector3 end, Vector3 angles)
+	void cMathematics::CalculateAntiAimAngles(ImVec3 start, ImVec3 end, ImVec3& angles)
 	{
-		Vector3 vDirection;
+		ImVec3 vDirection;
 		VectorSubtract(start, end, vDirection);
 
 		VectorNormalize(vDirection);
@@ -223,7 +223,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::MakeVector(Vector3 angles, Vector3 out)
+	void cMathematics::MakeVector(ImVec3 angles, ImVec3& out)
 	{
 		float flPitch = DegreesToRadians(angles[0]), 
 			flYaw = DegreesToRadians(angles[1]);
@@ -247,12 +247,12 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cMathematics::WorldToScreen(Vector3 world, ImVec2& screen)
+	bool cMathematics::WorldToScreen(ImVec3 world, ImVec2& screen)
 	{
 		float flCenterX = RefDef->iWidth / 2.0f,
 			flCenterY = RefDef->iHeight / 2.0f;
 
-		Vector3 vLocal, vTransForm;
+		ImVec3 vLocal, vTransForm;
 
 		VectorSubtract(world, RefDef->vViewOrigin, vLocal);
 
@@ -271,13 +271,13 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::WorldToCompass(Vector3 world, ImVec2 compasspos, float compasssize, ImVec2& screen)
+	void cMathematics::WorldToCompass(ImVec3 world, ImVec2 compasspos, float compasssize, ImVec2& screen)
 	{
 		float flAngle;
 
-		Vector3 vViewOrigin, vDirection, vAngles;
+		ImVec3 vViewOrigin, vDirection, vAngles;
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 		VectorSubtract(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, world, vDirection);
 		
 		VectorNormalize(vDirection);
@@ -294,11 +294,11 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::WorldToRadar(Vector3 world, ImVec2 radarpos, float scale, float radarsize, float blipsize, ImVec2& screen)
+	void cMathematics::WorldToRadar(ImVec3 world, ImVec2 radarpos, float scale, float radarsize, float blipsize, ImVec2& screen)
 	{
-		Vector3 vViewOrigin;
+		ImVec3 vViewOrigin;
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, vViewOrigin);
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 
 		float flCosYaw = cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
 			flSinYaw = sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1])),
@@ -325,7 +325,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cMathematics::RotatePoint(Vector3 point, Vector3 center, float yaw, Vector3 out)
+	void cMathematics::RotatePoint(ImVec3 point, ImVec3 center, float yaw, ImVec3& out)
 	{
 		float flAngleCos = cosf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE),
 			flAngleSin = sinf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE),
@@ -341,10 +341,10 @@ namespace NeoGenesys
 	*/
 	void cMathematics::ApplyPositionPrediction(sCEntity* entity)
 	{
-		Vector3 vOldPosition, vNewPosition, vDeltaPosition;
+		ImVec3 vOldPosition, vNewPosition, vDeltaPosition;
 
-		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, vOldPosition);
-		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, vNewPosition);
+		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldPosition);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewPosition);
 
 		vDeltaPosition[0] = vNewPosition[0] - vOldPosition[0];
 		vDeltaPosition[1] = vNewPosition[1] - vOldPosition[1];
@@ -352,7 +352,6 @@ namespace NeoGenesys
 
 		VectorGetSign(vDeltaPosition);
 
-		VectorMA(entity->vOrigin, *(float*)OFF_FRAMEINTERPOLATION, vDeltaPosition, entity->vOrigin);
 		VectorMA(entity->vOrigin, *(int*)OFF_FRAMETIME / 1000.0f, vDeltaPosition, entity->vOrigin);
 		VectorMA(entity->vOrigin, *(int*)OFF_PING / 1000.0f, vDeltaPosition, entity->vOrigin);
 	}
@@ -361,10 +360,10 @@ namespace NeoGenesys
 	*/
 	void cMathematics::ApplyAnglePrediction(sCEntity* entity)
 	{
-		Vector3 vOldAngles, vNewAngles, vDeltaAngles;
+		ImVec3 vOldAngles, vNewAngles, vDeltaAngles;
 
-		EvaluateTrajectory(&entity->CurrentEntityState.AngleTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, vOldAngles);
-		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.AngleTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, vNewAngles);
+		EvaluateTrajectory(&entity->CurrentEntityState.AngleTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldAngles);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.AngleTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewAngles);
 
 		vDeltaAngles[0] = AngleNormalize180(vNewAngles[0] - vOldAngles[0]);
 		vDeltaAngles[1] = AngleNormalize180(vNewAngles[1] - vOldAngles[1]);
@@ -372,7 +371,6 @@ namespace NeoGenesys
 
 		VectorGetSign(vDeltaAngles);
 
-		VectorMA(entity->vViewAngles, *(float*)OFF_FRAMEINTERPOLATION, vDeltaAngles, entity->vViewAngles);
 		VectorMA(entity->vViewAngles, *(int*)OFF_FRAMETIME / 1000.0f, vDeltaAngles, entity->vViewAngles);
 		VectorMA(entity->vViewAngles, *(int*)OFF_PING / 1000.0f, vDeltaAngles, entity->vViewAngles);
 	}

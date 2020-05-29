@@ -16,7 +16,7 @@ namespace NeoGenesys
 		{
 			bool bAkimbo, bTargetAcquired, bLockonTarget, bIsAutoAiming, bIsAutoFiring;
 			int iFireTMR, iCurrentAimTime, iCurrentAimDelay, iCurrentZoomDelay, iCurrentFireDelay, iDeltaTMR, iTargetNum, iLastTarget;
-			Vector3 vAimPosition, vAimAngles, vAntiAimAngles;
+			ImVec3 vAimPosition, vAimAngles, vAntiAimAngles;
 		} AimState;
 
 		void StandardAim();

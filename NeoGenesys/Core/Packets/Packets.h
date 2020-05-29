@@ -13,7 +13,7 @@ namespace NeoGenesys
 	public:
 
 		int iTeaBagTime = -3000;
-		Vector3 vTeaBagPos;
+		ImVec3 vTeaBagPos;
 
 		void WritePacket(sUserCmd* usercmd);
 		void PredictPlayerState(sUserCmd* usercmd);

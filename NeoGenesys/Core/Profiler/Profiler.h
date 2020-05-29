@@ -80,42 +80,6 @@ namespace NeoGenesys
 
 		typedef enum
 		{
-			MENU_COLOR_NEUTRAL,
-			MENU_COLOR_NEUTRAL_NEON,
-			MENU_COLOR_RED,
-			MENU_COLOR_RED_NEON,
-			MENU_COLOR_ORANGE,
-			MENU_COLOR_ORANGE_NEON,
-			MENU_COLOR_YELLOW,
-			MENU_COLOR_YELLOW_NEON,
-			MENU_COLOR_GREEN,
-			MENU_COLOR_GREEN_NEON,
-			MENU_COLOR_BLUE,
-			MENU_COLOR_BLUE_NEON,
-			MENU_COLOR_PURPLE,
-			MENU_COLOR_PURPLE_NEON,
-			MENU_COLOR_RAINBOW,
-			MENU_COLOR_RAINBOW_NEON,
-			MENU_COLOR_MAX
-		} eMenuColor;
-
-		typedef enum
-		{
-			MENU_CURSOR_BLACK,
-			MENU_CURSOR_WHITE,
-			MENU_CURSOR_MAX
-		} eMenuCursor;
-
-		typedef enum
-		{
-			MENU_FONT_LIGHT,
-			MENU_FONT_MEDIUM,
-			MENU_FONT_BOLD,
-			MENU_FONT_MAX
-		} eMenuFont;
-
-		typedef enum
-		{
 			AIMBOT_MODE_OFF,
 			AIMBOT_MODE_MANUAL,
 			AIMBOT_MODE_AUTO,
@@ -203,9 +167,6 @@ namespace NeoGenesys
 		} eMassKill;
 
 		std::shared_ptr<sCvar> gMenuTabs = std::make_shared<sCvar>("Menu Tab", std::vector<std::string>({ "Aimbot", "ESP", "Misc.", "Tweaks", "Styles" }), MENU_TAB_AIMBOT, MENU_TAB_AIMBOT, MENU_TAB_MAX);
-		std::shared_ptr<sCvar> gMenuColor = std::make_shared<sCvar>("Menu Color", std::vector<std::string>({ "Neutral", "Neutral (Neon)", "Red", "Red (Neon)", "Orange", "Orange (Neon)", "Yellow", "Yellow (Neon)", "Green", "Green (Neon)", "Blue", "Blue (Neon)", "Purple", "Purple (Neon)", "Rainbow", "Rainbow (Neon)" }), MENU_COLOR_NEUTRAL, MENU_COLOR_NEUTRAL, MENU_COLOR_MAX);
-		std::shared_ptr<sCvar> gMenuCursor = std::make_shared<sCvar>("Menu Cursor", std::vector<std::string>({ "Black", "White" }), MENU_CURSOR_BLACK, MENU_CURSOR_BLACK, MENU_CURSOR_MAX);
-		std::shared_ptr<sCvar> gMenuFont = std::make_shared<sCvar>("Menu Font", std::vector<std::string>({ "Light", "Medium", "Bold" }), MENU_FONT_LIGHT, MENU_FONT_LIGHT, MENU_FONT_MAX);
 
 		std::shared_ptr<sCvar> gAimBotMode = std::make_shared<sCvar>("Mode", std::vector<std::string>({ "Off", "Manual", "Auto" }), AIMBOT_MODE_OFF, AIMBOT_MODE_OFF, AIMBOT_MODE_MAX);
 		std::shared_ptr<sCvar> gAutoZoom = std::make_shared<sCvar>("Autozoom", std::vector<std::string>(), false);

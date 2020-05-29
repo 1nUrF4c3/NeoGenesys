@@ -8,19 +8,18 @@
 
 namespace NeoGenesys
 {
-	class cHost
+	class cPlayerList
 	{
 	public:
 
-		std::vector<sGEntity*> vSpawnedBots;
+		struct sPlayerList
+		{
+			bool bShowWindow = false, bWriteLog = false;
+			sNetAddr NetAddr[MAX_CLIENTS];
+		} PlayerList;
 
-		void PlayerMods();
-		void StartMatch();
-		void MassKill();
-		void SpawnBots(int count);
-
-		std::mutex _mutex;
-	} extern _host;
+		void DrawPlayerList();
+	} extern _playerList;
 }
 
 //=====================================================================================

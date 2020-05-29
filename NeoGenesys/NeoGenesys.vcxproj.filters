@@ -22,9 +22,6 @@
     <Filter Include="Core\Engine">
       <UniqueIdentifier>{13fff3f5-5bc6-4081-8a6d-5fa8a3f037f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Host">
-      <UniqueIdentifier>{aa5bef5d-f2df-43bc-a360-4bb1ecc3a859}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Mathematics">
       <UniqueIdentifier>{4c118a53-24de-44e6-9e65-c110b0864f8f}</UniqueIdentifier>
     </Filter>
@@ -73,6 +70,42 @@
     <Filter Include="Detours">
       <UniqueIdentifier>{9ef17511-2be9-4b32-b9b8-d5b27aa136e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\PlayerList">
+      <UniqueIdentifier>{bab73a3f-5fe6-45a2-9dcf-8e2a021ff89e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\HostMenu">
+      <UniqueIdentifier>{aa5bef5d-f2df-43bc-a360-4bb1ecc3a859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours\Include">
+      <UniqueIdentifier>{eba8e858-04d2-4844-ae30-98c6f535cccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours\Lib">
+      <UniqueIdentifier>{fc8927c1-1b45-4bf9-b608-3c5299f2af4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours\Lib\x64">
+      <UniqueIdentifier>{0c934504-4cac-4d21-9909-85dd5943c628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours\Lib\x86">
+      <UniqueIdentifier>{1e683cf4-8101-4d61-84b5-923491cf5b50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtect">
+      <UniqueIdentifier>{81aa7571-393f-4697-b86b-ac1bc5241222}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtect\Include">
+      <UniqueIdentifier>{4a31505d-1b0f-45ad-ab1f-39fb3f6c5053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtect\Lib">
+      <UniqueIdentifier>{7131ecdc-3684-4503-a14d-7ee45f0bd964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtect\Lib\x64">
+      <UniqueIdentifier>{3ca0bf3f-a174-4247-a356-913095ae5bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VMProtect\Lib\x86">
+      <UniqueIdentifier>{cd2a156a-199b-4be2-bedd-3b13fc4615ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\License">
+      <UniqueIdentifier>{94239af5-e03e-49dc-b00d-05a30160df04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -96,9 +129,6 @@
     </ClCompile>
     <ClCompile Include="Core\Drawing\Drawing.cpp">
       <Filter>Core\Drawing</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Host\Host.cpp">
-      <Filter>Core\Host</Filter>
     </ClCompile>
     <ClCompile Include="Core\Mathematics\Mathematics.cpp">
       <Filter>Core\Mathematics</Filter>
@@ -139,6 +169,18 @@
     <ClCompile Include="Core\Profiler\RapidXML\Utilities\FileUtility.cpp">
       <Filter>Core\Profiler\RapidXML\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Core\PlayerList\PlayerList.cpp">
+      <Filter>Core\PlayerList</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\HostMenu\HostMenu.cpp">
+      <Filter>Core\HostMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\License\License.cpp">
+      <Filter>Core\License</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Addons\WICTextureLoader.cpp">
+      <Filter>ImGui\Addons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.hpp" />
@@ -165,9 +207,6 @@
     </ClInclude>
     <ClInclude Include="Core\Engine\Thunk.hpp">
       <Filter>Core\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Host\Host.h">
-      <Filter>Core\Host</Filter>
     </ClInclude>
     <ClInclude Include="Core\Mathematics\Mathematics.h">
       <Filter>Core\Mathematics</Filter>
@@ -256,18 +295,51 @@
     <ClInclude Include="ImGui\imgui_memory_editor.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Detours\detours.h">
-      <Filter>Detours</Filter>
+    <ClInclude Include="Core\PlayerList\PlayerList.h">
+      <Filter>Core\PlayerList</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\HostMenu\HostMenu.h">
+      <Filter>Core\HostMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours\Include\detours.h">
+      <Filter>Detours\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="VMProtect\Include\VMProtectSDK.h">
+      <Filter>VMProtect\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\License\License.h">
+      <Filter>Core\License</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Addons\WICTextureLoader.h">
+      <Filter>ImGui\Addons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Detours\detours.lib">
-      <Filter>Detours</Filter>
+    <Library Include="Detours\Lib\x86\detours.lib">
+      <Filter>Detours\Lib\x86</Filter>
+    </Library>
+    <Library Include="Detours\Lib\x64\detours.lib">
+      <Filter>Detours\Lib\x64</Filter>
+    </Library>
+    <Library Include="VMProtect\Lib\x86\VMProtectSDK32.lib">
+      <Filter>VMProtect\Lib\x86</Filter>
+    </Library>
+    <Library Include="VMProtect\Lib\x64\VMProtectSDK64.lib">
+      <Filter>VMProtect\Lib\x64</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Detours\detours.pdb">
-      <Filter>Detours</Filter>
+    <None Include="Detours\Lib\x86\detours.pdb">
+      <Filter>Detours\Lib\x86</Filter>
+    </None>
+    <None Include="Detours\Lib\x64\detours.pdb">
+      <Filter>Detours\Lib\x64</Filter>
+    </None>
+    <None Include="VMProtect\Lib\x86\VMProtectSDK32.dll">
+      <Filter>VMProtect\Lib\x86</Filter>
+    </None>
+    <None Include="VMProtect\Lib\x64\VMProtectSDK64.dll">
+      <Filter>VMProtect\Lib\x64</Filter>
     </None>
   </ItemGroup>
 </Project>

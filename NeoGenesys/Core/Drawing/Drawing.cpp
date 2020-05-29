@@ -260,20 +260,20 @@ namespace NeoGenesys
 	{
 		if (shadow)
 		{
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x - 1.0f, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x - 1.0f, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
 
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x + 1.0f, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x + 1.0f, position.y), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x + 1.0f, position.y - 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x + 1.0f, position.y), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
 
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x + 1.0f, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x + 1.0f, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
 
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x - 1.0f, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
-			ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, ImVec2(position.x - 1.0f, position.y), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x - 1.0f, position.y + 1.0f), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
+			ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, ImVec2(position.x - 1.0f, position.y), ImGui::GetColorU32(ImGui::GetColorU32(_profiler.gColorShadow->Current.cValue)), text.c_str());
 		}
 
-		ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().FontDefault, ImGui::GetIO().FontDefault->FontSize, position, ImGui::GetColorU32(color), text.c_str());
+		ImGui::GetWindowDrawList()->AddText(_mainGui.Bank_Gothic_Pro_Light, _mainGui.flBank_Gothic_Pro_Light, position, ImGui::GetColorU32(color), text.c_str());
 	}
 	/*
 	//=====================================================================================
@@ -347,7 +347,7 @@ namespace NeoGenesys
 		if (_profiler.gPlayerInformation->Current.bValue)
 		{
 			std::string szText(acut::StripColorCodes(VariadicText("[%im] %s", (int)(distance / M_METERS), name.c_str())));
-			ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
+			ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 
 			DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - flHeight / 2.0f - flPadding - vStringSize.y), false, _profiler.gColorText->Current.cValue);
 		}
@@ -355,7 +355,7 @@ namespace NeoGenesys
 		if (_profiler.gPlayerWeapons->Current.bValue)
 		{
 			std::string szText(acut::StripColorCodes(_targetList.EntityList[entity->NextEntityState.iEntityNum].szWeapon));
-			ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
+			ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 			
 			DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y + flHeight / 2.0f + flPadding), false, _profiler.gColorText->Current.cValue);
 		}
@@ -366,7 +366,7 @@ namespace NeoGenesys
 	void cDrawing::DrawItem(std::string name, ImVec2 center, float distance, ImVec4 color)
 	{
 		std::string szText(acut::StripColorCodes(VariadicText("[%im] %s", (int)(distance / M_METERS), name.c_str())));
-		ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
+		ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 
 		DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - vStringSize.y / 2.0f), true, color);
 	}
@@ -376,7 +376,7 @@ namespace NeoGenesys
 	void cDrawing::DrawMissile(std::string name, ImVec2 center, float distance, ImVec4 color)
 	{
 		std::string szText(acut::StripColorCodes(VariadicText("[%im] %s", (int)(distance / M_METERS), name.c_str())));
-		ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
+		ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 
 		DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - vStringSize.y / 2.0f), true, color);
 	}
@@ -391,20 +391,20 @@ namespace NeoGenesys
 				entity->NextEntityState.iOtherEntityNum >= FindVariable("sv_maxclients")->Current.iValue ?
 				"Alien" : "Guard Dog").c_str()));
 
-		ImVec2 vStringSize = ImGui::GetIO().FontDefault->CalcTextSizeA(ImGui::GetIO().FontDefault->FontSize, FLT_MAX, 0.0f, szText.c_str());
+		ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 
 		DrawString(szText, ImVec2(center.x - vStringSize.x / 2.0f, center.y - vStringSize.y / 2.0f), true, color);
 	}
 	/*
 	//=====================================================================================
 	*/
-	bool cDrawing::Calculate2D(Vector3 bones3d[BONE_MAX], ImVec2 bones2d[BONE_MAX], ImVec2& position, ImVec2& dimentions)
+	bool cDrawing::Calculate2D(ImVec3 bones3d[BONE_MAX], ImVec2 bones2d[BONE_MAX], ImVec2& position, ImVec2& dimentions)
 	{
 		ImVec2 vTemp, vMinTemp = { FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX };
 
 		for (auto& Bone : vBones)
 		{
-			if (!WorldToScreen(GetScreenMatrix(), bones3d[Bone.first], vTemp))
+			if (!WorldToScreen(GetScreenMatrix(), bones3d[Bone.first], &vTemp))
 				return false;
 
 			if (vTemp.x < vMinTemp.x)
@@ -430,9 +430,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cDrawing::Calculate3D(sCEntity* entity, Vector3 center, Vector3 corners3d[8], ImVec2 corners2d[8])
+	bool cDrawing::Calculate3D(sCEntity* entity, ImVec3 center, ImVec3 corners3d[8], ImVec2 corners2d[8])
 	{
-		Vector3 vMinimum, vMaximum;
+		ImVec3 vMinimum, vMaximum;
 
 		if (entity->NextEntityState.LerpEntityState.iEntityFlags & EF_PRONE)
 		{
@@ -491,7 +491,7 @@ namespace NeoGenesys
 		{
 			_mathematics.RotatePoint(corners3d[i], center, entity->vViewAngles[1], corners3d[i]);
 
-			if (!WorldToScreen(GetScreenMatrix(), corners3d[i], corners2d[i]))
+			if (!WorldToScreen(GetScreenMatrix(), corners3d[i], &corners2d[i]))
 				return false;
 		}
 
@@ -504,11 +504,11 @@ namespace NeoGenesys
 	{
 		for (auto Tracer = vTracers.begin(); Tracer != vTracers.end();)
 		{
-			int iDeltaTime = CG->PredictedPlayerState.iCommandTime - Tracer->iStartTime;
+			int iDeltaTime = Sys_Milliseconds() - Tracer->iStartTime;
 
-			if (Tracer->bW2SSuccess = WorldToScreen(GetScreenMatrix(), Tracer->vHitPos3D, Tracer->vHitPos2D))
+			if (Tracer->bW2SSuccess = WorldToScreen(GetScreenMatrix(), Tracer->vHitPos3D, &Tracer->vHitPos2D))
 			{
-				WorldToScreen(GetScreenMatrix(), Tracer->vStartPos3D, Tracer->vStartPos2D);
+				WorldToScreen(GetScreenMatrix(), Tracer->vStartPos3D, &Tracer->vStartPos2D);
 
 				Tracer->cColorShadow[3] = 1.0f - ((float)iDeltaTime / 1000);
 				Tracer->cColorHitMarker[3] = 1.0f - ((float)iDeltaTime / 1000);

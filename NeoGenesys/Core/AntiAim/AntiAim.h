@@ -12,7 +12,7 @@ namespace NeoGenesys
 	{
 	public:
 
-		Vector3 vAntiAimAngles;
+		ImVec3 vAntiAimAngles;
 
 		void AntiAim(sUserCmd* usercmd);
 		bool IsAntiAiming();

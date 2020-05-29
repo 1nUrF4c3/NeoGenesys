@@ -33,8 +33,8 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 typedef void(HOOKCALL* tBulletFirePenetrate)(int* seed, sBulletFireParams* bp, sBulletTraceResults* br, int weapon, bool alternate, sCEntity* attacker, int servertime);
 tBulletFirePenetrate oBulletFirePenetrate = (tBulletFirePenetrate)OFF_BULLETFIREPENETRATE;
 
-void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents);
-typedef void(HOOKCALL* tBulletHitEvent)(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents);
+void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, ImVec3 start, ImVec3 position, ImVec3 normal, int surface, int _event, char param, int contents);
+typedef void(HOOKCALL* tBulletHitEvent)(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, ImVec3 start, ImVec3 position, ImVec3 normal, int surface, int _event, char param, int contents);
 tBulletHitEvent oBulletHitEvent = (tBulletHitEvent)OFF_BULLETHITEVENT;
 
 void HOOKCALL hCalcEntityLerpPositions(int localnum, sCEntity* entity);
@@ -45,8 +45,8 @@ void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon);
 typedef void(HOOKCALL* tObituary)(int localnum, sEntityState* entitystate, int weapon);
 tObituary oObituary = (tObituary)OFF_OBITUARY;
 
-void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, RGBA color, int flags);
-typedef void(HOOKCALL* tAddCmdDrawText)(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, RGBA color, int flags);
+void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, ImVec4 color, int flags);
+typedef void(HOOKCALL* tAddCmdDrawText)(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, ImVec4 color, int flags);
 tAddCmdDrawText oAddCmdDrawText = (tAddCmdDrawText)OFF_ADDCMDDRAWTEXT;
 
 void HOOKCALL hClientFrame(sGEntity* entity);
@@ -100,7 +100,7 @@ void HOOKCALL hBulletFirePenetrate(int* seed, sBulletFireParams* bp, sBulletTrac
 
 //=====================================================================================
 
-void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, Vector3 start, Vector3 position, Vector3 normal, int surface, int _event, char param, int contents)
+void HOOKCALL hBulletHitEvent(int localnum, int sourcenum, int targetnum, int weapon, bool alternate, ImVec3 start, ImVec3 position, ImVec3 normal, int surface, int _event, char param, int contents)
 {
 	_hooks.BulletHitEvent(localnum, sourcenum, targetnum, weapon, alternate, start, position, normal, surface, _event, param, contents);
 
@@ -127,7 +127,7 @@ void HOOKCALL hObituary(int localnum, sEntityState* entitystate, int weapon)
 
 //=====================================================================================
 
-void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, RGBA color, int flags)
+void HOOKCALL hAddCmdDrawText(LPSTR text, int length, LPVOID font, float x, float y, float w, float h, float angle, ImVec4 color, int flags)
 {
 	_hooks.AddCmdDrawText(text, length, font, x, y, w, h, angle, color, flags);
 
