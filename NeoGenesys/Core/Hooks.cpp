@@ -18,7 +18,7 @@ namespace NeoGenesys
 			_drawing.CalculateTracers();
 			_aimBot.SetAimState();
 
-			if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState))
+			if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) || (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState)))
 				_aimBot.StandardAim();
 
 			_removals.RecoilCompensation();

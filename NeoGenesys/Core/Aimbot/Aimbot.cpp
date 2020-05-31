@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cAimbot::StandardAim()
 	{
-		if ((!_profiler.gSilentAim->Current.bValue || WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState))) && AimState.bTargetAcquired)
+		if (!_profiler.gSilentAim->Current.bValue && AimState.bTargetAcquired)
 		{
 			AimState.vAimAngles[0] *= _profiler.gAimPower->Current.iValue / 100.0f;
 			AimState.vAimAngles[1] *= _profiler.gAimPower->Current.iValue / 100.0f;
@@ -40,7 +40,7 @@ namespace NeoGenesys
 	*/
 	void cAimbot::SilentAim(sUserCmd* usercmd)
 	{
-		if (_profiler.gSilentAim->Current.bValue && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) && AimState.bTargetAcquired)
+		if (_profiler.gSilentAim->Current.bValue && AimState.bTargetAcquired)
 		{
 			if (AimState.bLockonTarget)
 			{

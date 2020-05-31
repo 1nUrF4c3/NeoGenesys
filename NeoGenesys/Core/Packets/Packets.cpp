@@ -11,7 +11,10 @@ namespace NeoGenesys
 	void cPackets::WritePacket(sUserCmd* usercmd)
 	{
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
+		{
+			_aimBot.SilentAim(usercmd);
 			_aimBot.AutoFire(usercmd);
+		}
 
 		_antiAim.AntiAim(usercmd);
 
@@ -40,12 +43,10 @@ namespace NeoGenesys
 	*/
 	void cPackets::PredictPlayerState(sUserCmd* usercmd)
 	{
-		if (!IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState))
+		if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) && !IsPlayerReloading() && !WeaponBothClipEmpty(&CG->PredictedPlayerState))
 		{
 			_aimBot.SilentAim(usercmd);
-
-			if (!WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
-				_aimBot.AutoFire(usercmd);
+			_aimBot.AutoFire(usercmd);
 		}
 
 		if (_profiler.gSilentAim->Current.bValue)
