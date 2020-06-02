@@ -628,12 +628,12 @@ namespace NeoGenesys
 		{
 			Menu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 3.0f);
-		LPCSTR szSavePath = Menu.SaveDialog.saveFileDialog(bSaveButton, Menu.SaveDialog.getLastDirectory(), NULL, ".xml", "Save Profile");
+		LPCSTR szSavePath = Menu.SaveDialog.saveFileDialog(bSaveButton, Menu.szProfilePath, NULL, ".xml", "Save Profile");
 
 		if (strlen(szSavePath))
 		{
 			_profiler.SaveProfile(szSavePath);
-			strcpy_s(Menu.szProfilePath, szSavePath);
+			strcpy_s(Menu.szProfilePath, Menu.SaveDialog.getLastDirectory());
 		}
 
 		static bool bLoadButton;
@@ -641,12 +641,12 @@ namespace NeoGenesys
 		{
 			Menu.bWriteLog = true;
 		}
-		LPCSTR szLoadPath = Menu.LoadDialog.chooseFileDialog(bLoadButton, Menu.LoadDialog.getLastDirectory(), ".xml", "Load Profile");
+		LPCSTR szLoadPath = Menu.LoadDialog.chooseFileDialog(bLoadButton, Menu.szProfilePath, ".xml", "Load Profile");
 
 		if (strlen(szLoadPath))
 		{
 			_profiler.LoadProfile(szLoadPath);
-			strcpy_s(Menu.szProfilePath, szLoadPath);
+			strcpy_s(Menu.szProfilePath, Menu.LoadDialog.getLastDirectory());
 		}
 
 		ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
