@@ -145,17 +145,17 @@ namespace NeoGenesys
 	*/
 	void cMathematics::ClampAngles(ImVec3& angles)
 	{
+		while (angles[0] > 180.0f)
+			angles[0] -= 360.0f;
+
 		while (angles[0] < -180.0f) 
 			angles[0] += 360.0f;
 
-		while (angles[0] > 180.0f) 
-			angles[0] -= 360.0f;
+		while (angles[1] > 180.0f)
+			angles[1] -= 360.0f;
 
 		while (angles[1] < -180.0f) 
 			angles[1] += 360.0f;
-
-		while (angles[1] > 180.0f) 
-			angles[1] -= 360.0f;
 
 		if (angles[2] != 0.0f) 
 			angles[2] = 0.0f;
@@ -165,17 +165,17 @@ namespace NeoGenesys
 	*/
 	void cMathematics::ClampMove(char value[])
 	{
-		while (value[0] < -128)
-			value[0] = -128;
-
 		while (value[0] > 127)
 			value[0] = 127;
 
-		while (value[1] < -128)
-			value[1] = -128;
+		while (value[0] < -128)
+			value[0] = -128;
 
 		while (value[1] > 127)
 			value[1] = 127;
+
+		while (value[1] < -128)
+			value[1] = -128;
 
 		if (value[2] != 0)
 			value[2] = 0;
@@ -213,7 +213,7 @@ namespace NeoGenesys
 		ClampAngles(angles);
 
 		angles[0] = -40.0f - angles[0];
-		angles[1] = angles[1] - 180.0f;
+		angles[1] = angles[1] - 170.0f;
 
 		angles[0] -= CG->PredictedPlayerState.vDeltaAngles[0];
 		angles[1] -= CG->PredictedPlayerState.vDeltaAngles[1];

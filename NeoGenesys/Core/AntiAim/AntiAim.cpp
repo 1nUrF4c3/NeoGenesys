@@ -92,8 +92,20 @@ namespace NeoGenesys
 
 				else
 				{
-					vAntiAimAngles[0] = -40.0f - CG->PredictedPlayerState.vDeltaAngles[0];
-					vAntiAimAngles[1] = -180.0f - CG->PredictedPlayerState.vDeltaAngles[1];
+					vAntiAimAngles[0] = -40.0f - CG->vRefDefViewAngles[0];
+
+					if (vAntiAimAngles[0] > 85.0f) vAntiAimAngles[0] = 85.0f;
+					if (vAntiAimAngles[0] < -85.0f) vAntiAimAngles[0] = -85.0f;
+
+					vAntiAimAngles[0] -= CG->PredictedPlayerState.vDeltaAngles[0];
+
+					vAntiAimAngles[1] = CG->vRefDefViewAngles[1] - 170.0f;
+
+					while (vAntiAimAngles[1] > 180.0f) vAntiAimAngles[1] -= 360.0f;
+					while (vAntiAimAngles[1] < -180.0f) vAntiAimAngles[1] += 360.0f;
+
+					vAntiAimAngles[1] -= CG->PredictedPlayerState.vDeltaAngles[1];
+
 					vAntiAimAngles[2] = ShortToAngle(usercmd->iViewAngles[2]);
 				}
 			}
