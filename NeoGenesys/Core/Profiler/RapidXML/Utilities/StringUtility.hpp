@@ -65,10 +65,18 @@ namespace acut
 		if (path.empty())
 			return path;
 
-		auto idx = path.rfind('\\');
-		
-		if (idx == path.npos)
-			idx = path.rfind('/');
+		auto idx = path.npos;
+		auto idxb = path.rfind('\\');
+		auto idxf = path.rfind('/');
+
+		if (idxb != path.npos && idxf != path.npos)
+			idx = max(idxb, idxf);
+
+		else if (idxb != path.npos)
+			idx = idxb;
+
+		else if (idxf != path.npos)
+			idx = idxf;
 
 		if (idx != path.npos)
 			return path.substr(idx + 1);
@@ -84,10 +92,18 @@ namespace acut
 		if (path.empty())
 			return path;
 
-		auto idx = path.rfind('\\');
-		
-		if (idx == path.npos)
-			idx = path.rfind('/');
+		auto idx = path.npos;
+		auto idxb = path.rfind('\\');
+		auto idxf = path.rfind('/');
+
+		if (idxb != path.npos && idxf != path.npos)
+			idx = max(idxb, idxf);
+
+		else if (idxb != path.npos)
+			idx = idxb;
+
+		else if (idxf != path.npos)
+			idx = idxf;
 
 		if (idx != path.npos)
 			return path.substr(0, idx);
@@ -150,6 +166,23 @@ namespace acut
 			text.replace(iPosition, find.length(), replace);
 
 		return text;
+	}
+	/*
+	//=====================================================================================
+	*/
+	static std::vector<std::string> SplitStringWithDelimiter(std::string text, std::string delimiter)
+	{
+		std::vector<std::string> vStringParts;
+
+		size_t iStart, iEnd = 0;
+
+		while ((iStart = text.find_first_not_of(delimiter, iEnd)) != std::string::npos)
+		{
+			iEnd = text.find(delimiter, iStart);
+			vStringParts.push_back(text.substr(iStart, iEnd - iStart));
+		}
+
+		return vStringParts;
 	}
 	/*
 	//=====================================================================================

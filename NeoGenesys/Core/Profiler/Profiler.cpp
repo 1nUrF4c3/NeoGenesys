@@ -45,6 +45,7 @@ namespace NeoGenesys
 
 			XML.set("NeoGenesys.Miscellaneous.KillSpam", gKillSpam->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.NameStealer", gNameStealer->Current.bValue);
+			XML.set("NeoGenesys.Miscellaneous.ThirdPerson", gThirdPerson->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.CrossHair", gPlayerCrossHair->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Compass", gPlayerCompass->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Radar", gPlayerRadar->Current.bValue);
@@ -149,6 +150,7 @@ namespace NeoGenesys
 
 			XML.get_if_present("NeoGenesys.Miscellaneous.KillSpam", gKillSpam->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.NameStealer", gNameStealer->Current.bValue);
+			XML.get_if_present("NeoGenesys.Miscellaneous.ThirdPerson", gThirdPerson->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.CrossHair", gPlayerCrossHair->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Compass", gPlayerCompass->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Radar", gPlayerRadar->Current.bValue);
@@ -235,7 +237,7 @@ namespace NeoGenesys
 		gItems->Current.bValue = gItems->Reset.bValue;
 
 		gNameStealer->Current.bValue = gNameStealer->Reset.bValue;
-		gThirdPersonAntiAim->Current.bValue = gThirdPersonAntiAim->Reset.bValue;
+		gThirdPerson->Current.bValue = gThirdPerson->Reset.bValue;
 		gPlayerCrossHair->Current.bValue = gPlayerCrossHair->Reset.bValue;
 		gPlayerCompass->Current.bValue = gPlayerCompass->Reset.bValue;
 		gPlayerRadar->Current.bValue = gPlayerRadar->Reset.bValue;

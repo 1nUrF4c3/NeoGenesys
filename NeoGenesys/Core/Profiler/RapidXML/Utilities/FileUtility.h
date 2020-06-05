@@ -21,11 +21,11 @@
 
 namespace acut
 {
-    bool read_file(const std::wstring& path, std::string& buffer);
-    bool read_file(const std::wstring& path, std::vector<char>& buffer);
-    bool read_file(const std::wstring& path, std::wstring& buffer);
-    bool read_file(const std::wstring& path, std::vector<wchar_t>& buffer);
-    bool file_exists(const std::wstring& filename);
+	bool read_file(const std::wstring& path, std::string& buffer);
+	bool read_file(const std::wstring& path, std::vector<char>& buffer);
+	bool read_file(const std::wstring& path, std::wstring& buffer);
+	bool read_file(const std::wstring& path, std::vector<wchar_t>& buffer);
+	bool file_exists(const std::wstring& filename);
 }
 
 //=====================================================================================

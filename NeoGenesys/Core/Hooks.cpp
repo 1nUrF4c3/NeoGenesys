@@ -145,13 +145,12 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if (_profiler.gThirdPersonAntiAim->Current.bValue && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
+			if ((FindVariable("camera_thirdPerson")->Current.bValue = _profiler.gThirdPerson->Current.bValue) && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PredictedPlayerState.iClientNum)
 				{
 					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles[0] = _antiAim.vAntiAimAngles[0] + CG->PredictedPlayerState.vDeltaAngles[0];
 					entity->vViewAngles[1] = _antiAim.vAntiAimAngles[1] + CG->PredictedPlayerState.vDeltaAngles[1];
-					entity->vViewAngles[2] = _antiAim.vAntiAimAngles[2] + CG->PredictedPlayerState.vDeltaAngles[2];
 				}
 			}
 
