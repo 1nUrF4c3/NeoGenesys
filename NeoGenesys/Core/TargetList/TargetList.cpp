@@ -292,7 +292,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, short hitloc, bool autowall, float* damage)
+	bool cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage)
 	{
 		ImVec3 vViewOrigin;
 		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);

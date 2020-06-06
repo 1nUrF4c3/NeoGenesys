@@ -8,7 +8,7 @@ namespace NeoGenesys
 {
 	cAutowall _autoWall;
 
-	float cAutowall::C_Autowall(sCEntity* entity, ImVec3 start, ImVec3 end, short hitloc)
+	float cAutowall::C_Autowall(sCEntity* entity, ImVec3 start, ImVec3 end, eHitLocation hitloc)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sCEntity* pCEntity = &CEntity[iClientNum];
@@ -152,7 +152,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cAutowall::C_TraceBullet(sCEntity* entity, ImVec3 start, ImVec3 end, short hitloc)
+	float cAutowall::C_TraceBullet(sCEntity* entity, ImVec3 start, ImVec3 end, eHitLocation hitloc)
 	{
 		int iClientNum = CG->PredictedPlayerState.iClientNum;
 		sCEntity* pCEntity = &CEntity[iClientNum];
@@ -232,7 +232,7 @@ namespace NeoGenesys
 				return 0.0f;
 
 			if (GetTraceHitType(&TR_Enter) == entity->EntityState.iEntityNum)
-				return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+				return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 			float flEnterDepth = 0.0f, flExitDepth = 0.0f, flSurfaceDepth = 0.0f;
 
@@ -252,7 +252,7 @@ namespace NeoGenesys
 				VectorSubtract(vHitPos, FP_Enter.vStart, vTemp);
 
 				if (VectorLength(vTemp) >= flLength)
-					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
 					return 0.0f;
@@ -318,25 +318,25 @@ namespace NeoGenesys
 						if (flLength > 900.0f)
 						{
 							if (!bEnterHit)
-								return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+								return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 						}
 
 						if (GetTraceHitType(&TR_Exit) == entity->EntityState.iEntityNum)
-							return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+							return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 					}
 				}
 
 				else if (!bEnterHit)
-					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 				if (GetTraceHitType(&TR_Enter) == entity->EntityState.iEntityNum)
-					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 			}
 
 			return 0.0f;
 		}
 
-		return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+		return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 	}
 	/*
 	//=====================================================================================
@@ -373,14 +373,14 @@ namespace NeoGenesys
 			return 0.0f;
 
 		if (GetTraceHitType(&TR_Enter) == entity->EntityState.iEntityNum || TR_Enter.Trace.flFraction == 1.0f)
-			return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+			return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 		return 0.0f;
 	}
 	/*
 	//=====================================================================================
 	*/
-	float cAutowall::GetRemainingDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, short partgroup, int weapon, bool alternate)
+	float cAutowall::GetRemainingDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, eHitLocation partgroup, int weapon, bool alternate)
 	{
 		float flDamage = 0.0f;
 		ImVec3 vHitPos, vStart;

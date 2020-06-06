@@ -42,7 +42,7 @@ namespace NeoGenesys
 		void GetInformation();
 		bool EntityIsValid(int index);
 		bool EntityIsEnemy(int index);
-		bool IsVisibleInternal(sCEntity* entity, ImVec3 position, short hitloc, bool autowall, float* damage);
+		bool IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage);
 		bool IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index);
 	} extern _targetList;
 }

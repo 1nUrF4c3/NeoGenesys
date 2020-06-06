@@ -152,10 +152,12 @@ namespace NeoGenesys
 					_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_ALL)
 				{
 					PlayerKill(&GEntity[iTargetNum],
-						_targetList.EntityIsEnemy(iTargetNum) ? NULL : &GEntity[iTargetNum],
+						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PredictedPlayerState.iClientNum] : &GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PredictedPlayerState.iClientNum] : &GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? 9 : 14,
-						_targetList.EntityIsEnemy(iTargetNum) ? GetViewmodelWeapon(&CG->PredictedPlayerState) : 0);
+						_targetList.EntityIsEnemy(iTargetNum) ? CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.iWeapon : CEntity[iTargetNum].NextEntityState.iWeapon,
+						_targetList.EntityIsEnemy(iTargetNum) ? CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.iInAltWeaponMode : CEntity[iTargetNum].NextEntityState.iInAltWeaponMode,
+						CEntity[iTargetNum].vOrigin - CEntity[CG->PredictedPlayerState.iClientNum].vOrigin);
 				}
 			}
 		}

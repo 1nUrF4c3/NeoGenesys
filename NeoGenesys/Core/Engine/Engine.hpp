@@ -133,6 +133,7 @@
 #define OFF_GETENTITYDOBJ 0x140416490
 #define OFF_GETTAGPOSITION 0x140263F50
 #define OFF_GETTAGORIENTATION 0x140269980
+#define OFF_GETHITLOCATIONSTRING 0x140395A10
 #define OFF_LOCATIONALTRACE 0x1402B6020
 #define OFF_VECTORANGLES 0x1404E36A0
 #define OFF_ANGLEVECTORS 0x1404E39E0
@@ -169,6 +170,7 @@
 #define OFF_KICKCLIENTNUM 0x14046F730
 #define OFF_PLAYERDIE 0x140396920
 #define OFF_PLAYERKILL 0x1403CE260
+#define OFF_DAMAGE 0x140394DF0
 #define OFF_SPREADMULTIPLIER 0x14187D43C
 #define OFF_ZOOMMULTIPLIER 0x140B31D4C
 #define OFF_FIREWEAPON 0x1402A8B00
@@ -1544,6 +1546,13 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	FORCEINLINE int GetHitLocationString(eHitLocation hitloc)
+	{
+		return VariadicCall<int>(OFF_GETHITLOCATIONSTRING, hitloc);
+	}
+	/*
+	//=====================================================================================
+	*/
 	FORCEINLINE int LocationalTrace(sTrace* trace, const ImVec3 from, const ImVec3 to, int skip, DWORD mask)
 	{
 		return VariadicCall<int>(OFF_LOCATIONALTRACE, trace, from, to, skip, mask);
@@ -1628,7 +1637,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE float GetWeaponHitLocationMultiplier(int hitloc, int weapon, bool alternate)
+	FORCEINLINE float GetWeaponHitLocationMultiplier(eHitLocation hitloc, int weapon, bool alternate)
 	{
 		return VariadicCall<float>(OFF_GETWEAPONHITLOCATIONMULTIPLIER, hitloc, weapon, alternate);
 	}
@@ -1782,16 +1791,23 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE void PlayerDie(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
+	FORCEINLINE void PlayerDie(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon, bool alternate, const ImVec3 direction)
 	{
-		return VariadicCall<void>(OFF_PLAYERDIE, target, inflictor, attacker, 100000, method, weapon, 0, 0, 0, 0);
+		return VariadicCall<void>(OFF_PLAYERDIE, target, inflictor, attacker, 100000, method, weapon, alternate, direction, 0, 0);
 	}
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE void PlayerKill(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon)
+	FORCEINLINE void PlayerKill(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, int method, int weapon, bool alternate, const ImVec3 direction)
 	{
-		return VariadicCall<void>(OFF_PLAYERKILL, target, inflictor, attacker, 100000, method, weapon, 0, 0, 0, 0, 0);
+		return VariadicCall<void>(OFF_PLAYERKILL, target, inflictor, attacker, 100000, method, weapon, alternate, direction, 0, 0, 0);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE void Damage(sGEntity* target, sGEntity* inflictor, sGEntity* attacker, const ImVec3 direction, const ImVec3 position, int method, int weapon, bool alternate)
+	{
+		return VariadicCall<void>(OFF_DAMAGE, target, inflictor, attacker, direction, position, 100000, 0, method, weapon, alternate, 0, 0, 0, 0);
 	}
 	/*
 	//=====================================================================================
