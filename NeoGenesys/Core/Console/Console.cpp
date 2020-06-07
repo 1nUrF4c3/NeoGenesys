@@ -175,6 +175,12 @@ namespace NeoGenesys
 				bWriteLog = true;
 			}
 
+			if (ImGui::Selectable("Copy"))
+			{
+				bCopyToClipboard = true;
+				bWriteLog = true;
+			}
+
 			ImGui::EndPopup();
 			bWriteLog = true;
 		}
@@ -355,7 +361,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gNameSpam->Current.bValue = true;
+					_mainGui.gNameSpam->Custom.bValue = true;
 
 					AddLog("Spamming random names has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -365,7 +371,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gNameSpam->Current.bValue = false;
+					_mainGui.gNameSpam->Custom.bValue = false;
 
 					AddLog("Spamming random names has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -523,7 +529,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gSuperJump->Current.bValue = true;
+					_hostMenu.gSuperJump->Custom.bValue = true;
 
 					AddLog("Super jump has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -533,7 +539,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gSuperJump->Current.bValue = false;
+					_hostMenu.gSuperJump->Custom.bValue = false;
 
 					AddLog("Super jump has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -559,7 +565,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gMassKill->Current.iValue = cProfiler::MASSKILL_OFF;
+					_hostMenu.gMassKill->Custom.iValue = cHostMenu::MASSKILL_OFF;
 
 					AddLog("Masskill has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -569,7 +575,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gMassKill->Current.iValue = cProfiler::MASSKILL_AXIS;
+					_hostMenu.gMassKill->Custom.iValue = cHostMenu::MASSKILL_AXIS;
 
 					AddLog("Masskill has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -579,7 +585,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gMassKill->Current.iValue = cProfiler::MASSKILL_ALLIES;
+					_hostMenu.gMassKill->Custom.iValue = cHostMenu::MASSKILL_ALLIES;
 
 					AddLog("Masskill has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -589,7 +595,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gMassKill->Current.iValue = cProfiler::MASSKILL_ALL;
+					_hostMenu.gMassKill->Custom.iValue = cHostMenu::MASSKILL_ALL;
 
 					AddLog("Masskill has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -615,7 +621,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gAntiLeave->Current.bValue = true;
+					_hooks.gAntiLeave->Custom.bValue = true;
 
 					AddLog("Anti-leave has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -625,7 +631,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gAntiLeave->Current.bValue = false;
+					_hooks.gAntiLeave->Custom.bValue = false;
 
 					AddLog("Anti-leave has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -651,7 +657,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gBunnyHop->Current.bValue = true;
+					_packets.gBunnyHop->Custom.bValue = true;
 
 					AddLog("Auto bunny hop has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -661,7 +667,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gBunnyHop->Current.bValue = false;
+					_packets.gBunnyHop->Custom.bValue = false;
 
 					AddLog("Auto bunny hop has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -696,8 +702,8 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gTeaBagMessage->Current.szValue = Strdup(szTeaBagMessage);
-						_profiler.gTeaBag->Current.bValue = true;
+						_hooks.gTeaBagMessage->Custom.szValue = Strdup(szTeaBagMessage);
+						_hooks.gTeaBag->Custom.bValue = true;
 
 						AddLog("Auto tea bag has been enabled with message \"%s.\"", szTeaBagMessage);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -707,7 +713,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gTeaBag->Current.bValue = true;
+						_hooks.gTeaBag->Custom.bValue = true;
 
 						AddLog("Auto tea bag has been enabled.");
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -718,8 +724,8 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gTeaBagMessage->Current.szValue = Strdup("");
-					_profiler.gTeaBag->Current.bValue = false;
+					_hooks.gTeaBagMessage->Custom.szValue = Strdup("");
+					_hooks.gTeaBag->Custom.bValue = false;
 
 					AddLog("Auto tea bag has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1315,8 +1321,8 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gChatSpamMessage->Current.szValue = Strdup(szChatSpam);
-						_profiler.gChatSpam->Current.bValue = true;
+						_mainGui.gChatSpamMessage->Custom.szValue = Strdup(szChatSpam);
+						_mainGui.gChatSpam->Custom.bValue = true;
 
 						AddLog("Custom chatspam message \"%s\" has been enabled.", szChatSpam);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1332,8 +1338,8 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gChatSpamMessage->Current.szValue = Strdup("");
-					_profiler.gChatSpam->Current.bValue = false;
+					_mainGui.gChatSpamMessage->Custom.szValue = Strdup("");
+					_mainGui.gChatSpam->Custom.bValue = false;
 
 					AddLog("Custom chatspam message has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1368,8 +1374,8 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_profiler.gKillSpamMessage->Current.szValue = Strdup(szKillSpam);
-						_profiler.gKillSpam->Current.bValue = true;
+						_hooks.gKillSpamMessage->Custom.szValue = Strdup(szKillSpam);
+						_hooks.gKillSpam->Custom.bValue = true;
 
 						AddLog("Custom killspam message \"%s\" has been enabled.", szKillSpam);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -1385,8 +1391,8 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_profiler.gKillSpamMessage->Current.szValue = Strdup("");
-					_profiler.gKillSpam->Current.bValue = false;
+					_hooks.gKillSpamMessage->Custom.szValue = Strdup("");
+					_hooks.gKillSpam->Custom.bValue = false;
 
 					AddLog("Custom killspam message has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());

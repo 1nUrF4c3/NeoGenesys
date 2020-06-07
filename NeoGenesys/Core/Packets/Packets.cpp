@@ -18,7 +18,7 @@ namespace NeoGenesys
 
 		_antiAim.AntiAim(usercmd);
 
-		if (_profiler.gBunnyHop->Current.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
+		if (gBunnyHop->Custom.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
 		{
 			if (usercmd->iButtons & BUTTON_JUMP)
 				usercmd->iButtons &= ~BUTTON_JUMP;
@@ -29,7 +29,7 @@ namespace NeoGenesys
 
 		if (Sys_Milliseconds() - iTeaBagTime < 3000)
 		{
-			VectorCopy(vTeaBagPos, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
+			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = vTeaBagPos;
 
 			if (usercmd->iButtons & BUTTON_CROUCH)
 				usercmd->iButtons &= ~BUTTON_CROUCH;
@@ -49,7 +49,7 @@ namespace NeoGenesys
 			_aimBot.AutoFire(usercmd);
 		}
 
-		if (_profiler.gSilentAim->Current.bValue)
+		if (_aimBot.gSilentAim->Custom.bValue)
 			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		else

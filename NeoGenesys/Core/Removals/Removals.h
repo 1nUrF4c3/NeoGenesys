@@ -12,6 +12,9 @@ namespace NeoGenesys
 	{
 	public:
 
+		std::shared_ptr<sCvar> gRecoilFactor = std::make_shared<sCvar>("Recoil Factor", std::vector<std::string>(), 1.0f, 0.0f, 1.0f);
+		std::shared_ptr<sCvar> gSpreadFactor = std::make_shared<sCvar>("Spread Factor", std::vector<std::string>(), 1.0f, 0.0f, 1.0f);
+
 		void RecoilCompensation();
 		void SpreadCompensationStandardAim(sUserCmd* usercmd, bool akimbo);
 		void SpreadCompensationSilentAim(sUserCmd* usercmd, bool akimbo);

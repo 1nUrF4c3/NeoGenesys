@@ -14,6 +14,15 @@ namespace NeoGenesys
 
 		cHooks() : _thunkVectoredExceptionHandler(&cHooks::VectoredExceptionHandler, this) {}
 
+		std::shared_ptr<sCvar> gPlayerBulletTracers = std::make_shared<sCvar>("Bullet Tracers", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gNameStealer = std::make_shared<sCvar>("Name Stealer", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gThirdPerson = std::make_shared<sCvar>("Third Person", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gTeaBag = std::make_shared<sCvar>("Tea Bag", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gKillSpam = std::make_shared<sCvar>("Killspam", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gTeaBagMessage = std::make_shared<sCvar>("Tea Bag Message", std::vector<std::string>(), _strdup(""));
+		std::shared_ptr<sCvar> gKillSpamMessage = std::make_shared<sCvar>("Killspam Message", std::vector<std::string>(), _strdup(""));
+		std::shared_ptr<sCvar> gAntiLeave = std::make_shared<sCvar>("Anti-Leave", std::vector<std::string>(), false);
+
 		QWORD dwSysValue;
 		LPVOID pVectoredExceptionHandler;
 

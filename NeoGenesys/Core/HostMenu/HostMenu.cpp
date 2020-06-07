@@ -60,10 +60,10 @@ namespace NeoGenesys
 					PlayerState[i].flSpeedMultiplier = 3.0f;
 
 				if (HostMenu.PlayerMod[i].bFreezePosition)
-					VectorCopy(HostMenu.PlayerMod[i].szPosition, PlayerState[i].vOrigin);
+					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].szPosition;
 
 				else
-					VectorCopy(PlayerState[i].vOrigin, HostMenu.PlayerMod[i].szPosition);
+					HostMenu.PlayerMod[i].szPosition = PlayerState[i].vOrigin;
 			}
 
 			if (!LocalClientIsInGame() || !CharacterInfo[i].iInfoValid)
@@ -75,19 +75,19 @@ namespace NeoGenesys
 				HostMenu.PlayerMod[i].bSuperSpeed = false;
 				HostMenu.PlayerMod[i].bFreezePosition = false;
 
-				_targetList.vIsTarget[i] = TRUE;
+				_targetList.bIsPriority[i] = false;
 			}
 		}
 
 		static bool bSuperJump = false;
 
-		if (_profiler.gSuperJump->Current.bValue && !bSuperJump)
+		if (gSuperJump->Custom.bValue && !bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 			bSuperJump = true;
 		}
 
-		else if (!_profiler.gSuperJump->Current.bValue && bSuperJump)
+		else if (!gSuperJump->Custom.bValue && bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 			bSuperJump = false;
@@ -147,9 +147,9 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[iTargetNum].iInfoValid && CharacterInfo[iTargetNum].iNextValid)
 			{
-				if ((_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
-					(_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
-					_profiler.gMassKill->Current.iValue == cProfiler::MASSKILL_ALL)
+				if ((gMassKill->Custom.iValue == MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
+					(gMassKill->Custom.iValue == MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
+					gMassKill->Custom.iValue == MASSKILL_ALL)
 				{
 					PlayerKill(&GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PredictedPlayerState.iClientNum] : &GEntity[iTargetNum],
@@ -343,19 +343,19 @@ namespace NeoGenesys
 
 		if (ImGui::Button("Teleport To", ImVec2(98.0f, 25.0f)))
 		{
-			VectorCopy(PlayerState[HostMenu.iPlayer].vOrigin, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
+			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = PlayerState[HostMenu.iPlayer].vOrigin;
 			HostMenu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 4.0f);
 
 		if (ImGui::Button("Teleport From", ImVec2(98.0f, 25.0f)))
 		{
-			VectorCopy(PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin, PlayerState[HostMenu.iPlayer].vOrigin);
+			PlayerState[HostMenu.iPlayer].vOrigin = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
 			HostMenu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 4.0f);
 		
 		if (ImGui::Button("Launch", ImVec2(100.0f, 25.0f)))
 		{
-			PlayerState[HostMenu.iPlayer].vVelocity[2] = 10000.0f;
+			PlayerState[HostMenu.iPlayer].vVelocity.z = 10000.0f;
 			HostMenu.bWriteLog = true;
 		} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 

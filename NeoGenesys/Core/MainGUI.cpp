@@ -108,10 +108,10 @@ namespace NeoGenesys
 			_profiler.DisableAll();
 
 		if (GetKeyPress(VK_PRIOR, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
-			VectorCopy(PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin, _hostMenu.HostMenu.vTeleport);
+			_hostMenu.HostMenu.vTeleport = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
 
 		if (GetKeyPress(VK_NEXT, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
-			VectorCopy(_hostMenu.HostMenu.vTeleport, PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin);
+			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = _hostMenu.HostMenu.vTeleport;
 
 		*(bool*)OFF_MOUSEINPUT = !Menu.bShowWindow;
 		FindVariable("cl_bypassMouseInput")->Current.iValue = Menu.bShowWindow;
@@ -245,7 +245,7 @@ namespace NeoGenesys
 			{
 				if (LocalClientIsInGame() && !IsMigrating() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 				{
-					if (_profiler.gNameSpam->Current.bValue)
+					if (gNameSpam->Custom.bValue)
 					{
 						std::string szUserName = acut::RandomANString(0);
 
@@ -253,9 +253,9 @@ namespace NeoGenesys
 						Cbuf_AddText(VariadicText("name \"%s\"\n", szUserName.c_str()));
 					}
 
-					if (_profiler.gChatSpam->Current.bValue)
+					if (gChatSpam->Custom.bValue)
 					{
-						Cbuf_AddText(VariadicText("say \"%s\"\n", _profiler.gChatSpamMessage->Current.szValue));
+						Cbuf_AddText(VariadicText("say \"%s\"\n", gChatSpamMessage->Custom.szValue));
 					}
 				}
 
@@ -278,7 +278,7 @@ namespace NeoGenesys
 		ImGui::Begin("NEOGENESYS", &Menu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 		ImGui::SetColorEditOptions(ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoSmallPreview | ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop);
 
-		if (ImGui::TabLabels(_profiler.gMenuTabs->Domain.iMax, acut::StringVectorToCharPointerArray(_profiler.gMenuTabs->szItems), _profiler.gMenuTabs->Current.iValue, NULL, false, NULL, NULL, false, false, NULL, NULL, &ImVec2(94.0f, 25.0f)))
+		if (ImGui::TabLabels(gMenuTabs->Limits.iMax, acut::StringVectorToCharPointerArray(gMenuTabs->szOptions), gMenuTabs->Custom.iValue, NULL, false, NULL, NULL, false, false, NULL, NULL, &ImVec2(94.0f, 25.0f)))
 		{
 			Menu.bWriteLog = true;
 		}
@@ -287,162 +287,162 @@ namespace NeoGenesys
 		ImGui::Separator();
 		ImGui::NewLine();
 
-		switch (_profiler.gMenuTabs->Current.iValue)
+		switch (gMenuTabs->Custom.iValue)
 		{
-		case cProfiler::MENU_TAB_AIMBOT:
+		case MENU_TAB_AIMBOT:
 		{
-			if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_OFF].c_str(), &_profiler.gAimBotMode->Current.iValue, cProfiler::AIMBOT_MODE_OFF))
+			if (ImGui::RadioButton(_aimBot.gAimBotMode->szOptions[cAimbot::AIMBOT_MODE_OFF].c_str(), &_aimBot.gAimBotMode->Custom.iValue, cAimbot::AIMBOT_MODE_OFF))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(148.0f);
 
-			if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_MANUAL].c_str(), &_profiler.gAimBotMode->Current.iValue, cProfiler::AIMBOT_MODE_MANUAL))
+			if (ImGui::RadioButton(_aimBot.gAimBotMode->szOptions[cAimbot::AIMBOT_MODE_MANUAL].c_str(), &_aimBot.gAimBotMode->Custom.iValue, cAimbot::AIMBOT_MODE_MANUAL))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::RadioButton(_profiler.gAimBotMode->szItems[cProfiler::AIMBOT_MODE_AUTO].c_str(), &_profiler.gAimBotMode->Current.iValue, cProfiler::AIMBOT_MODE_AUTO))
+			if (ImGui::RadioButton(_aimBot.gAimBotMode->szOptions[cAimbot::AIMBOT_MODE_AUTO].c_str(), &_aimBot.gAimBotMode->Custom.iValue, cAimbot::AIMBOT_MODE_AUTO))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gAutoZoom->szName.c_str(), &_profiler.gAutoZoom->Current.bValue))
+			if (ImGui::Checkbox(_aimBot.gAutoZoom->szLabel.c_str(), &_aimBot.gAutoZoom->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gAutoFire->szName.c_str(), &_profiler.gAutoFire->Current.bValue))
+			if (ImGui::Checkbox(_aimBot.gAutoFire->szLabel.c_str(), &_aimBot.gAutoFire->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gAutoWall->szName.c_str(), &_profiler.gAutoWall->Current.bValue))
+			if (ImGui::Checkbox(_targetList.gAutoWall->szLabel.c_str(), &_targetList.gAutoWall->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gSilentAim->szName.c_str(), &_profiler.gSilentAim->Current.bValue))
+			if (ImGui::Checkbox(_aimBot.gSilentAim->szLabel.c_str(), &_aimBot.gSilentAim->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gTargetAgents->szName.c_str(), &_profiler.gTargetAgents->Current.bValue))
+			if (ImGui::Checkbox(_targetList.gTargetAgents->szLabel.c_str(), &_targetList.gTargetAgents->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gTargetMissiles->szName.c_str(), &_profiler.gTargetMissiles->Current.bValue))
+			if (ImGui::Checkbox(_targetList.gTargetMissiles->szLabel.c_str(), &_targetList.gTargetMissiles->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gAntiAim->szName.c_str(), &_profiler.gAntiAim->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gAntiAim->szItems), _profiler.gAntiAim->Domain.iMax))
+			if (ImGui::Combo(_antiAim.gAntiAim->szLabel.c_str(), &_antiAim.gAntiAim->Custom.iValue, acut::StringVectorToCharPointerArray(_antiAim.gAntiAim->szOptions), _antiAim.gAntiAim->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gBoneScan->szName.c_str(), &_profiler.gBoneScan->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gBoneScan->szItems), _profiler.gBoneScan->Domain.iMax))
+			if (ImGui::Combo(_targetList.gBoneScan->szLabel.c_str(), &_targetList.gBoneScan->Custom.iValue, acut::StringVectorToCharPointerArray(_targetList.gBoneScan->szOptions), _targetList.gBoneScan->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gSortMethod->szName.c_str(), &_profiler.gSortMethod->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gSortMethod->szItems), _profiler.gSortMethod->Domain.iMax))
+			if (ImGui::Combo(_targetList.gSortMethod->szLabel.c_str(), &_targetList.gSortMethod->Custom.iValue, acut::StringVectorToCharPointerArray(_targetList.gSortMethod->szOptions), _targetList.gSortMethod->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			}
 		} break;
 
-		case cProfiler::MENU_TAB_WALLHACK:
+		case MENU_TAB_WALLHACK:
 		{
-			if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_AXIS].c_str(), &_profiler.gWallHackMode->Current.iValue, cProfiler::WALLHACK_MODE_AXIS))
+			if (ImGui::RadioButton(_drawing.gWallHackMode->szOptions[cDrawing::WALLHACK_MODE_AXIS].c_str(), &_drawing.gWallHackMode->Custom.iValue, cDrawing::WALLHACK_MODE_AXIS))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(148.0f);
 
-			if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_ALLIES].c_str(), &_profiler.gWallHackMode->Current.iValue, cProfiler::WALLHACK_MODE_ALLIES))
+			if (ImGui::RadioButton(_drawing.gWallHackMode->szOptions[cDrawing::WALLHACK_MODE_ALLIES].c_str(), &_drawing.gWallHackMode->Custom.iValue, cDrawing::WALLHACK_MODE_ALLIES))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::RadioButton(_profiler.gWallHackMode->szItems[cProfiler::WALLHACK_MODE_ALL].c_str(), &_profiler.gWallHackMode->Current.iValue, cProfiler::WALLHACK_MODE_ALL))
+			if (ImGui::RadioButton(_drawing.gWallHackMode->szOptions[cDrawing::WALLHACK_MODE_ALL].c_str(), &_drawing.gWallHackMode->Custom.iValue, cDrawing::WALLHACK_MODE_ALL))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gPlayerBoxes->szName.c_str(), &_profiler.gPlayerBoxes->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gPlayerBoxes->szItems), _profiler.gPlayerBoxes->Domain.iMax))
+			if (ImGui::Combo(_drawing.gPlayerBoxes->szLabel.c_str(), &_drawing.gPlayerBoxes->Custom.iValue, acut::StringVectorToCharPointerArray(_drawing.gPlayerBoxes->szOptions), _drawing.gPlayerBoxes->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gPlayerBones->szName.c_str(), &_profiler.gPlayerBones->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gPlayerBones->szItems), _profiler.gPlayerBones->Domain.iMax))
+			if (ImGui::Combo(_drawing.gPlayerBones->szLabel.c_str(), &_drawing.gPlayerBones->Custom.iValue, acut::StringVectorToCharPointerArray(_drawing.gPlayerBones->szOptions), _drawing.gPlayerBones->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gPlayerSnapLines->szName.c_str(), &_profiler.gPlayerSnapLines->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gPlayerSnapLines->szItems), _profiler.gPlayerSnapLines->Domain.iMax))
+			if (ImGui::Combo(_drawing.gPlayerSnapLines->szLabel.c_str(), &_drawing.gPlayerSnapLines->Custom.iValue, acut::StringVectorToCharPointerArray(_drawing.gPlayerSnapLines->szOptions), _drawing.gPlayerSnapLines->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gPlayerInformation->szName.c_str(), &_profiler.gPlayerInformation->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gPlayerInformation->szLabel.c_str(), &_drawing.gPlayerInformation->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gPlayerWeapons->szName.c_str(), &_profiler.gPlayerWeapons->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gPlayerWeapons->szLabel.c_str(), &_drawing.gPlayerWeapons->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gPlayerBulletTracers->szName.c_str(), &_profiler.gPlayerBulletTracers->Current.bValue))
+			if (ImGui::Checkbox(_hooks.gPlayerBulletTracers->szLabel.c_str(), &_hooks.gPlayerBulletTracers->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gAgents->szName.c_str(), &_profiler.gAgents->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gAgents->szLabel.c_str(), &_drawing.gAgents->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gMissiles->szName.c_str(), &_profiler.gMissiles->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gMissiles->szLabel.c_str(), &_drawing.gMissiles->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gItems->szName.c_str(), &_profiler.gItems->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gItems->szLabel.c_str(), &_drawing.gItems->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			}
 		} break;
 
-		case cProfiler::MENU_TAB_MISCELLANEOUS:
+		case MENU_TAB_MISCELLANEOUS:
 		{
-			if (ImGui::Checkbox(_profiler.gKillSpam->szName.c_str(), &_profiler.gKillSpam->Current.bValue))
+			if (ImGui::Checkbox(_hooks.gKillSpam->szLabel.c_str(), &_hooks.gKillSpam->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gNameStealer->szName.c_str(), &_profiler.gNameStealer->Current.bValue))
+			if (ImGui::Checkbox(_hooks.gNameStealer->szLabel.c_str(), &_hooks.gNameStealer->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gThirdPerson->szName.c_str(), &_profiler.gThirdPerson->Current.bValue))
+			if (ImGui::Checkbox(_hooks.gThirdPerson->szLabel.c_str(), &_hooks.gThirdPerson->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gPlayerCrossHair->szName.c_str(), &_profiler.gPlayerCrossHair->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gPlayerCrossHair->szLabel.c_str(), &_drawing.gPlayerCrossHair->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox(_profiler.gPlayerCompass->szName.c_str(), &_profiler.gPlayerCompass->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gPlayerCompass->szLabel.c_str(), &_drawing.gPlayerCompass->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox(_profiler.gPlayerRadar->szName.c_str(), &_profiler.gPlayerRadar->Current.bValue))
+			if (ImGui::Checkbox(_drawing.gPlayerRadar->szLabel.c_str(), &_drawing.gPlayerRadar->Custom.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
@@ -467,55 +467,55 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
-			if (ImGui::Combo(_profiler.gRiotShield->szName.c_str(), &_profiler.gRiotShield->Current.iValue, acut::StringVectorToCharPointerArray(_profiler.gRiotShield->szItems), _profiler.gRiotShield->Domain.iMax))
+			if (ImGui::Combo(_targetList.gRiotShielders->szLabel.c_str(), &_targetList.gRiotShielders->Custom.iValue, acut::StringVectorToCharPointerArray(_targetList.gRiotShielders->szOptions), _targetList.gRiotShielders->Limits.iMax))
 			{
 				Menu.bWriteLog = true;
 			}
 		} break;
 
-		case cProfiler::MENU_TAB_TWEAKS:
+		case MENU_TAB_TWEAKS:
 		{
-			if (ImGui::SliderInt(_profiler.gAimBone->szName.c_str(), &_profiler.gAimBone->Current.iValue, _profiler.gAimBone->Domain.iMin, _profiler.gAimBone->Domain.iMax, szBones[_profiler.gAimBone->Current.iValue].first.c_str()))
+			if (ImGui::SliderInt(_targetList.gAimBone->szLabel.c_str(), &_targetList.gAimBone->Custom.iValue, _targetList.gAimBone->Limits.iMin, _targetList.gAimBone->Limits.iMax, szBones[_targetList.gAimBone->Custom.iValue].first.c_str()))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAimAngle->szName.c_str(), &_profiler.gAimAngle->Current.iValue, _profiler.gAimAngle->Domain.iMin, _profiler.gAimAngle->Domain.iMax, "%d degrees"))
+			if (ImGui::SliderInt(_targetList.gAimAngle->szLabel.c_str(), &_targetList.gAimAngle->Custom.iValue, _targetList.gAimAngle->Limits.iMin, _targetList.gAimAngle->Limits.iMax, "%d degrees"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAimPower->szName.c_str(), &_profiler.gAimPower->Current.iValue, _profiler.gAimPower->Domain.iMin, _profiler.gAimPower->Domain.iMax, "%d percent"))
+			if (ImGui::SliderInt(_aimBot.gAimPower->szLabel.c_str(), &_aimBot.gAimPower->Custom.iValue, _aimBot.gAimPower->Limits.iMin, _aimBot.gAimPower->Limits.iMax, "%d percent"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAutoAimTime->szName.c_str(), &_profiler.gAutoAimTime->Current.iValue, _profiler.gAutoAimTime->Domain.iMin, _profiler.gAutoAimTime->Domain.iMax, "%d ms"))
+			if (ImGui::SliderInt(_aimBot.gAutoAimTime->szLabel.c_str(), &_aimBot.gAutoAimTime->Custom.iValue, _aimBot.gAutoAimTime->Limits.iMin, _aimBot.gAutoAimTime->Limits.iMax, "%d ms"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAutoAimDelay->szName.c_str(), &_profiler.gAutoAimDelay->Current.iValue, _profiler.gAutoAimDelay->Domain.iMin, _profiler.gAutoAimDelay->Domain.iMax, "%d ms"))
+			if (ImGui::SliderInt(_aimBot.gAutoAimDelay->szLabel.c_str(), &_aimBot.gAutoAimDelay->Custom.iValue, _aimBot.gAutoAimDelay->Limits.iMin, _aimBot.gAutoAimDelay->Limits.iMax, "%d ms"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAutoZoomDelay->szName.c_str(), &_profiler.gAutoZoomDelay->Current.iValue, _profiler.gAutoZoomDelay->Domain.iMin, _profiler.gAutoZoomDelay->Domain.iMax, "%d ms"))
+			if (ImGui::SliderInt(_aimBot.gAutoZoomDelay->szLabel.c_str(), &_aimBot.gAutoZoomDelay->Custom.iValue, _aimBot.gAutoZoomDelay->Limits.iMin, _aimBot.gAutoZoomDelay->Limits.iMax, "%d ms"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderInt(_profiler.gAutoFireDelay->szName.c_str(), &_profiler.gAutoFireDelay->Current.iValue, _profiler.gAutoFireDelay->Domain.iMin, _profiler.gAutoFireDelay->Domain.iMax, "%d ms"))
+			if (ImGui::SliderInt(_aimBot.gAutoFireDelay->szLabel.c_str(), &_aimBot.gAutoFireDelay->Custom.iValue, _aimBot.gAutoFireDelay->Limits.iMin, _aimBot.gAutoFireDelay->Limits.iMax, "%d ms"))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderFloat(_profiler.gRecoilFactor->szName.c_str(), &_profiler.gRecoilFactor->Current.flValue, _profiler.gRecoilFactor->Domain.flMin, _profiler.gRecoilFactor->Domain.flMax))
+			if (ImGui::SliderFloat(_removals.gRecoilFactor->szLabel.c_str(), &_removals.gRecoilFactor->Custom.flValue, _removals.gRecoilFactor->Limits.flMin, _removals.gRecoilFactor->Limits.flMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::SliderFloat(_profiler.gSpreadFactor->szName.c_str(), &_profiler.gSpreadFactor->Current.flValue, _profiler.gSpreadFactor->Domain.flMin, _profiler.gSpreadFactor->Domain.flMax))
+			if (ImGui::SliderFloat(_removals.gSpreadFactor->szLabel.c_str(), &_removals.gSpreadFactor->Custom.flValue, _removals.gSpreadFactor->Limits.flMin, _removals.gSpreadFactor->Limits.flMax))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
@@ -532,15 +532,15 @@ namespace NeoGenesys
 
 			if (ImGui::Button("Reset to Default", ImVec2(446.0f, 35.0f)))
 			{
-				_profiler.gAimBone->Current.iValue = _profiler.gAimBone->Reset.iValue;
-				_profiler.gAimAngle->Current.iValue = _profiler.gAimAngle->Reset.iValue;
-				_profiler.gAimPower->Current.iValue = _profiler.gAimPower->Reset.iValue;
-				_profiler.gAutoAimTime->Current.iValue = _profiler.gAutoAimTime->Reset.iValue;
-				_profiler.gAutoAimDelay->Current.iValue = _profiler.gAutoAimDelay->Reset.iValue;
-				_profiler.gAutoZoomDelay->Current.iValue = _profiler.gAutoZoomDelay->Reset.iValue;
-				_profiler.gAutoFireDelay->Current.iValue = _profiler.gAutoFireDelay->Reset.iValue;
-				_profiler.gRecoilFactor->Current.flValue = _profiler.gRecoilFactor->Reset.flValue;
-				_profiler.gSpreadFactor->Current.flValue = _profiler.gSpreadFactor->Reset.flValue;
+				_targetList.gAimBone->Custom.iValue = _targetList.gAimBone->Default.iValue;
+				_targetList.gAimAngle->Custom.iValue = _targetList.gAimAngle->Default.iValue;
+				_aimBot.gAimPower->Custom.iValue = _aimBot.gAimPower->Default.iValue;
+				_aimBot.gAutoAimTime->Custom.iValue = _aimBot.gAutoAimTime->Default.iValue;
+				_aimBot.gAutoAimDelay->Custom.iValue = _aimBot.gAutoAimDelay->Default.iValue;
+				_aimBot.gAutoZoomDelay->Custom.iValue = _aimBot.gAutoZoomDelay->Default.iValue;
+				_aimBot.gAutoFireDelay->Custom.iValue = _aimBot.gAutoFireDelay->Default.iValue;
+				_removals.gRecoilFactor->Custom.flValue = _removals.gRecoilFactor->Default.flValue;
+				_removals.gSpreadFactor->Custom.flValue = _removals.gSpreadFactor->Default.flValue;
 
 				FindVariable("cg_fov")->Current.flValue = FindVariable("cg_fov")->Reset.flValue;
 				FindVariable("com_maxfps")->Current.iValue = FindVariable("com_maxfps")->Reset.iValue;
@@ -549,64 +549,64 @@ namespace NeoGenesys
 			}
 		} break;
 
-		case cProfiler::MENU_TAB_STYLES:
+		case MENU_TAB_STYLES:
 		{
-			_drawing.ColorPicker(_profiler.gColorAxis->szName, _profiler.gColorAxis->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorAxis->szLabel, _drawing.gColorAxis->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorAxis->szName.c_str(), _profiler.gColorAxis->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorAxis->szLabel.c_str(), _drawing.gColorAxis->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_profiler.gColorAllies->szName, _profiler.gColorAllies->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorAllies->szLabel, _drawing.gColorAllies->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorAllies->szName.c_str(), _profiler.gColorAllies->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorAllies->szLabel.c_str(), _drawing.gColorAllies->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_profiler.gColorAccents->szName, _profiler.gColorAccents->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorAccents->szLabel, _drawing.gColorAccents->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorAccents->szName.c_str(), _profiler.gColorAccents->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorAccents->szLabel.c_str(), _drawing.gColorAccents->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_profiler.gColorCrossHair->szName, _profiler.gColorCrossHair->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorCrossHair->szLabel, _drawing.gColorCrossHair->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorCrossHair->szName.c_str(), _profiler.gColorCrossHair->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorCrossHair->szLabel.c_str(), _drawing.gColorCrossHair->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_profiler.gColorText->szName, _profiler.gColorText->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorText->szLabel, _drawing.gColorText->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorText->szName.c_str(), _profiler.gColorText->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorText->szLabel.c_str(), _drawing.gColorText->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_profiler.gColorShadow->szName, _profiler.gColorShadow->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorShadow->szLabel, _drawing.gColorShadow->Custom.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_profiler.gColorShadow->szName.c_str(), _profiler.gColorShadow->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorShadow->szLabel.c_str(), _drawing.gColorShadow->Custom.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
 
 			if (ImGui::Button("Reset to Default", ImVec2(446.0f, 35.0f)))
 			{
-				_profiler.gColorAxis->Current.cValue = _profiler.gColorAxis->Reset.cValue;
-				_profiler.gColorAllies->Current.cValue = _profiler.gColorAllies->Reset.cValue;
-				_profiler.gColorAccents->Current.cValue = _profiler.gColorAccents->Reset.cValue;
-				_profiler.gColorCrossHair->Current.cValue = _profiler.gColorCrossHair->Reset.cValue;
-				_profiler.gColorText->Current.cValue = _profiler.gColorText->Reset.cValue;
-				_profiler.gColorShadow->Current.cValue = _profiler.gColorShadow->Reset.cValue;
+				_drawing.gColorAxis->Custom.cValue = _drawing.gColorAxis->Default.cValue;
+				_drawing.gColorAllies->Custom.cValue = _drawing.gColorAllies->Default.cValue;
+				_drawing.gColorAccents->Custom.cValue = _drawing.gColorAccents->Default.cValue;
+				_drawing.gColorCrossHair->Custom.cValue = _drawing.gColorCrossHair->Default.cValue;
+				_drawing.gColorText->Custom.cValue = _drawing.gColorText->Default.cValue;
+				_drawing.gColorShadow->Custom.cValue = _drawing.gColorShadow->Default.cValue;
 
 				Menu.bWriteLog = true;
 			}

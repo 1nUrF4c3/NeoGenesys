@@ -12,6 +12,18 @@ namespace NeoGenesys
 	{
 	public:
 
+		typedef enum
+		{
+			MASSKILL_OFF,
+			MASSKILL_AXIS,
+			MASSKILL_ALLIES,
+			MASSKILL_ALL,
+			MASSKILL_MAX
+		} eMassKill;
+
+		std::shared_ptr<sCvar> gSuperJump = std::make_shared<sCvar>("Super Jump", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>(), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
+
 		struct sHostMenu
 		{
 			char szKickReason[64] = { NULL };

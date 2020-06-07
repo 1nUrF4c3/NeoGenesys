@@ -48,18 +48,7 @@
 #define ShortToAngle(a) ((float)((a)*(360.0f/65536)))
 #define AngleNormalize360(a) (ShortToAngle(AngleToShort((a))))
 #define AngleNormalize180(a) (((a)/360.0f-floorf((a)/360.0f+0.5f))*360.0f)
-#define DotProduct(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
 #define AngleCompare180(a) (((a)<90.0f&&(a)>-90.0f)||((a)>270.0f||(a)<-270.0f))
-#define VectorGetSign(a) ((a)[0]=(float)GetSign((a)[0]),(a)[1]=(float)GetSign((a)[1]),(a)[2]=(float)GetSign((a)[2]))
-#define VectorCopy(a,b) ((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
-#define VectorAdd(a,b,c) ((c)[0]=(a)[0]+(b)[0],(c)[1]=(a)[1]+(b)[1],(c)[2]=(a)[2]+(b)[2])
-#define VectorSubtract(a,b,c) ((c)[0]=(a)[0]-(b)[0],(c)[1]=(a)[1]-(b)[1],(c)[2]=(a)[2]-(b)[2])
-#define VectorMultiply(a,b,c) ((c)[0]=(a)[0]*(b)[0],(c)[1]=(a)[1]*(b)[1],(c)[2]=(a)[2]*(b)[2])
-#define VectorDivide(a,b,c) ((c)[0]=(a)[0]/(b)[0],(c)[1]=(a)[1]/(b)[1],(c)[2]=(a)[2]/(b)[2])
-#define	VectorScale(a,b,c) ((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b))
-#define	VectorMA(a,b,c,d) ((d)[0]=(a)[0]+(c)[0]*(b),(d)[1]=(a)[1]+(c)[1]*(b),(d)[2]=(a)[2]+(c)[2]*(b))
-#define VectorAverage(a,b,c) ((c)[0]=((a)[0]+(b)[0])/2.0f,(c)[1]=((a)[1]+(b)[1])/2.0f,(c)[2]=((a)[2]+(b)[2])/2.0f)
-#define VectorLength(a) (sqrtf(powf((a)[0],2.0f)+powf((a)[1],2.0f)+powf((a)[2],2.0f)))
 
 #define OFF_CHATHEIGHT_DVAR 0x1419A9788
 #define OFF_CHATHEIGHT_EXCEPTION 0x14025C709
@@ -709,6 +698,63 @@ namespace NeoGenesys
 		"YOU_WISH",
 		"ALWAYS_HARD",
 		"HAT_TRICK"
+	};
+	/*
+	//=====================================================================================
+	*/
+	struct sCvar
+	{
+		std::string szLabel;
+		std::vector<std::string> szOptions;
+
+		union uCvarValue
+		{
+			bool bValue;
+			int iValue;
+			float flValue;
+			DWORD dwValue;
+			ImVec4 cValue;
+			LPSTR szValue;
+
+			uCvarValue(bool value) : bValue(value) {}
+			uCvarValue(int value) : iValue(value) {}
+			uCvarValue(float value) : flValue(value) {}
+			uCvarValue(DWORD value) : dwValue(value) {}
+			uCvarValue(ImVec4 value) : cValue(value) {}
+			uCvarValue(LPSTR value) : szValue(value) {}
+		} Custom, Default;
+
+		union uCvarLimits
+		{
+			struct
+			{
+				int iMin;
+				int iMax;
+			};
+
+			struct
+			{
+				float flMin;
+				float flMax;
+			};
+
+			struct
+			{
+				DWORD dwMin;
+				DWORD dwMax;
+			};
+
+			uCvarLimits(int min, int max) : iMin(min), iMax(max) {}
+			uCvarLimits(float min, float max) : flMin(min), flMax(max) {}
+			uCvarLimits(DWORD min, DWORD max) : dwMin(min), dwMax(max) {}
+		} Limits;
+
+		sCvar(std::string name, std::vector<std::string> items, bool value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
+		sCvar(std::string name, std::vector<std::string> items, int value, int min, int max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, float value, float min, float max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, DWORD value, DWORD min, DWORD max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, ImVec4 value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
+		sCvar(std::string name, std::vector<std::string> items, LPSTR value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
 	};
 	/*
 	//=====================================================================================

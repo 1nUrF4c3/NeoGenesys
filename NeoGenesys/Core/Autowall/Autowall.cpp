@@ -33,12 +33,12 @@ namespace NeoGenesys
 		FP_Enter.flPower = 1.0f;
 		FP_Enter.iBulletType = (pWeaponDef->bRifleBullet != 0) + 1;
 
-		VectorCopy(start, FP_Enter.vViewOrigin);
-		VectorCopy(start, FP_Enter.vStart);
-		VectorCopy(end, FP_Enter.vEnd);
+		FP_Enter.vViewOrigin = start;
+		FP_Enter.vStart = start;
+		FP_Enter.vEnd = end;
 
-		VectorSubtract(end, start, FP_Enter.vDir);
-		float flLength = VectorLength(FP_Enter.vDir);
+		FP_Enter.vDir = end - start;
+		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
@@ -65,10 +65,10 @@ namespace NeoGenesys
 				if (flEnterDepth <= 0.0f)
 					return 0.0f;
 
-				VectorCopy(TR_Enter.vHitPos, vHitPos);
-				VectorSubtract(vHitPos, FP_Enter.vStart, vTemp);
+				vHitPos = TR_Enter.vHitPos;
+				vTemp = vHitPos - FP_Enter.vStart;
 
-				if (VectorLength(vTemp) >= flLength)
+				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
 					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
@@ -77,13 +77,12 @@ namespace NeoGenesys
 				bEnterHit = C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TR_Enter.iDepthSurfaceType);
 
 				CopyMemory(&FP_Exit, &FP_Enter, sizeof(sBulletFireParams));
-				VectorScale(FP_Enter.vDir, -1.0f, FP_Exit.vDir);
-
-				VectorCopy(FP_Enter.vEnd, FP_Exit.vStart);
-				VectorMA(vHitPos, 0.0099999998f, FP_Exit.vDir, FP_Exit.vEnd);
-
 				CopyMemory(&TR_Exit, &TR_Enter, sizeof(sBulletTraceResults));
-				VectorScale(TR_Exit.Trace.vNormal, -1.0f, TR_Exit.Trace.vNormal);
+
+				FP_Exit.vDir = FP_Enter.vDir * -1.0f;
+				FP_Exit.vStart = FP_Enter.vEnd;
+				FP_Exit.vEnd = (FP_Exit.vDir * 0.0099999998f) + vHitPos;
+				TR_Exit.Trace.vNormal *= -1.0f;
 
 				if (bEnterHit)
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
@@ -122,11 +121,9 @@ namespace NeoGenesys
 					{
 						ImVec3 vLength;
 
-						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
+						vLength = TR_Exit.vHitPos - TR_Enter.vHitPos;
 
-						float flLength = DotProduct(vLength, vLength);
-
-						if (flLength > 900.0f)
+						if (_mathematics.DotProduct(vLength, vLength) > 900.0f)
 						{
 							if (!bEnterHit)
 								return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
@@ -161,22 +158,22 @@ namespace NeoGenesys
 		sWeaponDef* pWeaponDef = Weapons->WeaponDef[iWeapon];
 
 		sBulletFireParams FP_Enter;
-		sBulletTraceResults TR_Enter;
-
 		ZeroMemory(&FP_Enter, sizeof(sBulletFireParams));
-		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
-		VectorSubtract(end, start, FP_Enter.vDir);
-		VectorNormalize(&FP_Enter.vDir);
+		sBulletTraceResults TR_Enter;
+		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = iClientNum;
 		FP_Enter.flPower = 1.0f;
 		FP_Enter.iBulletType = (pWeaponDef->bRifleBullet != 0) + 1;
 
-		VectorCopy(start, FP_Enter.vViewOrigin);
-		VectorCopy(start, FP_Enter.vStart);
-		VectorCopy(end, FP_Enter.vEnd);
+		FP_Enter.vViewOrigin = start;
+		FP_Enter.vStart = start;
+		FP_Enter.vEnd = end;
+
+		FP_Enter.vDir = end - start;
+		VectorNormalize(&FP_Enter.vDir);
 
 		C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
@@ -213,12 +210,12 @@ namespace NeoGenesys
 		FP_Enter.flPower = 1.0f;
 		FP_Enter.iBulletType = (pWeaponDef->bRifleBullet != 0) + 1;
 
-		VectorCopy(start, FP_Enter.vViewOrigin);
-		VectorCopy(start, FP_Enter.vStart);
-		VectorCopy(end, FP_Enter.vEnd);
+		FP_Enter.vViewOrigin = start;
+		FP_Enter.vStart = start;
+		FP_Enter.vEnd = end;
 
-		VectorSubtract(end, start, FP_Enter.vDir);
-		float flLength = VectorLength(FP_Enter.vDir);
+		FP_Enter.vDir = end - start;
+		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
@@ -248,10 +245,10 @@ namespace NeoGenesys
 				if (flEnterDepth <= 0.0f)
 					return 0.0f;
 
-				VectorCopy(TR_Enter.vHitPos, vHitPos);
-				VectorSubtract(vHitPos, FP_Enter.vStart, vTemp);
+				vHitPos = TR_Enter.vHitPos;
+				vTemp = vHitPos - FP_Enter.vStart;
 
-				if (VectorLength(vTemp) >= flLength)
+				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
 					return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
@@ -263,13 +260,12 @@ namespace NeoGenesys
 					return 0.0f;
 
 				CopyMemory(&FP_Exit, &FP_Enter, sizeof(sBulletFireParams));
-				VectorScale(FP_Enter.vDir, -1.0f, FP_Exit.vDir);
-
-				VectorCopy(FP_Enter.vEnd, FP_Exit.vStart);
-				VectorMA(vHitPos, 0.0099999998f, FP_Exit.vDir, FP_Exit.vEnd);
-
 				CopyMemory(&TR_Exit, &TR_Enter, sizeof(sBulletTraceResults));
-				VectorScale(TR_Exit.Trace.vNormal, -1.0f, TR_Exit.Trace.vNormal);
+
+				FP_Exit.vDir = FP_Enter.vDir * -1.0f;
+				FP_Exit.vStart = FP_Enter.vEnd;
+				FP_Exit.vEnd = (FP_Exit.vDir * 0.0099999998f) + vHitPos;
+				TR_Exit.Trace.vNormal *= -1.0f;
 
 				if (bEnterHit)
 					AdvanceTrace(&FP_Exit, &TR_Exit, 0.0099999998f);
@@ -311,11 +307,9 @@ namespace NeoGenesys
 					{
 						ImVec3 vLength;
 
-						VectorSubtract(TR_Exit.vHitPos, TR_Enter.vHitPos, vLength);
+						vLength = TR_Exit.vHitPos - TR_Enter.vHitPos;
 
-						float flLength = DotProduct(vLength, vLength);
-
-						if (flLength > 900.0f)
+						if (_mathematics.DotProduct(vLength, vLength) > 900.0f)
 						{
 							if (!bEnterHit)
 								return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
@@ -350,22 +344,22 @@ namespace NeoGenesys
 		sWeaponDef* pWeaponDef = Weapons->WeaponDef[iWeapon];
 
 		sBulletFireParams FP_Enter;
-		sBulletTraceResults TR_Enter;
-
 		ZeroMemory(&FP_Enter, sizeof(sBulletFireParams));
-		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
-		VectorSubtract(end, start, FP_Enter.vDir);
-		VectorNormalize(&FP_Enter.vDir);
+		sBulletTraceResults TR_Enter;
+		ZeroMemory(&TR_Enter, sizeof(sBulletTraceResults));
 
 		FP_Enter.iMaxEntNum = 2046;
 		FP_Enter.iEntityNum = iClientNum;
 		FP_Enter.flPower = 1.0f;
 		FP_Enter.iBulletType = (pWeaponDef->bRifleBullet != 0) + 1;
 
-		VectorCopy(start, FP_Enter.vViewOrigin);
-		VectorCopy(start, FP_Enter.vStart);
-		VectorCopy(end, FP_Enter.vEnd);
+		FP_Enter.vViewOrigin = start;
+		FP_Enter.vStart = start;
+		FP_Enter.vEnd = end;
+
+		FP_Enter.vDir = end - start;
+		VectorNormalize(&FP_Enter.vDir);
 
 		G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
@@ -387,8 +381,8 @@ namespace NeoGenesys
 
 		if (fireparams->flPower > 0.0f)
 		{
-			VectorCopy(traceresults->vHitPos, vHitPos);
-			VectorCopy(fireparams->vStart, vStart);
+			vHitPos = traceresults->vHitPos;
+			vStart = fireparams->vStart;
 
 			flDamage = (float)GetBulletDamageForProjectile(&CG->PredictedPlayerState, weapon, alternate, vStart, vHitPos) * fireparams->flPower;
 			flDamage = GetWeaponHitLocationMultiplier(partgroup, weapon, alternate) * flDamage;
@@ -406,8 +400,8 @@ namespace NeoGenesys
 	{
 		ImVec3 vStart, vEnd;
 
-		VectorCopy(start, vStart);
-		VectorCopy(end, vEnd);
+		vStart = start;
+		vEnd = end;
 
 		sTrace Trace;
 		ZeroMemory(&Trace, sizeof(sTrace));
