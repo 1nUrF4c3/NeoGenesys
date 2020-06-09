@@ -36,7 +36,7 @@ namespace NeoGenesys
 				ImGui::Separator();
 				ImGui::PushID(i);
 
-				if (ImGui::Selectable(std::to_string(i).c_str(), &_targetList.bIsPriority[i], ImGuiSelectableFlags_SpanAllColumns))
+				if (ImGui::Selectable(std::to_string(i).c_str(), &_targetList.Priorities[i].bIsPrioritized, ImGuiSelectableFlags_SpanAllColumns))
 				{
 					PlayerList.bWriteLog = true;
 				}
@@ -61,8 +61,24 @@ namespace NeoGenesys
 							Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
 
 							PlayerList.bWriteLog = true;
-						} ImGui::Separator();
+						}
 					}
+
+					if (ImGui::Selectable("Ignore"))
+					{
+						_targetList.Priorities[i].bIsIgnored = !_targetList.Priorities[i].bIsIgnored;
+
+						PlayerList.bWriteLog = true;
+					}
+
+					if (_targetList.Priorities[i].bIsIgnored)
+					{
+						ImGui::SameLine();
+						ImGui::RenderCheckMark(ImGui::GetCurrentWindow()->DrawList, ImGui::GetCurrentWindow()->DC.CursorPos, ImGui::GetColorU32(ImGuiCol_CheckMark), ImGui::GetCurrentContext()->FontSize);
+						ImGui::NewLine();
+					}
+
+					ImGui::Separator();
 
 					if (ImGui::Selectable("Copy ID"))
 					{

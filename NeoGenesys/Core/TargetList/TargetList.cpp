@@ -37,7 +37,7 @@ namespace NeoGenesys
 				if (!pDObj)
 					continue;
 
-				if (bIsPriority[i] && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Custom.iValue)
+				if (_targetList.Priorities[i].bIsPrioritized && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Custom.iValue)
 				{
 					AntiAimTargetInfo.iIndex = i;
 
@@ -223,9 +223,21 @@ namespace NeoGenesys
 				if (GEntity[i].iHealth < 1)
 					continue;
 
+			if (i < FindVariable("sv_maxclients")->Current.iValue)
+			{
+				if (Priorities[i].bIsIgnored)
+					continue;
+			}
+
+			else
+			{
+				if (Priorities[CEntity[i].NextEntityState.iOtherEntityNum].bIsIgnored)
+					continue;
+			}
+
 			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Custom.iValue)
 			{
-				TargetInfo.bIsPriority = bIsPriority[i];
+				TargetInfo.bIsPriority = _targetList.Priorities[i].bIsPrioritized;
 				TargetInfo.iIndex = i;
 
 				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
@@ -338,7 +350,6 @@ namespace NeoGenesys
 	{
 		ImVec3 vViewOrigin;
 
-		ApplyPrediction(entity, position);
 		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
@@ -410,21 +421,6 @@ namespace NeoGenesys
 		}
 
 		return bReturn;
-	}
-	/*
-	//=====================================================================================
-	*/
-	void cTargetList::ApplyPrediction(sCEntity* entity, ImVec3& position)
-	{
-		ImVec3 vOldPosition, vNewPosition, vDeltaPosition;
-
-		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldPosition);
-		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewPosition);
-
-		vDeltaPosition = vNewPosition - vOldPosition;
-
-		position += (vDeltaPosition * (*(int*)OFF_FRAMETIME / 1000.0f));
-		position += (vDeltaPosition * (*(int*)OFF_PING / 1000.0f));
 	}
 }
 

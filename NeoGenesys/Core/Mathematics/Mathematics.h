@@ -28,6 +28,8 @@ namespace NeoGenesys
 		void WorldToCompass(ImVec3 world, ImVec2 compasspos, float compasssize, ImVec2& screen);
 		void WorldToRadar(ImVec3 world, ImVec2 radarpos, float scale, float radarsize, float blipsize, ImVec2& screen);
 		void RotatePoint(ImVec3 point, ImVec3 center, float yaw, ImVec3& out);
+		void ApplyPositionPrediction(sCEntity* entity);
+		void ApplyAnglePrediction(sCEntity* entity);
 	} extern _mathematics;
 }
 

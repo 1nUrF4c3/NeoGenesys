@@ -73,14 +73,16 @@ namespace NeoGenesys
 			ImVec4 cColor;
 		} EntityList[MAX_ENTITIES];
 
-		bool bIsPriority[MAX_CLIENTS] = { false };
+		struct sPriorities
+		{
+			bool bIsPrioritized, bIsIgnored;
+		} Priorities[MAX_CLIENTS];
 
 		void GetInformation();
 		bool EntityIsValid(int index);
 		bool EntityIsEnemy(int index);
 		bool IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage);
 		bool IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index);
-		void ApplyPrediction(sCEntity* entity, ImVec3& position);
 	} extern _targetList;
 }
 

@@ -202,7 +202,7 @@ namespace NeoGenesys
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, angles);
-		
+
 		ClampAngles(angles);
 
 		angles -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles;
@@ -264,7 +264,7 @@ namespace NeoGenesys
 
 		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
 		vDirection = (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin) - world;
-		
+
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
 
@@ -289,7 +289,7 @@ namespace NeoGenesys
 
 		float flCosYaw = cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y)),
 			flSinYaw = sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y));
-		
+
 		vDelta.x = world.x - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.x : vViewOrigin.x);
 		vDelta.y = world.y - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.y : vViewOrigin.y);
 
@@ -326,6 +326,48 @@ namespace NeoGenesys
 		out.x = center.x + flAngleSin * vDifference.x - flAngleCos * vDifference.y;
 		out.y = center.y + flAngleCos * vDifference.x + flAngleSin * vDifference.y;
 		out.z = point.z;
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMathematics::ApplyPositionPrediction(sCEntity* entity)
+	{
+		ImVec3 vOldPosition, vNewPosition, vDeltaPosition;
+
+		EvaluateTrajectory(&entity->CurrentEntityState.PositionTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldPosition);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.PositionTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewPosition);
+
+		vDeltaPosition = vNewPosition - vOldPosition;
+		
+		vDeltaPosition.x = (float)GetSign(vDeltaPosition.x);
+		vDeltaPosition.y = (float)GetSign(vDeltaPosition.y);
+		vDeltaPosition.z = (float)GetSign(vDeltaPosition.z);
+		
+		entity->vOrigin += (vDeltaPosition * (*(float*)OFF_FRAMEINTERPOLATION));
+		entity->vOrigin += (vDeltaPosition * (*(int*)OFF_FRAMETIME / 1000.0f));
+		entity->vOrigin += (vDeltaPosition * (*(int*)OFF_PING / 1000.0f));
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMathematics::ApplyAnglePrediction(sCEntity* entity)
+	{
+		ImVec3 vOldAngles, vNewAngles, vDeltaAngles;
+
+		EvaluateTrajectory(&entity->CurrentEntityState.AngleTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldAngles);
+		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.AngleTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewAngles);
+
+		vDeltaAngles.x = AngleNormalize180(vNewAngles.x - vOldAngles.x);
+		vDeltaAngles.y = AngleNormalize180(vNewAngles.y - vOldAngles.y);
+		vDeltaAngles.z = AngleNormalize180(vNewAngles.z - vOldAngles.z);
+		
+		vDeltaAngles.x = (float)GetSign(vDeltaAngles.x);
+		vDeltaAngles.y = (float)GetSign(vDeltaAngles.y);
+		vDeltaAngles.z = (float)GetSign(vDeltaAngles.z);
+		
+		entity->vViewAngles += (vDeltaAngles * (*(float*)OFF_FRAMEINTERPOLATION));
+		entity->vViewAngles += (vDeltaAngles * (*(int*)OFF_FRAMETIME / 1000.0f));
+		entity->vViewAngles += (vDeltaAngles * (*(int*)OFF_PING / 1000.0f));
 	}
 }
 

@@ -75,7 +75,8 @@ namespace NeoGenesys
 				HostMenu.PlayerMod[i].bSuperSpeed = false;
 				HostMenu.PlayerMod[i].bFreezePosition = false;
 
-				_targetList.bIsPriority[i] = false;
+				_targetList.Priorities[i].bIsPrioritized = false;
+				_targetList.Priorities[i].bIsIgnored = false;
 			}
 		}
 

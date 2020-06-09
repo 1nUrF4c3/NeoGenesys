@@ -161,6 +161,9 @@ namespace NeoGenesys
 					entity->vViewAngles.y = _antiAim.vAntiAimAngles.y + CG->PredictedPlayerState.vDeltaAngles.y;
 				}
 			}
+
+			_mathematics.ApplyPositionPrediction(entity);
+			_mathematics.ApplyAnglePrediction(entity);
 		}
 	}
 	/*
