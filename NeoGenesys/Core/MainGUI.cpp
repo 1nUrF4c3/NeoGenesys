@@ -12,14 +12,14 @@ namespace NeoGenesys
 	{
 		hWindow = *(HWND*)OFF_WINDOWHANDLE;
 
-		if (!hWindow || !pDevice || !pDeviceContext)
+		if (!hWindow || !_device || !_deviceContext)
 			return;
 
 		oWindowProcess = (tWindowProcess)SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)_thunkWindowProcess.GetThunk());
 
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(hWindow);
-		ImGui_ImplDX11_Init(pDevice, pDeviceContext);
+		ImGui_ImplDX11_Init(_device, _deviceContext);
 
 		Menu.szIniFileName = acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_INI, " ", "");
 		Menu.szLogFileName = acut::GetExeDirectory() + acut::FindAndReplaceString(DEFAULT_LOG, " ", "");
@@ -32,236 +32,6 @@ namespace NeoGenesys
 		Eurostile_Extended = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedBase85TTF(eurostile_extended_compressed_data_base85, flEurostile_Extended = Window->iHeight / 60.0f);
 
 		bInitialized = true;
-	}
-	/*
-	//=====================================================================================
-	*/
-	bool cMainGUI::GetKeyPress(int vkey, bool immediate)
-	{
-		if (VirtualKeys[vkey].bKey)
-		{
-			VirtualKeys[vkey].bUp = false;
-			VirtualKeys[vkey].bDown = true;
-		}
-
-		else if (!VirtualKeys[vkey].bKey && VirtualKeys[vkey].bDown)
-		{
-			VirtualKeys[vkey].bUp = true;
-			VirtualKeys[vkey].bDown = false;
-		}
-
-		else
-		{
-			VirtualKeys[vkey].bUp = false;
-			VirtualKeys[vkey].bDown = false;
-		}
-
-		if (immediate)
-			return VirtualKeys[vkey].bDown;
-
-		else
-			return VirtualKeys[vkey].bUp;
-	}
-	/*
-	//=====================================================================================
-	*/
-	LRESULT CALLBACK cMainGUI::WindowProcess(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case WM_LBUTTONDOWN:
-			VirtualKeys[VK_LBUTTON].bKey = true;
-			break;
-
-		case WM_LBUTTONUP:
-			VirtualKeys[VK_LBUTTON].bKey = false;
-			break;
-
-		case WM_RBUTTONDOWN:
-			VirtualKeys[VK_RBUTTON].bKey = true;
-			break;
-
-		case WM_RBUTTONUP:
-			VirtualKeys[VK_RBUTTON].bKey = false;
-			break;
-
-		case WM_KEYDOWN:
-			VirtualKeys[wParam].bKey = true;
-			break;
-
-		case WM_KEYUP:
-			VirtualKeys[wParam].bKey = false;
-			break;
-		}
-
-		if (GetKeyPress(VK_INSERT, false))
-			Menu.bShowWindow = !Menu.bShowWindow;
-
-		if (GetKeyPress(VK_DELETE, false))
-			if (!LocalClientIsInGame())
-				std::thread(&cHostMenu::StartMatch, &_hostMenu).detach();
-
-		if (GetKeyPress(VK_HOME, false))
-			_profiler.LoadProfile("");
-
-		if (GetKeyPress(VK_END, false))
-			_profiler.DisableAll();
-
-		if (GetKeyPress(VK_PRIOR, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
-			_hostMenu.HostMenu.vTeleport = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
-
-		if (GetKeyPress(VK_NEXT, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
-			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = _hostMenu.HostMenu.vTeleport;
-
-		*(bool*)OFF_MOUSEINPUT = !Menu.bShowWindow;
-		FindVariable("cl_bypassMouseInput")->Current.iValue = Menu.bShowWindow;
-
-		if (bInitialized && Menu.bShowWindow && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
-			return TRUE;
-
-		return CallWindowProc(oWindowProcess, hWnd, uMsg, wParam, lParam);
-	}
-	/*
-	//=====================================================================================
-	*/
-	void WINAPI cMainGUI::Present(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags)
-	{
-		if (!bInitialized)
-		{
-			pSwapChain->GetDevice(__uuidof(pDevice), (void**)&pDevice);
-			pDevice->GetImmediateContext(&pDeviceContext);
-			InitInterface();
-		}
-
-		else
-		{
-			ImGui::GetIO().MouseDrawCursor = Menu.bShowWindow;
-
-			ImGui_ImplWin32_NewFrame();
-			ImGui_ImplDX11_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-
-			ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-			ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-
-			ImGui::Begin("INVISIBLE", (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
-			ImGui::GetWindowDrawList()->PushClipRectFullScreen();
-
-			ImGui::PopStyleColor(2);
-
-			if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
-			{
-				_drawing.DrawESP();
-				_drawing.DrawCompass();
-				_drawing.DrawRadar();
-				_drawing.DrawCrosshair();
-				_drawing.DrawTracers();
-			}
-
-			ImU32 cShadow = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-
-			std::string szWatermark(VariadicText("NEOGENESYS - COD GHOSTS by: InUrFace | Frametime: %s, Ping: %s",
-				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME).c_str() : "N/A",
-				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
-
-			ImVec2 vWatermark(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szWatermark.c_str()));
-			ImU32 cWatermark = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-
-			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-				ImVec2(vWatermark.y + 1.0f, flEurostile_Extended - vWatermark.y + 1.0f),
-				cShadow, szWatermark.c_str());
-
-			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-				ImVec2(vWatermark.y, flEurostile_Extended - vWatermark.y),
-				cWatermark, szWatermark.c_str());
-
-			if (LocalClientIsInGame())
-			{
-				std::string szConnection(IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) ? "Hosting" : "Not Hosting");
-				ImVec2 vConnection(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szConnection.c_str()));
-				ImU32 cConnection = ImGui::ColorConvertFloat4ToU32(IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) ? ImVec4(0.3f, 1.0f, 0.3f, 1.0f) : ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
-
-				ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f + 1.0f, flEurostile_Extended - vConnection.y + 1.0f),
-					cShadow, szConnection.c_str());
-
-				ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f, flEurostile_Extended - vConnection.y),
-					cConnection, szConnection.c_str());
-			}
-
-			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
-			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
-			ImU32 cFramesPerSecond = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 0.3f, 1.0f));
-
-			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-				ImVec2(ImGui::GetIO().DisplaySize.x - vFramesPerSecond.x - vFramesPerSecond.y + 1.0f, flEurostile_Extended - vFramesPerSecond.y + 1.0f),
-				cShadow, szFramesPerSecond.c_str());
-
-			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
-				ImVec2(ImGui::GetIO().DisplaySize.x - vFramesPerSecond.x - vFramesPerSecond.y, flEurostile_Extended - vFramesPerSecond.y),
-				cFramesPerSecond, szFramesPerSecond.c_str());
-			
-			ImGui::End();
-
-			if (Menu.bShowWindow)
-			{
-				DrawMainGUI();
-
-				if (Menu.bShowMemoryEditor)
-					Menu.MemEdit.DrawMemoryEditor(&Menu.bShowMemoryEditor, hIw6mp64_ship.lpBaseOfDll, hIw6mp64_ship.SizeOfImage, (size_t)hIw6mp64_ship.lpBaseOfDll);
-
-				if (Menu.bShowConsole)
-					_console.DrawConsole(&Menu.bShowConsole);
-
-				if (_playerList.PlayerList.bShowWindow && LocalClientIsInGame())
-					_playerList.DrawPlayerList();
-
-				if (_hostMenu.HostMenu.bShowWindow && LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) && !*(bool*)OFF_ISALIENSMODE)
-					_hostMenu.DrawHostMenu();
-			}
-
-			ImGui::Render();
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-			if (hWindow != *(HWND*)OFF_WINDOWHANDLE)
-			{
-				pDevice->Release();
-				pDeviceContext->Release();
-
-				ImGui_ImplWin32_Shutdown();
-				ImGui_ImplDX11_Shutdown();
-				ImGui::DestroyContext();
-
-				bInitialized = false;
-			}
-
-			static int iTime = Sys_Milliseconds();
-
-			if (Sys_Milliseconds() - iTime > max(*(int*)OFF_FRAMETIME, *(int*)OFF_PING))
-			{
-				if (LocalClientIsInGame() && !IsMigrating() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
-				{
-					if (gNameSpam->Custom.bValue)
-					{
-						std::string szUserName = acut::RandomANString(0);
-
-						strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })), strlen(szUserName.c_str()) + 1, szUserName.c_str(), 32);
-						Cbuf_AddText(VariadicText("name \"%s\"\n", szUserName.c_str()));
-					}
-
-					if (gChatSpam->Custom.bValue)
-					{
-						Cbuf_AddText(VariadicText("say \"%s\"\n", gChatSpamMessage->Custom.szValue));
-					}
-				}
-
-				iTime = Sys_Milliseconds();
-			}
-		}
 	}
 	/*
 	//=====================================================================================
@@ -653,6 +423,248 @@ namespace NeoGenesys
 		ImGui::InputText("", Menu.szProfilePath, IM_ARRAYSIZE(Menu.szProfilePath), ImGuiInputTextFlags_ReadOnly);
 		ImGui::PopItemWidth();
 		ImGui::End();
+	}
+	/*
+	//=====================================================================================
+	*/
+	bool cMainGUI::GetKeyPress(int vkey, bool immediate)
+	{
+		if (VirtualKeys[vkey].bKey)
+		{
+			VirtualKeys[vkey].bUp = false;
+			VirtualKeys[vkey].bDown = true;
+		}
+
+		else if (!VirtualKeys[vkey].bKey && VirtualKeys[vkey].bDown)
+		{
+			VirtualKeys[vkey].bUp = true;
+			VirtualKeys[vkey].bDown = false;
+		}
+
+		else
+		{
+			VirtualKeys[vkey].bUp = false;
+			VirtualKeys[vkey].bDown = false;
+		}
+
+		if (immediate)
+			return VirtualKeys[vkey].bDown;
+
+		else
+			return VirtualKeys[vkey].bUp;
+	}
+	/*
+	//=====================================================================================
+	*/
+	LRESULT CALLBACK cMainGUI::WindowProcess(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_LBUTTONDOWN:
+			VirtualKeys[VK_LBUTTON].bKey = true;
+			break;
+
+		case WM_LBUTTONUP:
+			VirtualKeys[VK_LBUTTON].bKey = false;
+			break;
+
+		case WM_RBUTTONDOWN:
+			VirtualKeys[VK_RBUTTON].bKey = true;
+			break;
+
+		case WM_RBUTTONUP:
+			VirtualKeys[VK_RBUTTON].bKey = false;
+			break;
+
+		case WM_KEYDOWN:
+			VirtualKeys[wParam].bKey = true;
+			break;
+
+		case WM_KEYUP:
+			VirtualKeys[wParam].bKey = false;
+			break;
+		}
+
+		if (GetKeyPress(VK_INSERT, false))
+			Menu.bShowWindow = !Menu.bShowWindow;
+
+		if (GetKeyPress(VK_DELETE, false))
+			if (!LocalClientIsInGame())
+				std::thread(&cHostMenu::StartMatch, &_hostMenu).detach();
+
+		if (GetKeyPress(VK_HOME, false))
+			_profiler.LoadProfile("");
+
+		if (GetKeyPress(VK_END, false))
+			_profiler.DisableAll();
+
+		if (GetKeyPress(VK_PRIOR, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+			_hostMenu.HostMenu.vTeleport = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
+
+		if (GetKeyPress(VK_NEXT, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = _hostMenu.HostMenu.vTeleport;
+
+		*(bool*)OFF_MOUSEINPUT = !Menu.bShowWindow;
+		FindVariable("cl_bypassMouseInput")->Current.iValue = Menu.bShowWindow;
+
+		if (bInitialized && Menu.bShowWindow && ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
+			return TRUE;
+
+		return CallWindowProc(oWindowProcess, hWnd, uMsg, wParam, lParam);
+	}
+	/*
+	//=====================================================================================
+	*/
+	void WINAPI cMainGUI::Present(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags)
+	{
+		if (!bInitialized)
+		{
+			InitInterface();
+		}
+
+		else
+		{
+			ImGui::GetIO().MouseDrawCursor = Menu.bShowWindow;
+
+			ImGui_ImplWin32_NewFrame();
+			ImGui_ImplDX11_NewFrame();
+			ImGui::NewFrame();
+
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+			ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+			ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+			ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+
+			ImGui::Begin("INVISIBLE", (bool*)true, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs);
+			ImGui::GetWindowDrawList()->PushClipRectFullScreen();
+
+			ImGui::PopStyleColor(2);
+
+			if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
+			{
+				_drawing.DrawESP();
+				_drawing.DrawCompass();
+				_drawing.DrawRadar();
+				_drawing.DrawCrosshair();
+				_drawing.DrawTracers();
+			}
+
+			ImU32 cShadow = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			std::string szWatermark(VariadicText("NEOGENESYS - COD GHOSTS by: InUrFace | Frametime: %s, Ping: %s",
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME).c_str() : "N/A",
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
+
+			ImVec2 vWatermark(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szWatermark.c_str()));
+			ImU32 cWatermark = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+				ImVec2(vWatermark.y + 1.0f, flEurostile_Extended - vWatermark.y + 1.0f),
+				cShadow, szWatermark.c_str());
+
+			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+				ImVec2(vWatermark.y, flEurostile_Extended - vWatermark.y),
+				cWatermark, szWatermark.c_str());
+
+			if (LocalClientIsInGame())
+			{
+				std::string szConnection(IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) ? "Hosting" : "Not Hosting");
+				ImVec2 vConnection(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szConnection.c_str()));
+				ImU32 cConnection = ImGui::ColorConvertFloat4ToU32(IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) ? ImVec4(0.3f, 1.0f, 0.3f, 1.0f) : ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
+
+				ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f + 1.0f, flEurostile_Extended - vConnection.y + 1.0f),
+					cShadow, szConnection.c_str());
+
+				ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+					ImVec2(ImGui::GetIO().DisplaySize.x / 2.0f - vConnection.x / 2.0f, flEurostile_Extended - vConnection.y),
+					cConnection, szConnection.c_str());
+			}
+
+			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
+			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
+			ImU32 cFramesPerSecond = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 0.3f, 1.0f));
+
+			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+				ImVec2(ImGui::GetIO().DisplaySize.x - vFramesPerSecond.x - vFramesPerSecond.y + 1.0f, flEurostile_Extended - vFramesPerSecond.y + 1.0f),
+				cShadow, szFramesPerSecond.c_str());
+
+			ImGui::GetWindowDrawList()->AddText(Eurostile_Extended, flEurostile_Extended,
+				ImVec2(ImGui::GetIO().DisplaySize.x - vFramesPerSecond.x - vFramesPerSecond.y, flEurostile_Extended - vFramesPerSecond.y),
+				cFramesPerSecond, szFramesPerSecond.c_str());
+			
+			ImGui::End();
+
+			if (Menu.bShowWindow)
+			{
+				DrawMainGUI();
+
+				if (Menu.bShowMemoryEditor)
+					Menu.MemEdit.DrawMemoryEditor(&Menu.bShowMemoryEditor, hIw6mp64_ship.lpBaseOfDll, hIw6mp64_ship.SizeOfImage, (size_t)hIw6mp64_ship.lpBaseOfDll);
+
+				if (Menu.bShowConsole)
+					_console.DrawConsole(&Menu.bShowConsole);
+
+				if (_playerList.PlayerList.bShowWindow && LocalClientIsInGame())
+					_playerList.DrawPlayerList();
+
+				if (_hostMenu.HostMenu.bShowWindow && LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) && !*(bool*)OFF_ISALIENSMODE)
+					_hostMenu.DrawHostMenu();
+			}
+
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+			if (hWindow != *(HWND*)OFF_WINDOWHANDLE)
+			{
+				_device->Release();
+				_deviceContext->Release();
+
+				ImGui_ImplWin32_Shutdown();
+				ImGui_ImplDX11_Shutdown();
+				ImGui::DestroyContext();
+
+				bInitialized = false;
+			}
+
+			static int iTime = Sys_Milliseconds();
+
+			if (Sys_Milliseconds() - iTime > max(*(int*)OFF_FRAMETIME, *(int*)OFF_PING))
+			{
+				if (LocalClientIsInGame() && !IsMigrating() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
+				{
+					if (gNameSpam->Custom.bValue)
+					{
+						std::string szUserName = acut::RandomANString(0);
+
+						strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })), strlen(szUserName.c_str()) + 1, szUserName.c_str(), 32);
+						Cbuf_AddText(VariadicText("name \"%s\"\n", szUserName.c_str()));
+					}
+
+					if (gChatSpam->Custom.bValue)
+					{
+						Cbuf_AddText(VariadicText("say \"%s\"\n", gChatSpamMessage->Custom.szValue));
+					}
+				}
+
+				iTime = Sys_Milliseconds();
+			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void WINAPI cMainGUI::DrawIndexed(_In_ ID3D11DeviceContext* pContext, _In_ UINT IndexCount, _In_ UINT StartIndexLocation, _In_ INT BaseVertexLocation)
+	{
+		return;
+	}
+	/*
+	//=====================================================================================
+	*/
+	void WINAPI cMainGUI::ClearRenderTargetView(_In_ ID3D11DeviceContext* pContext, _In_ ID3D11RenderTargetView* pRenderTargetView, _In_ const FLOAT ColorRGBA[4])
+	{
+		return;
 	}
 }
 

@@ -17,6 +17,14 @@ HRESULT WINAPI hPresent(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval,
 typedef HRESULT(WINAPI* tPresent)(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags);
 tPresent oPresent;
 
+void WINAPI hDrawIndexed(_In_ ID3D11DeviceContext* pContext, _In_ UINT IndexCount, _In_ UINT StartIndexLocation, _In_ INT BaseVertexLocation);
+typedef void(WINAPI* tDrawIndexed)(_In_ ID3D11DeviceContext* pContext, _In_ UINT IndexCount, _In_ UINT StartIndexLocation, _In_ INT BaseVertexLocation);
+tDrawIndexed oDrawIndexed;
+
+void WINAPI hClearRenderTargetView(_In_ ID3D11DeviceContext* pContext, _In_ ID3D11RenderTargetView* pRenderTargetView, _In_ const FLOAT ColorRGBA[4]);
+typedef void(WINAPI* tClearRenderTargetView)(_In_ ID3D11DeviceContext* pContext, _In_ ID3D11RenderTargetView* pRenderTargetView, _In_ const FLOAT ColorRGBA[4]);
+tClearRenderTargetView oClearRenderTargetView;
+
 void HOOKCALL hRefresh(int localnum);
 typedef void(HOOKCALL* tRefresh)(int localnum);
 tRefresh oRefresh = (tRefresh)OFF_REFRESH;
@@ -60,6 +68,24 @@ HRESULT WINAPI hPresent(_In_ IDXGISwapChain* swapchain, _In_ UINT syncinterval, 
 	_mainGui.Present(swapchain, syncinterval, flags);
 
 	return oPresent(swapchain, syncinterval, flags);
+}
+
+//=====================================================================================
+
+void WINAPI hDrawIndexed(_In_ ID3D11DeviceContext* pContext, _In_ UINT IndexCount, _In_ UINT StartIndexLocation, _In_ INT BaseVertexLocation)
+{
+	_mainGui.DrawIndexed(pContext, IndexCount, StartIndexLocation, BaseVertexLocation);
+
+	oDrawIndexed(pContext, IndexCount, StartIndexLocation, BaseVertexLocation);
+}
+
+//=====================================================================================
+
+void WINAPI hClearRenderTargetView(_In_ ID3D11DeviceContext* pContext, _In_ ID3D11RenderTargetView* pRenderTargetView, _In_ const FLOAT ColorRGBA[4])
+{
+	_mainGui.ClearRenderTargetView(pContext, pRenderTargetView, ColorRGBA);
+
+	oClearRenderTargetView(pContext, pRenderTargetView, ColorRGBA);
 }
 
 //=====================================================================================
@@ -148,7 +174,10 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 void Initialize()
 {
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
-	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
+
+	oPresent = (tPresent)SwapVMT(_mainGui._swapChain, &hPresent, 8);
+	oDrawIndexed = (tDrawIndexed)SwapVMT(_mainGui._deviceContext, &hDrawIndexed, 12);
+	oClearRenderTargetView = (tClearRenderTargetView)SwapVMT(_mainGui._deviceContext, &hClearRenderTargetView, 50);
 
 	AttachHook(oRefresh, hRefresh);
 	AttachHook(oWritePacket, hWritePacket);
@@ -166,7 +195,10 @@ void Initialize()
 void Deallocate()
 {
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
-	SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)oPresent, bGameOverlayRenderer64 ? 0 : 8);
+
+	SwapVMT(_mainGui._swapChain, oPresent, 8);
+	SwapVMT(_mainGui._deviceContext, oDrawIndexed, 12);
+	SwapVMT(_mainGui._deviceContext, oClearRenderTargetView, 50);
 
 	DetachHook(oRefresh, hRefresh);
 	DetachHook(oWritePacket, hWritePacket);
@@ -178,8 +210,8 @@ void Deallocate()
 	DetachHook(oAddCmdDrawText, hAddCmdDrawText);
 	DetachHook(oClientFrame, hClientFrame);
 
-	_mainGui.pDevice->Release();
-	_mainGui.pDeviceContext->Release();
+	_mainGui._device->Release();
+	_mainGui._deviceContext->Release();
 
 	ImGui_ImplWin32_Shutdown();
 	ImGui_ImplDX11_Shutdown();

@@ -64,14 +64,19 @@ namespace NeoGenesys
 		} VirtualKeys[MAX_VIRTUALKEYS];
 
 		HWND hWindow;
-		ID3D11Device* pDevice;
-		ID3D11DeviceContext* pDeviceContext;
+
+		IDXGISwapChain* _swapChain = *(IDXGISwapChain**)OFF_SWAPCHAIN;
+		ID3D11Device* _device = *(ID3D11Device**)OFF_DEVICE;
+		ID3D11DeviceContext* _deviceContext = *(ID3D11DeviceContext**)OFF_DEVICECONTEXT;
 
 		void InitInterface();
-		bool GetKeyPress(int vkey, bool immediate);
 		void DrawMainGUI();
+		bool GetKeyPress(int vkey, bool immediate);
 
 		void WINAPI Present(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags);
+		void WINAPI DrawIndexed(_In_ ID3D11DeviceContext* pContext, _In_ UINT IndexCount, _In_ UINT StartIndexLocation, _In_ INT BaseVertexLocation);
+		void WINAPI ClearRenderTargetView(_In_ ID3D11DeviceContext* pContext, _In_ ID3D11RenderTargetView* pRenderTargetView, _In_ const FLOAT ColorRGBA[4]);
+
 		LRESULT CALLBACK WindowProcess(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 		typedef LRESULT(CALLBACK* tWindowProcess)(_In_ HWND hWnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 		tWindowProcess oWindowProcess;

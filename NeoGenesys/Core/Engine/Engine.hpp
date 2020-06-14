@@ -63,6 +63,8 @@
 #define OFF_SYSMILLISECONDS 0x140501CA0
 #define OFF_WINDOWHANDLE 0x147AD2640
 #define OFF_SWAPCHAIN 0x1480B1D70
+#define OFF_DEVICE 0x1480AA098
+#define OFF_DEVICECONTEXT 0x1480AA0A0
 #define OFF_REFRESH 0x14025CC50
 #define OFF_WRITEPACKET 0x1402C1E70
 #define OFF_PREDICTPLAYERSTATE 0x1402830B0
@@ -1215,12 +1217,6 @@ namespace NeoGenesys
 	//=====================================================================================
 	*/
 	static MODULEINFO hIw6mp64_ship = GetModuleInfo(NULL);
-	static MODULEINFO hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
-	static bool bGameOverlayRenderer64 = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage);
-
-	static DWORD_PTR dwPresent = bGameOverlayRenderer64 ?
-		ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
-		*(DWORD_PTR*)OFF_SWAPCHAIN;
 	/*
 	//=====================================================================================
 	*/

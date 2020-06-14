@@ -37,7 +37,7 @@ namespace NeoGenesys
 				if (!pDObj)
 					continue;
 
-				if (_targetList.Priorities[i].bIsPrioritized && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Custom.iValue)
+				if (_targetList.Priorities[i].bIsPrioritized && !_targetList.Priorities[i].bIsIgnored)
 				{
 					AntiAimTargetInfo.iIndex = i;
 
@@ -253,10 +253,10 @@ namespace NeoGenesys
 			{
 				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
 
-				auto ItTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
+				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
-				if (ItTargetInfo != vTargetInfo.end())
-					_aimBot.AimState.iTargetNum = ItTargetInfo->iIndex;
+				if (itTargetInfo != vTargetInfo.end())
+					_aimBot.AimState.iTargetNum = itTargetInfo->iIndex;
 
 				else
 					_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
@@ -266,10 +266,10 @@ namespace NeoGenesys
 			{
 				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
 
-				auto ItTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
+				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
-				if (ItTargetInfo != vTargetInfo.end())
-					_aimBot.AimState.iTargetNum = ItTargetInfo->iIndex;
+				if (itTargetInfo != vTargetInfo.end())
+					_aimBot.AimState.iTargetNum = itTargetInfo->iIndex;
 
 				else
 					_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
