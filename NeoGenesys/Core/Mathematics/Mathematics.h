@@ -14,6 +14,7 @@ namespace NeoGenesys
 
 		float CalculateFOV(ImVec3 position);
 		float CalculateDistance(ImVec3 start, ImVec3 end);
+		ImVec3 AngleToForward(ImVec3 position, ImVec3 angles, float distance);
 		float DotProduct(ImVec3 left, ImVec3 right);
 		float VectorLength(ImVec3 left, ImVec3 right);
 		void VectorAngles(ImVec3 direction, ImVec3& angles);

@@ -44,6 +44,17 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	ImVec3 cMathematics::AngleToForward(ImVec3 position, ImVec3 angles, float distance)
+	{
+		ImVec3 vForward, vRight, vUp;
+
+		AngleVectors(angles, vForward, vRight, vUp);
+
+		return (position + (vForward * distance));
+	}
+	/*
+	//=====================================================================================
+	*/
 	float cMathematics::DotProduct(ImVec3 left, ImVec3 right)
 	{
 		return (left.x * right.x + left.y * right.y + left.z * right.z);

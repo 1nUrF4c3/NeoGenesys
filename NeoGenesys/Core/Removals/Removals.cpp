@@ -10,12 +10,12 @@ namespace NeoGenesys
 
 	void cRemovals::RecoilCompensation()
 	{
-		Punch->vPunchAngles *= gRecoilFactor->Custom.flValue;
-		ViewMatrix->vRecoilAngles *= gRecoilFactor->Custom.flValue;
+		Punch->vPunchAngles *= gRecoilFactor->Current.flValue;
+		ViewMatrix->vRecoilAngles *= gRecoilFactor->Current.flValue;
 
-		Punch->vWeaponPunchAngles[0] *= gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[1] *= gRecoilFactor->Custom.flValue;
-		Punch->vWeaponPunchAngles[2] *= gRecoilFactor->Custom.flValue;
+		Punch->vWeaponPunchAngles[0] *= gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[1] *= gRecoilFactor->Current.flValue;
+		Punch->vWeaponPunchAngles[2] *= gRecoilFactor->Current.flValue;
 	}
 	/*
 	//=====================================================================================
@@ -28,8 +28,8 @@ namespace NeoGenesys
 
 		GetSpreadAngles(akimbo, usercmd->iServerTime, GetWeaponSpread(), vAngles);
 
-		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - gSpreadFactor->Custom.flValue));
-		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[0] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[0] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[0] : CG->vWeaponAngles[0]) - vAngles[0]) * (1.0f - gSpreadFactor->Current.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(((WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles[1] : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles[1] : CG->vWeaponAngles[1]) - vAngles[1]) * (1.0f - gSpreadFactor->Current.flValue));
 	}
 	/*
 	//=====================================================================================
@@ -46,8 +46,8 @@ namespace NeoGenesys
 		flSpreadX *= flSpread;
 		flSpreadY *= flSpread;
 
-		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * (1.0f - gSpreadFactor->Custom.flValue));
-		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * (1.0f - gSpreadFactor->Custom.flValue));
+		usercmd->iViewAngles[0] += AngleToShort(flSpreadY * (1.0f - gSpreadFactor->Current.flValue));
+		usercmd->iViewAngles[1] += AngleToShort(flSpreadX * (1.0f - gSpreadFactor->Current.flValue));
 	}
 	/*
 	//=====================================================================================
@@ -103,7 +103,7 @@ namespace NeoGenesys
 
 		GetHipfireSpreadForWeapon(&CG->PredictedPlayerState, GetViewmodelWeapon(&CG->PredictedPlayerState), &flMinSpread, &flMaxSpread);
 
-		if (CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM)
+		if (_aimBot.AimState.bIsZooming)
 		{
 			if (*(float*)OFF_ZOOMMULTIPLIER == 1.0f)
 				flSpreadMultiplier = 0.0f;

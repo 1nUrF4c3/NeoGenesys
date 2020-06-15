@@ -511,7 +511,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	static std::vector<std::pair<eBone, eHitLocation>> vBones =
+	static std::vector<std::pair<eBone, eHitLocation>> iBones =
 	{
 		std::make_pair(BONE_HELMET, HITLOC_HELMET),
 		std::make_pair(BONE_HEAD, HITLOC_HEAD),
@@ -553,6 +553,29 @@ namespace NeoGenesys
 		std::make_pair("Right Wrist", "j_wrist_ri"),
 		std::make_pair("Left Ankle", "j_ankle_le"),
 		std::make_pair("Right Ankle", "j_ankle_ri")
+	};
+	/*
+	//=====================================================================================
+	*/
+	static std::vector<std::pair<std::pair<eBone, eHitLocation>, std::pair<std::string, std::string>>> vBones =
+	{
+		std::make_pair(iBones[BONE_HELMET], szBones[BONE_HELMET]),
+		std::make_pair(iBones[BONE_HEAD], szBones[BONE_HEAD]),
+		std::make_pair(iBones[BONE_NECK], szBones[BONE_NECK]),
+		std::make_pair(iBones[BONE_UPPER_SPINE], szBones[BONE_UPPER_SPINE]),
+		std::make_pair(iBones[BONE_LOWER_SPINE], szBones[BONE_LOWER_SPINE]),
+		std::make_pair(iBones[BONE_LEFT_SHOULDER], szBones[BONE_LEFT_SHOULDER]),
+		std::make_pair(iBones[BONE_RIGHT_SHOULDER], szBones[BONE_RIGHT_SHOULDER]),
+		std::make_pair(iBones[BONE_LEFT_HIP], szBones[BONE_LEFT_HIP]),
+		std::make_pair(iBones[BONE_RIGHT_HIP], szBones[BONE_RIGHT_HIP]),
+		std::make_pair(iBones[BONE_LEFT_ELBOW], szBones[BONE_LEFT_ELBOW]),
+		std::make_pair(iBones[BONE_RIGHT_ELBOW], szBones[BONE_RIGHT_ELBOW]),
+		std::make_pair(iBones[BONE_LEFT_KNEE], szBones[BONE_LEFT_KNEE]),
+		std::make_pair(iBones[BONE_RIGHT_KNEE], szBones[BONE_RIGHT_KNEE]),
+		std::make_pair(iBones[BONE_LEFT_WRIST], szBones[BONE_LEFT_WRIST]),
+		std::make_pair(iBones[BONE_RIGHT_WRIST], szBones[BONE_RIGHT_WRIST]),
+		std::make_pair(iBones[BONE_LEFT_ANKLE], szBones[BONE_LEFT_ANKLE]),
+		std::make_pair(iBones[BONE_RIGHT_ANKLE], szBones[BONE_RIGHT_ANKLE]),
 	};
 	/*
 	//=====================================================================================
@@ -706,8 +729,8 @@ namespace NeoGenesys
 	*/
 	struct sCvar
 	{
-		std::string szLabel;
-		std::vector<std::string> szOptions;
+		std::string szName;
+		std::vector<std::string> szItems;
 
 		union uCvarValue
 		{
@@ -724,7 +747,7 @@ namespace NeoGenesys
 			uCvarValue(DWORD value) : dwValue(value) {}
 			uCvarValue(ImVec4 value) : cValue(value) {}
 			uCvarValue(LPSTR value) : szValue(value) {}
-		} Custom, Default;
+		} Current, Reset;
 
 		union uCvarLimits
 		{
@@ -749,14 +772,14 @@ namespace NeoGenesys
 			uCvarLimits(int min, int max) : iMin(min), iMax(max) {}
 			uCvarLimits(float min, float max) : flMin(min), flMax(max) {}
 			uCvarLimits(DWORD min, DWORD max) : dwMin(min), dwMax(max) {}
-		} Limits;
+		} Domain;
 
-		sCvar(std::string name, std::vector<std::string> items, bool value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
-		sCvar(std::string name, std::vector<std::string> items, int value, int min, int max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
-		sCvar(std::string name, std::vector<std::string> items, float value, float min, float max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
-		sCvar(std::string name, std::vector<std::string> items, DWORD value, DWORD min, DWORD max) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(min, max) {}
-		sCvar(std::string name, std::vector<std::string> items, ImVec4 value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
-		sCvar(std::string name, std::vector<std::string> items, LPSTR value) : szLabel(name), szOptions(items), Custom(value), Default(value), Limits(NULL, NULL) {}
+		sCvar(std::string name, std::vector<std::string> items, bool value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
+		sCvar(std::string name, std::vector<std::string> items, int value, int min, int max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, float value, float min, float max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, DWORD value, DWORD min, DWORD max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, ImVec4 value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
+		sCvar(std::string name, std::vector<std::string> items, LPSTR value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
 	};
 	/*
 	//=====================================================================================
@@ -1658,9 +1681,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE WORD GetTraceHitType(sBulletTraceResults* traceresults)
+	FORCEINLINE WORD GetTraceHitType(sTrace* trace)
 	{
-		return VariadicCall<WORD>(OFF_GETTRACEHITTYPE, traceresults);
+		return VariadicCall<WORD>(OFF_GETTRACEHITTYPE, trace);
 	}
 	/*
 	//=====================================================================================

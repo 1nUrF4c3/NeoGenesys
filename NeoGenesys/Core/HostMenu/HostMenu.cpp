@@ -60,10 +60,10 @@ namespace NeoGenesys
 					PlayerState[i].flSpeedMultiplier = 3.0f;
 
 				if (HostMenu.PlayerMod[i].bFreezePosition)
-					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].szPosition;
+					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].vPosition;
 
 				else
-					HostMenu.PlayerMod[i].szPosition = PlayerState[i].vOrigin;
+					HostMenu.PlayerMod[i].vPosition = PlayerState[i].vOrigin;
 			}
 
 			if (!LocalClientIsInGame() || !CharacterInfo[i].iInfoValid)
@@ -82,19 +82,78 @@ namespace NeoGenesys
 
 		static bool bSuperJump = false;
 
-		if (gSuperJump->Custom.bValue && !bSuperJump)
+		if (gSuperJump->Current.bValue && !bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 			bSuperJump = true;
 		}
 
-		else if (!gSuperJump->Custom.bValue && bSuperJump)
+		else if (!gSuperJump->Current.bValue && bSuperJump)
 		{
 			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 			bSuperJump = false;
 		}
 
 		iCounter++;
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cHostMenu::TeleportAll()
+	{
+		ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, M_METERS);
+
+		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+		{
+			if (_targetList.EntityIsValid(i))
+			{
+				ImVec3 vOffset = _targetList.EntityList[i].vCenter3D - CEntity[i].vOrigin;
+				ImVec3 vTeleport = vCrosshair - vOffset;
+
+				PlayerState[i].vOrigin = vTeleport;
+			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cHostMenu::GravityGun()
+	{
+		if (gGravityGun->Current.bValue)
+		{
+			if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
+			{
+				HostMenu.iGravityGunNum = -1;
+
+				sTrace Trace;
+
+				LocationalTrace(&Trace, RefDef->vViewOrigin, _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 8192.0f), CG->PredictedPlayerState.iClientNum, MASK_NONKILLSTREAK);
+
+				if (Trace.TraceHitType == TRACE_HITTYPE_ENTITY)
+				{
+					HostMenu.iGravityGunNum = GetTraceHitType(&Trace);
+					HostMenu.flGravityGunDist = _mathematics.CalculateDistance(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
+				}
+			}
+
+			if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
+			{
+				ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
+				ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;
+				ImVec3 vTeleport = vCrosshair - vOffset;
+
+				PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
+
+				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+
+				if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+				{
+					PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
+					HostMenu.iGravityGunNum = -1;
+					SetZoomState(false);
+				}
+			}
+		}
 	}
 	/*
 	//=====================================================================================
@@ -148,9 +207,9 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[iTargetNum].iInfoValid && CharacterInfo[iTargetNum].iNextValid)
 			{
-				if ((gMassKill->Custom.iValue == MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
-					(gMassKill->Custom.iValue == MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
-					gMassKill->Custom.iValue == MASSKILL_ALL)
+				if ((gMassKill->Current.iValue == MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
+					(gMassKill->Current.iValue == MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
+					gMassKill->Current.iValue == MASSKILL_ALL)
 				{
 					PlayerKill(&GEntity[iTargetNum],
 						_targetList.EntityIsEnemy(iTargetNum) ? &GEntity[CG->PredictedPlayerState.iClientNum] : &GEntity[iTargetNum],

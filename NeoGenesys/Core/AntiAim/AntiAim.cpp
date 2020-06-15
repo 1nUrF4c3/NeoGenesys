@@ -10,7 +10,7 @@ namespace NeoGenesys
 
 	void cAntiAim::AntiAim(sUserCmd* usercmd)
 	{
-		if (gAntiAim->Custom.iValue == ANTIAIM_SPINBOT)
+		if (gAntiAim->Current.iValue == ANTIAIM_SPINBOT)
 		{
 			static float flAngle = 0.0f;
 
@@ -24,7 +24,7 @@ namespace NeoGenesys
 			flAngle += 45.0f;
 		}
 
-		else if (gAntiAim->Custom.iValue == ANTIAIM_JITTERBOT)
+		else if (gAntiAim->Current.iValue == ANTIAIM_JITTERBOT)
 		{
 			static int iMode = 1;
 
@@ -60,7 +60,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (gAntiAim->Custom.iValue == ANTIAIM_RANDOMIZED)
+		else if (gAntiAim->Current.iValue == ANTIAIM_RANDOMIZED)
 		{
 			std::random_device Device;
 			std::uniform_real_distribution<float> RandomPitch(-85.0f, 85.0f), RandomYaw(0.0f, 360.0f);
@@ -70,7 +70,7 @@ namespace NeoGenesys
 			vAntiAimAngles.z = ShortToAngle(usercmd->iViewAngles[2]);
 		}
 
-		else if (gAntiAim->Custom.iValue == ANTIAIM_REVERSED)
+		else if (gAntiAim->Current.iValue == ANTIAIM_REVERSED)
 		{
 
 			if (_aimBot.AimState.bAntiAimTargetAcquired || _aimBot.AimState.bIsAutoAiming)
@@ -98,7 +98,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (gAntiAim->Custom.iValue == ANTIAIM_INVERTED)
+		else if (gAntiAim->Current.iValue == ANTIAIM_INVERTED)
 		{
 			vAntiAimAngles.x = ShortToAngle(usercmd->iViewAngles[0]);
 			vAntiAimAngles.y = ShortToAngle(usercmd->iViewAngles[1]);
@@ -131,7 +131,7 @@ namespace NeoGenesys
 		return (GetViewmodelWeapon(&CG->PredictedPlayerState) && !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) &&
 			!(CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_PRONE) &&
 			!(CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_MANTLE) &&
-			(gAntiAim->Custom.iValue > ANTIAIM_OFF));
+			(gAntiAim->Current.iValue > ANTIAIM_OFF));
 	}
 }
 

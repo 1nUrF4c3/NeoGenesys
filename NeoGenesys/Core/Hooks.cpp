@@ -91,8 +91,8 @@ namespace NeoGenesys
 
 				vAngles += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles;
 
-				AngleVectors(_aimBot.gSilentAim->Custom.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, &vForward, &vRight, &vUp);
-				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _removals.gSpreadFactor->Custom.flValue, bp->vStart, &bp->vEnd, &bp->vDir, vForward, vRight, vUp);
+				AngleVectors(_aimBot.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, &vForward, &vRight, &vUp);
+				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _removals.gSpreadFactor->Current.flValue, bp->vStart, &bp->vEnd, &bp->vDir, vForward, vRight, vUp);
 			}
 		}
 	}
@@ -103,15 +103,15 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 		{
-			if (gPlayerBulletTracers->Custom.bValue)
+			if (gPlayerBulletTracers->Current.bValue)
 			{
 				if (sourcenum == CG->PredictedPlayerState.iClientNum &&
 					_targetList.EntityIsEnemy(targetnum) &&
 					_aimBot.AimState.bIsAutoFiring &&
 					(CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER ||
-					(_targetList.gTargetMissiles->Custom.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_MISSILE &&
+					(_targetList.gTargetMissiles->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_MISSILE &&
 					(CEntity[targetnum].NextEntityState.iWeapon == WEAPON_C4 || CEntity[targetnum].NextEntityState.iWeapon == WEAPON_IED)) ||
-					(_targetList.gTargetAgents->Custom.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
+					(_targetList.gTargetAgents->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
 				{
 					ImVec3 vTracerStart;
 					GetPlayerViewOrigin(&CG->PredictedPlayerState, &vTracerStart);
@@ -132,13 +132,13 @@ namespace NeoGenesys
 						Tracer.vStartPos3D = vTracerStart;
 						Tracer.vHitPos3D = position;
 
-						Tracer.cColorShadow = _drawing.gColorShadow->Custom.cValue;
-						Tracer.cColorHitMarker = _drawing.gColorText->Custom.cValue;
-						Tracer.cColorTracer = _drawing.gColorAccents->Custom.cValue;
+						Tracer.cColorShadow = _drawing.gColorShadow->Current.cValue;
+						Tracer.cColorHitMarker = _drawing.gColorText->Current.cValue;
+						Tracer.cColorTracer = _drawing.gColorAccents->Current.cValue;
 
-						Tracer.flAlphaShadow = _drawing.gColorShadow->Custom.cValue.w;
-						Tracer.flAlphaHitMarker = _drawing.gColorText->Custom.cValue.w;
-						Tracer.flAlphaTracer = _drawing.gColorAccents->Custom.cValue.w;
+						Tracer.flAlphaShadow = _drawing.gColorShadow->Current.cValue.w;
+						Tracer.flAlphaHitMarker = _drawing.gColorText->Current.cValue.w;
+						Tracer.flAlphaTracer = _drawing.gColorAccents->Current.cValue.w;
 
 						_drawing.vTracers.push_back(Tracer);
 					}
@@ -153,7 +153,7 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if ((FindVariable("camera_thirdPerson")->Current.bValue = gThirdPerson->Custom.bValue) && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
+			if ((FindVariable("camera_thirdPerson")->Current.bValue = gThirdPerson->Current.bValue) && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PredictedPlayerState.iClientNum)
 				{
@@ -175,12 +175,12 @@ namespace NeoGenesys
 		{
 			if (entitystate->iAttackerEntityNum == CG->PredictedPlayerState.iClientNum)
 			{
-				if (gTeaBag->Custom.bValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+				if (gTeaBag->Current.bValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				{
 					_packets.iTeaBagTime = Sys_Milliseconds();
 					_packets.vTeaBagPos = PlayerState[entitystate->iOtherEntityNum].vOrigin;
 
-					std::string szTeaBag = gTeaBagMessage->Custom.szValue;
+					std::string szTeaBag = gTeaBagMessage->Current.szValue;
 
 					if (!szTeaBag.empty())
 					{
@@ -191,9 +191,9 @@ namespace NeoGenesys
 					}
 				}
 
-				if (gKillSpam->Custom.bValue)
+				if (gKillSpam->Current.bValue)
 				{
-					std::string szKillSpam = gKillSpamMessage->Custom.szValue;
+					std::string szKillSpam = gKillSpamMessage->Current.szValue;
 
 					if (!szKillSpam.empty())
 					{
@@ -220,7 +220,7 @@ namespace NeoGenesys
 					}
 				}
 
-				if (gNameStealer->Custom.bValue)
+				if (gNameStealer->Current.bValue)
 				{
 					strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })),
 						strlen(ClientInfo[entitystate->iOtherEntityNum].szName) + 1, 
@@ -248,10 +248,11 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 		{
+			_hostMenu.GravityGun();
 			_hostMenu.MassKill();
 
 			for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
-				if (gAntiLeave->Custom.bValue && i != CG->PredictedPlayerState.iClientNum)
+				if (gAntiLeave->Current.bValue && i != CG->PredictedPlayerState.iClientNum)
 					GameSendServerCommand(i, SV_CMD_RELIABLE, "o 11 1");
 		}
 	}

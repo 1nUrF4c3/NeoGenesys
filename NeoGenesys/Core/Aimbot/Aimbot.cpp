@@ -10,16 +10,16 @@ namespace NeoGenesys
 
 	void cAimbot::StandardAim()
 	{
-		if (!gSilentAim->Custom.bValue && AimState.bTargetAcquired)
+		if (!gSilentAim->Current.bValue && AimState.bTargetAcquired)
 		{
-			AimState.vAimAngles *= gAimPower->Custom.iValue / 100.0f;
+			AimState.vAimAngles *= gAimPower->Current.iValue / 100.0f;
 
-			if (gAutoAimTime->Custom.iValue)
+			if (gAutoAimTime->Current.iValue)
 			{
-				AimState.vAimAngles *= (float)AimState.iCurrentAimTime / (float)gAutoAimTime->Custom.iValue;
+				AimState.vAimAngles *= (float)AimState.iCurrentAimTime / (float)gAutoAimTime->Current.iValue;
 			}
 
-			if (AimState.iCurrentAimDelay == gAutoAimDelay->Custom.iValue)
+			if (AimState.iCurrentAimDelay == gAutoAimDelay->Current.iValue)
 			{
 				if (AimState.bLockonTarget)
 				{
@@ -27,8 +27,8 @@ namespace NeoGenesys
 				}
 			}
 
-			if (AimState.iCurrentZoomDelay == gAutoZoomDelay->Custom.iValue)
-				if (gAutoZoom->Custom.bValue && gAimBotMode->Custom.iValue == AIMBOT_MODE_AUTO)
+			if (AimState.iCurrentZoomDelay == gAutoZoomDelay->Current.iValue)
+				if (gAutoZoom->Current.bValue && gAimBotMode->Current.iValue == AIMBOT_MODE_AUTO)
 					SetZoomState(true);
 		}
 	}
@@ -37,7 +37,7 @@ namespace NeoGenesys
 	*/
 	void cAimbot::SilentAim(sUserCmd* usercmd)
 	{
-		if (gSilentAim->Custom.bValue && AimState.bTargetAcquired)
+		if (gSilentAim->Current.bValue && AimState.bTargetAcquired)
 		{
 			if (AimState.bLockonTarget)
 			{
@@ -49,8 +49,8 @@ namespace NeoGenesys
 				_mathematics.MovementFix(usercmd, ShortToAngle(usercmd->iViewAngles[1]), flOldYaw, usercmd->szMove[0], usercmd->szMove[1]);
 			}
 
-			if (AimState.iCurrentZoomDelay == gAutoZoomDelay->Custom.iValue)
-				if (gAutoZoom->Custom.bValue && gAimBotMode->Custom.iValue == AIMBOT_MODE_AUTO)
+			if (AimState.iCurrentZoomDelay == gAutoZoomDelay->Current.iValue)
+				if (gAutoZoom->Current.bValue && gAimBotMode->Current.iValue == AIMBOT_MODE_AUTO)
 					SetZoomState(true);
 		}
 	}
@@ -59,9 +59,9 @@ namespace NeoGenesys
 	*/
 	void cAimbot::AutoFire(sUserCmd* usercmd)
 	{
-		if (gAutoFire->Custom.bValue && AimState.bTargetAcquired)
+		if (gAutoFire->Current.bValue && AimState.bTargetAcquired)
 		{
-			if (AimState.iCurrentFireDelay == gAutoFireDelay->Custom.iValue)
+			if (AimState.iCurrentFireDelay == gAutoFireDelay->Current.iValue)
 			{
 				if (AimState.bLockonTarget)
 				{
@@ -88,13 +88,14 @@ namespace NeoGenesys
 
 		AimState.bTargetAcquired = (AimState.iTargetNum > -1);
 		AimState.bAntiAimTargetAcquired = (AimState.iAntiAimTargetNum > -1);
-		AimState.bLockonTarget = (gAimBotMode->Custom.iValue == AIMBOT_MODE_AUTO || (gAimBotMode->Custom.iValue == AIMBOT_MODE_MANUAL && CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM));
+		AimState.bIsZooming = (CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM);
+		AimState.bLockonTarget = (gAimBotMode->Current.iValue == AIMBOT_MODE_AUTO || (gAimBotMode->Current.iValue == AIMBOT_MODE_MANUAL && AimState.bIsZooming));
 		AimState.bIsAutoAiming = (AimState.bTargetAcquired && AimState.bLockonTarget);
-		AimState.bIsAutoFiring = (gAutoFire->Custom.bValue && AimState.bIsAutoAiming);
+		AimState.bIsAutoFiring = (gAutoFire->Current.bValue && AimState.bIsAutoAiming);
 
 		if (AimState.bLockonTarget)
 		{
-			if (AimState.iCurrentAimDelay == gAutoAimDelay->Custom.iValue)
+			if (AimState.iCurrentAimDelay == gAutoAimDelay->Current.iValue)
 				AimState.iCurrentAimTime += Sys_Milliseconds() - AimState.iDeltaTMR;
 
 			AimState.iCurrentAimDelay += Sys_Milliseconds() - AimState.iDeltaTMR;
@@ -119,17 +120,17 @@ namespace NeoGenesys
 		if (!AimState.bTargetAcquired)
 			AimState.iCurrentAimDelay = AimState.iCurrentZoomDelay = AimState.iCurrentFireDelay = 0;
 
-		if (AimState.iCurrentAimTime > gAutoAimTime->Custom.iValue)
-			AimState.iCurrentAimTime = gAutoAimTime->Custom.iValue;
+		if (AimState.iCurrentAimTime > gAutoAimTime->Current.iValue)
+			AimState.iCurrentAimTime = gAutoAimTime->Current.iValue;
 
-		if (AimState.iCurrentAimDelay > gAutoAimDelay->Custom.iValue)
-			AimState.iCurrentAimDelay = gAutoAimDelay->Custom.iValue;
+		if (AimState.iCurrentAimDelay > gAutoAimDelay->Current.iValue)
+			AimState.iCurrentAimDelay = gAutoAimDelay->Current.iValue;
 
-		if (AimState.iCurrentZoomDelay > gAutoZoomDelay->Custom.iValue)
-			AimState.iCurrentZoomDelay = gAutoZoomDelay->Custom.iValue;
+		if (AimState.iCurrentZoomDelay > gAutoZoomDelay->Current.iValue)
+			AimState.iCurrentZoomDelay = gAutoZoomDelay->Current.iValue;
 
-		if (AimState.iCurrentFireDelay > gAutoFireDelay->Custom.iValue)
-			AimState.iCurrentFireDelay = gAutoFireDelay->Custom.iValue;
+		if (AimState.iCurrentFireDelay > gAutoFireDelay->Current.iValue)
+			AimState.iCurrentFireDelay = gAutoFireDelay->Current.iValue;
 
 		if (AimState.bTargetAcquired)
 		{
