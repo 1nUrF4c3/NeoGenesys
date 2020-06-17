@@ -502,7 +502,7 @@ namespace NeoGenesys
 	*/
 	void cDrawing::CalculateTracers()
 	{
-		for (auto Tracer = vTracers.begin(); Tracer != vTracers.end();)
+		for (auto Tracer = vTracers.begin(); Tracer != vTracers.end(); Tracer++)
 		{
 			int iDeltaTime = Sys_Milliseconds() - Tracer->iStartTime;
 
@@ -516,10 +516,10 @@ namespace NeoGenesys
 			}
 
 			if (Tracer->cColorShadow.w <= 0.0f && Tracer->cColorHitMarker.w <= 0.0f && Tracer->cColorTracer.w <= 0.0f)
+			{
 				Tracer = vTracers.erase(Tracer);
-
-			else
-				++Tracer;
+				Tracer--;
+			}
 		}
 	}
 	/*

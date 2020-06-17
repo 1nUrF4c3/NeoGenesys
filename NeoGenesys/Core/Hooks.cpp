@@ -28,6 +28,7 @@ namespace NeoGenesys
 			_drawing.vTracers.clear();
 
 		_hostMenu.PlayerMods();
+		_hostMenu.GravityGun();
 	}
 	/*
 	//=====================================================================================
@@ -248,7 +249,6 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 		{
-			_hostMenu.GravityGun();
 			_hostMenu.MassKill();
 
 			for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)

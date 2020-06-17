@@ -68,8 +68,8 @@ namespace NeoGenesys
 		} HostMenu;
 
 		void PlayerMods();
-		void TeleportAll();
 		void GravityGun();
+		void TeleportAll();
 		void StartMatch();
 		void MassKill();
 		void SpawnBots(int count);

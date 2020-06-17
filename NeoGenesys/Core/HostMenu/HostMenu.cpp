@@ -60,10 +60,15 @@ namespace NeoGenesys
 					PlayerState[i].flSpeedMultiplier = 3.0f;
 
 				if (HostMenu.PlayerMod[i].bFreezePosition)
+				{
+					PlayerState[i].iGravity = 0;
 					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].vPosition;
+				}
 
 				else
+				{
 					HostMenu.PlayerMod[i].vPosition = PlayerState[i].vOrigin;
+				}
 			}
 
 			if (!LocalClientIsInGame() || !CharacterInfo[i].iInfoValid)
@@ -99,6 +104,51 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	void cHostMenu::GravityGun()
+	{
+		if (gGravityGun->Current.bValue)
+		{
+			if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+			{
+				if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
+				{
+					HostMenu.iGravityGunNum = -1;
+
+					sTrace Trace;
+
+					LocationalTrace(&Trace, RefDef->vViewOrigin, _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 8192.0f), CG->PredictedPlayerState.iClientNum, MASK_NONKILLSTREAK);
+
+					if (Trace.TraceHitType == TRACE_HITTYPE_ENTITY)
+					{
+						HostMenu.iGravityGunNum = GetTraceHitType(&Trace);
+						HostMenu.flGravityGunDist = _mathematics.CalculateDistance(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
+					}
+				}
+
+				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
+				{
+					ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
+					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;
+					ImVec3 vTeleport = vCrosshair - vOffset;
+
+					PlayerState[HostMenu.iGravityGunNum].iGravity = 0;
+					PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
+
+					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+
+					if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+					{
+						PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
+						HostMenu.iGravityGunNum = -1;
+						SetZoomState(false);
+					}
+				}
+			}
+		}
+	}
+	/*
+	//=====================================================================================
+	*/
 	void cHostMenu::TeleportAll()
 	{
 		ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, M_METERS);
@@ -117,59 +167,18 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cHostMenu::GravityGun()
-	{
-		if (gGravityGun->Current.bValue)
-		{
-			if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
-			{
-				HostMenu.iGravityGunNum = -1;
-
-				sTrace Trace;
-
-				LocationalTrace(&Trace, RefDef->vViewOrigin, _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 8192.0f), CG->PredictedPlayerState.iClientNum, MASK_NONKILLSTREAK);
-
-				if (Trace.TraceHitType == TRACE_HITTYPE_ENTITY)
-				{
-					HostMenu.iGravityGunNum = GetTraceHitType(&Trace);
-					HostMenu.flGravityGunDist = _mathematics.CalculateDistance(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
-				}
-			}
-
-			if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
-			{
-				ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
-				ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;
-				ImVec3 vTeleport = vCrosshair - vOffset;
-
-				PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
-
-				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
-
-				if (pUserCmd->iButtons & BUTTON_FIRELEFT)
-				{
-					PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
-					HostMenu.iGravityGunNum = -1;
-					SetZoomState(false);
-				}
-			}
-		}
-	}
-	/*
-	//=====================================================================================
-	*/
 	void cHostMenu::StartMatch()
 	{
 		if (!_mutex.try_lock())
 			return;
 
 		bool bTeamBased = FindVariable("party_teambased")->Current.bValue;
-		PBYTE pResult = VariadicCall<PBYTE>(0x1402D6880);
+		LPBYTE pResult = VariadicCall<LPBYTE>(0x1402D6880);
 
 		if (pResult[78])
 		{
 			LPVOID* v1 = VariadicCall<LPVOID*>(0x1402D6870);
-			VariadicCall<PBYTE>(0x1402E9A60, v1);
+			VariadicCall<LPBYTE>(0x1402E9A60, v1);
 		}
 
 		if (!pResult[78] || !bTeamBased)
