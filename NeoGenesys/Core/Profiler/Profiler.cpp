@@ -246,7 +246,6 @@ namespace NeoGenesys
 		_mainGui.gNameSpam->Current.bValue = _mainGui.gNameSpam->Reset.bValue;
 		_mainGui.gChatSpam->Current.bValue = _mainGui.gChatSpam->Reset.bValue;
 		_hooks.gKillSpam->Current.bValue = _hooks.gKillSpam->Reset.bValue;
-		_hostMenu.gSuperJump->Current.bValue = _hostMenu.gSuperJump->Reset.bValue;
 		_hostMenu.gMassKill->Current.iValue = _hostMenu.gMassKill->Reset.iValue;
 		_packets.gBunnyHop->Current.bValue = _packets.gBunnyHop->Reset.bValue;
 		_hooks.gTeaBag->Current.bValue = _hooks.gTeaBag->Reset.bValue;

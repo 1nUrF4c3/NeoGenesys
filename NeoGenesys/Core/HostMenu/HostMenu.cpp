@@ -10,9 +10,6 @@ namespace NeoGenesys
 
 	void cHostMenu::PlayerMods()
 	{
-		static int iCounter = 0;
-		int iAntileaveNum = iCounter % FindVariable("sv_maxclients")->Current.iValue;
-
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 		{
 			if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
@@ -61,8 +58,9 @@ namespace NeoGenesys
 
 				if (HostMenu.PlayerMod[i].bFreezePosition)
 				{
-					PlayerState[i].iGravity = 0;
 					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].vPosition;
+					PlayerState[i].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+					PlayerState[i].iGravity = 0;
 				}
 
 				else
@@ -71,7 +69,7 @@ namespace NeoGenesys
 				}
 			}
 
-			if (!LocalClientIsInGame() || !CharacterInfo[i].iInfoValid)
+			if (!CharacterInfo[i].iInfoValid)
 			{
 				HostMenu.PlayerMod[i].bGodMode = false;
 				HostMenu.PlayerMod[i].bNoClip = false;
@@ -84,22 +82,6 @@ namespace NeoGenesys
 				_targetList.Priorities[i].bIsIgnored = false;
 			}
 		}
-
-		static bool bSuperJump = false;
-
-		if (gSuperJump->Current.bValue && !bSuperJump)
-		{
-			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
-			bSuperJump = true;
-		}
-
-		else if (!gSuperJump->Current.bValue && bSuperJump)
-		{
-			WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
-			bSuperJump = false;
-		}
-
-		iCounter++;
 	}
 	/*
 	//=====================================================================================
@@ -131,8 +113,9 @@ namespace NeoGenesys
 					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;
 					ImVec3 vTeleport = vCrosshair - vOffset;
 
-					PlayerState[HostMenu.iGravityGunNum].iGravity = 0;
 					PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
+					PlayerState[HostMenu.iGravityGunNum].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+					PlayerState[HostMenu.iGravityGunNum].iGravity = 0;
 
 					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
 
@@ -161,6 +144,8 @@ namespace NeoGenesys
 				ImVec3 vTeleport = vCrosshair - vOffset;
 
 				PlayerState[i].vOrigin = vTeleport;
+				PlayerState[i].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+				PlayerState[i].iGravity = 0;
 			}
 		}
 	}
@@ -413,12 +398,18 @@ namespace NeoGenesys
 		if (ImGui::Button("Teleport To", ImVec2(98.0f, 25.0f)))
 		{
 			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = PlayerState[HostMenu.iPlayer].vOrigin;
+			PlayerState[CG->PredictedPlayerState.iClientNum].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+			PlayerState[CG->PredictedPlayerState.iClientNum].iGravity = 0;
+
 			HostMenu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 4.0f);
 
 		if (ImGui::Button("Teleport From", ImVec2(98.0f, 25.0f)))
 		{
 			PlayerState[HostMenu.iPlayer].vOrigin = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
+			PlayerState[HostMenu.iPlayer].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+			PlayerState[HostMenu.iPlayer].iGravity = 0;
+
 			HostMenu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 4.0f);
 		

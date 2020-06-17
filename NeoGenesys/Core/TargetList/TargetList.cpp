@@ -215,7 +215,7 @@ namespace NeoGenesys
 
 			else
 			{
-				EntityList[i].bIsVisible = IsVisibleInternal(&CEntity[i], CEntity[i].vOrigin, HITLOC_NONE, gAutoWall->Current.bValue, NULL);
+				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, HITLOC_NONE, gAutoWall->Current.bValue, nullptr).get();
 				EntityList[i].vHitLocation = CEntity[i].vOrigin;
 			}
 
@@ -393,12 +393,18 @@ namespace NeoGenesys
 
 		sDamageInfo DamageInfo;
 		std::vector<sDamageInfo> vDamageInfo;
+		std::vector<std::future<bool>> vIsVisible(BONE_MAX);
 
 		if (bonescan)
 		{
 			for (auto& Bone : vBones)
 			{
-				if (IsVisibleInternal(entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage))
+				vIsVisible[Bone.first.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage);
+			}
+
+			for (auto& Bone : vBones)
+			{
+				if (vIsVisible[Bone.first.first].get())
 				{
 					DamageInfo.iBoneIndex = Bone.first.first;
 					vDamageInfo.push_back(DamageInfo);
@@ -410,7 +416,7 @@ namespace NeoGenesys
 
 		else
 		{
-			return IsVisibleInternal(entity, bones3d[index], vBones[index].first.second, autowall, NULL);
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].first.second, autowall, nullptr).get();
 		}
 
 		if (!vDamageInfo.empty())

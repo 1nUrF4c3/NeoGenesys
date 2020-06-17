@@ -531,7 +531,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gSuperJump->Current.bValue = true;
+					WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 3000.0f);
 
 					AddLog("Super jump has been enabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
@@ -541,7 +541,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gSuperJump->Current.bValue = false;
+					WriteMemoryProtected((LPVOID)OFF_ALTJUMPHEIGHT, 39.0f);
 
 					AddLog("Super jump has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
