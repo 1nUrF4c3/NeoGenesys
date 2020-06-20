@@ -398,7 +398,7 @@ namespace NeoGenesys
 		{
 			Menu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 3.0f);
-		LPCSTR szSavePath = Menu.SaveDialog.saveFileDialog(bSaveButton, acut::GetParent(Menu.szProfilePath).c_str(), NULL, ".xml", "Save Profile");
+		LPCSTR szSavePath = Menu.SaveDialog.saveFileDialog(bSaveButton, acut::GetParent(Menu.szProfilePath).c_str(), NULL, ".xml", "SAVE PROFILE");
 
 		if (strlen(szSavePath))
 		{
@@ -411,7 +411,7 @@ namespace NeoGenesys
 		{
 			Menu.bWriteLog = true;
 		}
-		LPCSTR szLoadPath = Menu.LoadDialog.chooseFileDialog(bLoadButton, acut::GetParent(Menu.szProfilePath).c_str(), ".xml", "Load Profile");
+		LPCSTR szLoadPath = Menu.LoadDialog.chooseFileDialog(bLoadButton, acut::GetParent(Menu.szProfilePath).c_str(), ".xml", "LOAD PROFILE");
 
 		if (strlen(szLoadPath))
 		{
