@@ -1240,6 +1240,13 @@ namespace NeoGenesys
 	//=====================================================================================
 	*/
 	static MODULEINFO hIw6mp64_ship = GetModuleInfo(NULL);
+	static MODULEINFO hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
+
+	static bool bGameOverlayRenderer64 = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage);
+
+	static LPVOID pPresent = bGameOverlayRenderer64 ?
+		(LPVOID)ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
+		*(LPVOID*)OFF_SWAPCHAIN;
 	/*
 	//=====================================================================================
 	*/

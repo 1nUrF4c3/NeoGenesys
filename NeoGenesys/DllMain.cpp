@@ -175,9 +175,7 @@ void Initialize()
 {
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 
-	oPresent = (tPresent)SwapVMT(_mainGui._swapChain, &hPresent, 8);
-	oDrawIndexed = (tDrawIndexed)SwapVMT(_mainGui._deviceContext, &hDrawIndexed, 12);
-	oClearRenderTargetView = (tClearRenderTargetView)SwapVMT(_mainGui._deviceContext, &hClearRenderTargetView, 50);
+	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? &pPresent : pPresent, &hPresent, bGameOverlayRenderer64 ? 0 : 8);
 
 	AttachHook(oRefresh, hRefresh);
 	AttachHook(oWritePacket, hWritePacket);
@@ -196,9 +194,7 @@ void Deallocate()
 {
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
 
-	SwapVMT(_mainGui._swapChain, oPresent, 8);
-	SwapVMT(_mainGui._deviceContext, oDrawIndexed, 12);
-	SwapVMT(_mainGui._deviceContext, oClearRenderTargetView, 50);
+	SwapVMT(bGameOverlayRenderer64 ? &pPresent : pPresent, oPresent, bGameOverlayRenderer64 ? 0 : 8);
 
 	DetachHook(oRefresh, hRefresh);
 	DetachHook(oWritePacket, hWritePacket);

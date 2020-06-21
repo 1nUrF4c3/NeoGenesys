@@ -526,6 +526,8 @@ namespace NeoGenesys
 	{
 		if (!bInitialized)
 		{
+			pSwapChain->GetDevice(__uuidof(_device), (void**)&_device);
+			_device->GetImmediateContext(&_deviceContext);
 			InitInterface();
 		}
 

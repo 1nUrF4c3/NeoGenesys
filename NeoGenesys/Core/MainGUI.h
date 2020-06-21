@@ -64,10 +64,8 @@ namespace NeoGenesys
 		} VirtualKeys[MAX_VIRTUALKEYS];
 
 		HWND hWindow;
-
-		IDXGISwapChain* _swapChain = *(IDXGISwapChain**)OFF_SWAPCHAIN;
-		ID3D11Device* _device = *(ID3D11Device**)OFF_DEVICE;
-		ID3D11DeviceContext* _deviceContext = *(ID3D11DeviceContext**)OFF_DEVICECONTEXT;
+		ID3D11Device* _device;
+		ID3D11DeviceContext* _deviceContext;
 
 		void InitInterface();
 		void DrawMainGUI();
