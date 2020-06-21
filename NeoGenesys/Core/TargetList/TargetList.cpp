@@ -41,8 +41,9 @@ namespace NeoGenesys
 				{
 					AntiAimTargetInfo.iIndex = i;
 
-					AntiAimTargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 					AntiAimTargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+					AntiAimTargetInfo.flDamage = EntityList[i].flDamage;
+					AntiAimTargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 
 					vAntiAimTargetInfo.push_back(AntiAimTargetInfo);
 				}
@@ -156,8 +157,8 @@ namespace NeoGenesys
 
 			if (EntityList[i].bAimFeet)
 			{
-				bool bIsLeftAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, vBones[BONE_LEFT_ANKLE].first.first),
-					bIsRightAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, vBones[BONE_RIGHT_ANKLE].first.first);
+				bool bIsLeftAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, vBones[BONE_LEFT_ANKLE].first.first, NULL),
+					bIsRightAnkleVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, vBones[BONE_RIGHT_ANKLE].first.first, NULL);
 
 				if (bIsLeftAnkleVisible && bIsRightAnkleVisible)
 				{
@@ -188,20 +189,20 @@ namespace NeoGenesys
 			{
 				if (gBoneScan->Current.iValue == BONESCAN_ONTIMER)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, iBonescanNum == i, gAutoWall->Current.bValue, EntityList[i].iBoneIndex, &EntityList[i].flDamage);
 					EntityList[i].vHitLocation = EntityList[i].vBones3D[EntityList[i].iBoneIndex];
 				}
 
 				else if (gBoneScan->Current.iValue == BONESCAN_IMMEDIATE)
 				{
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, true, gAutoWall->Current.bValue, EntityList[i].iBoneIndex, &EntityList[i].flDamage);
 					EntityList[i].vHitLocation = EntityList[i].vBones3D[EntityList[i].iBoneIndex];
 				}
 
 				else
 				{
 					EntityList[i].iBoneIndex = (eBone)gAimBone->Current.iValue;
-					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
+					EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, EntityList[i].iBoneIndex, &EntityList[i].flDamage);
 					EntityList[i].vHitLocation = EntityList[i].vBones3D[EntityList[i].iBoneIndex];
 				}
 			}
@@ -209,7 +210,7 @@ namespace NeoGenesys
 			else if (CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
 				EntityList[i].iBoneIndex = vBones[BONE_HEAD].first.first;
-				EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, EntityList[i].iBoneIndex);
+				EntityList[i].bIsVisible = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, gAutoWall->Current.bValue, EntityList[i].iBoneIndex, nullptr);
 				EntityList[i].vHitLocation = EntityList[i].vBones3D[EntityList[i].iBoneIndex];
 			}
 
@@ -240,8 +241,9 @@ namespace NeoGenesys
 				TargetInfo.bIsPriority = _targetList.Priorities[i].bIsPrioritized;
 				TargetInfo.iIndex = i;
 
-				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+				TargetInfo.flDamage = EntityList[i].flDamage;
+				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 
 				vTargetInfo.push_back(TargetInfo);
 			}
@@ -249,9 +251,9 @@ namespace NeoGenesys
 
 		if (!vTargetInfo.empty())
 		{
-			if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
+			if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
+				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
 
 				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
@@ -262,9 +264,22 @@ namespace NeoGenesys
 					_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
 			}
 
-			else if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
+			else if (gSortMethod->Current.iValue == SORT_METHOD_DAMAGE)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
+				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDamage > b.flDamage; });
+
+				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
+
+				if (itTargetInfo != vTargetInfo.end())
+					_aimBot.AimState.iTargetNum = itTargetInfo->iIndex;
+
+				else
+					_aimBot.AimState.iTargetNum = vTargetInfo.front().iIndex;
+			}
+
+			else if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
+			{
+				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
 
 				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
@@ -280,16 +295,23 @@ namespace NeoGenesys
 
 		if (!vAntiAimTargetInfo.empty())
 		{
-			if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
+			if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
 			{
-				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flFOV < b.flFOV; });
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDistance < b.flDistance; });
 
 				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
 			}
 
-			else if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
+			else if (gSortMethod->Current.iValue == SORT_METHOD_DAMAGE)
 			{
-				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDistance < b.flDistance; });
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDamage > b.flDamage; });
+
+				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
+			}
+
+			else if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
+			{
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flFOV < b.flFOV; });
 
 				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
 			}
@@ -387,7 +409,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index)
+	bool cTargetList::IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index, float* damage)
 	{
 		bool bReturn = false;
 
@@ -416,13 +438,18 @@ namespace NeoGenesys
 
 		else
 		{
-			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].first.second, autowall, nullptr).get();
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].first.second, autowall, damage).get();
 		}
 
 		if (!vDamageInfo.empty())
 		{
 			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
+
 			index = vDamageInfo.front().iBoneIndex;
+
+			if (damage)
+				*damage = vDamageInfo.front().flDamage;
+
 			vDamageInfo.clear();
 		}
 
