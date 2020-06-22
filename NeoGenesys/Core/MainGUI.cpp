@@ -562,8 +562,8 @@ namespace NeoGenesys
 			ImU32 cShadow = ImGui::ColorConvertFloat4ToU32(ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
 
 			std::string szWatermark(VariadicText("NEOGENESYS - COD GHOSTS by: InUrFace | Frametime: %s, Ping: %s",
-				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME).c_str() : "N/A",
-				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING).c_str() : "N/A"));
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_FRAMETIME) : "N/A",
+				LocalClientIsInGame() ? VariadicText("%i ms", *(int*)OFF_PING) : "N/A"));
 
 			ImVec2 vWatermark(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szWatermark.c_str()));
 			ImU32 cWatermark = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 1.0f, 1.0f));

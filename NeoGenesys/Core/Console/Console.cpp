@@ -334,7 +334,7 @@ namespace NeoGenesys
 			char szArgBuff[512] = { NULL };
 
 			for (int i = 0; i < CmdLine.iArgNum; i++)
-				strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+				strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 			LPSTR szUsername = strtok(szArgBuff, "\n");
 
@@ -732,7 +732,7 @@ namespace NeoGenesys
 					char szArgBuff[512] = { NULL };
 
 					for (int i = 1; i < CmdLine.iArgNum; i++)
-						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 					LPSTR szTeaBagMessage = strtok(szArgBuff, "\n");
 
@@ -740,7 +740,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_hooks.gTeaBagMessage->Current.szValue = Strdup(szTeaBagMessage);
+						_hooks.gTeaBagMessage->Current.szValue = VariadicText(szTeaBagMessage);
 						_hooks.gTeaBag->Current.bValue = true;
 
 						AddLog("Auto tea bag has been enabled with message \"%s.\"", szTeaBagMessage);
@@ -762,7 +762,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hooks.gTeaBagMessage->Current.szValue = Strdup("");
+					_hooks.gTeaBagMessage->Current.szValue = VariadicText("");
 					_hooks.gTeaBag->Current.bValue = false;
 
 					AddLog("Auto tea bag has been disabled.");
@@ -991,7 +991,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1016,7 +1016,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1041,7 +1041,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1074,7 +1074,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1099,7 +1099,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1124,7 +1124,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1165,7 +1165,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1190,7 +1190,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1215,7 +1215,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1248,7 +1248,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1273,7 +1273,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1298,7 +1298,7 @@ namespace NeoGenesys
 							char szArgBuff[512] = { NULL };
 
 							for (int i = 3; i < CmdLine.iArgNum; i++)
-								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+								strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 							LPSTR szMessage = strtok(szArgBuff, "\n");
 
@@ -1351,7 +1351,7 @@ namespace NeoGenesys
 					char szArgBuff[512] = { NULL };
 
 					for (int i = 1; i < CmdLine.iArgNum; i++)
-						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 					LPSTR szChatSpam = strtok(szArgBuff, "\n");
 
@@ -1359,7 +1359,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_mainGui.gChatSpamMessage->Current.szValue = Strdup(szChatSpam);
+						_mainGui.gChatSpamMessage->Current.szValue = VariadicText(szChatSpam);
 						_mainGui.gChatSpam->Current.bValue = true;
 
 						AddLog("Custom chatspam message \"%s\" has been enabled.", szChatSpam);
@@ -1376,7 +1376,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_mainGui.gChatSpamMessage->Current.szValue = Strdup("");
+					_mainGui.gChatSpamMessage->Current.szValue = VariadicText("");
 					_mainGui.gChatSpam->Current.bValue = false;
 
 					AddLog("Custom chatspam message has been disabled.");
@@ -1404,7 +1404,7 @@ namespace NeoGenesys
 					char szArgBuff[512] = { NULL };
 
 					for (int i = 1; i < CmdLine.iArgNum; i++)
-						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]).c_str());
+						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
 					LPSTR szKillSpam = strtok(szArgBuff, "\n");
 
@@ -1412,7 +1412,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_hooks.gKillSpamMessage->Current.szValue = Strdup(szKillSpam);
+						_hooks.gKillSpamMessage->Current.szValue = VariadicText(szKillSpam);
 						_hooks.gKillSpam->Current.bValue = true;
 
 						AddLog("Custom killspam message \"%s\" has been enabled.", szKillSpam);
@@ -1429,7 +1429,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hooks.gKillSpamMessage->Current.szValue = Strdup("");
+					_hooks.gKillSpamMessage->Current.szValue = VariadicText("");
 					_hooks.gKillSpam->Current.bValue = false;
 
 					AddLog("Custom killspam message has been disabled.");
