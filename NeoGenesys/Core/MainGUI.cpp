@@ -506,7 +506,11 @@ namespace NeoGenesys
 			_hostMenu.HostMenu.vTeleport = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
 
 		if (GetKeyPress(VK_NEXT, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+		{
 			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = _hostMenu.HostMenu.vTeleport;
+			PlayerState[CG->PredictedPlayerState.iClientNum].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+			PlayerState[CG->PredictedPlayerState.iClientNum].iGravity = 0;
+		}
 
 		if (GetKeyPress(VK_NUMPAD5, false) && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 			_hostMenu.TeleportAll();

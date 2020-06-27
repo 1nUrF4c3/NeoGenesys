@@ -32,9 +32,9 @@ namespace NeoGenesys
 
 			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER || CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
-				LPVOID pDObj = GetEntityDObj(i);
+				LPVOID lpDObj = GetEntityDObj(i);
 
-				if (!pDObj)
+				if (!lpDObj)
 					continue;
 
 				if (_targetList.Priorities[i].bIsPrioritized && !_targetList.Priorities[i].bIsIgnored)
@@ -52,7 +52,7 @@ namespace NeoGenesys
 
 				for (auto& Bone : vBones)
 				{
-					GetTagPosition(&CEntity[i], pDObj, RegisterTag(Bone.second.second), &EntityList[i].vBones3D[Bone.first.first]);
+					GetTagPosition(&CEntity[i], lpDObj, RegisterTag(Bone.second.second), &EntityList[i].vBones3D[Bone.first.first]);
 
 					if (EntityList[i].vBones3D[Bone.first.first].x < vMinTemp.x)
 						vMinTemp.x = EntityList[i].vBones3D[Bone.first.first].x;

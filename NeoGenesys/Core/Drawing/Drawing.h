@@ -12,15 +12,15 @@ namespace NeoGenesys
 	{
 	public:
 
-		typedef enum
+		enum eWallHackMode
 		{
 			WALLHACK_MODE_AXIS,
 			WALLHACK_MODE_ALLIES,
 			WALLHACK_MODE_ALL,
 			WALLHACK_MODE_MAX
-		} eWallHackMode;
+		};
 
-		typedef enum
+		enum ePlayerBoxes
 		{
 			PLAYER_BOXES_OFF,
 			PLAYER_BOXES_BORDER,
@@ -30,24 +30,24 @@ namespace NeoGenesys
 			PLAYER_BOXES_BORDER_3D,
 			PLAYER_BOXES_CORNER_3D,
 			PLAYER_BOXES_MAX
-		} ePlayerBoxes;
+		};
 
-		typedef enum
+		enum ePlayerBones
 		{
 			PLAYER_BONES_OFF,
 			PLAYER_BONES_DOTS,
 			PLAYER_BONES_LINES,
 			PLAYER_BONES_MAX
-		} ePlayerBones;
+		};
 
-		typedef enum
+		enum ePlayerSnapLines
 		{
 			PLAYER_SNAPLINES_OFF,
 			PLAYER_SNAPLINES_TOP,
 			PLAYER_SNAPLINES_BOTTOM,
 			PLAYER_SNAPLINES_CROSSHAIR,
 			PLAYER_SNAPLINES_MAX
-		} ePlayerSnapLines;
+		};
 
 		std::shared_ptr<sCvar> gWallHackMode = std::make_shared<sCvar>("Mode", std::vector<std::string>({ "Axis", "Allies", "All" }), WALLHACK_MODE_AXIS, WALLHACK_MODE_AXIS, WALLHACK_MODE_MAX);
 		std::shared_ptr<sCvar> gPlayerBoxes = std::make_shared<sCvar>("Boxes", std::vector<std::string>({ "Off", "Border", "Corner", "Border Filled", "Corner Filled", "Border 3D", "Corner 3D" }), PLAYER_BOXES_OFF, PLAYER_BOXES_OFF, PLAYER_BOXES_MAX);
@@ -68,7 +68,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gColorText = std::make_shared<sCvar>("Text", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(255), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorShadow = std::make_shared<sCvar>("Shadow", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)));
 
-		typedef struct
+		struct sTracer
 		{
 			bool bW2SSuccess;
 			int iStartTime;
@@ -76,7 +76,7 @@ namespace NeoGenesys
 			ImVec3 vHitPos3D, vStartPos3D;
 			ImVec4 cColorShadow, cColorHitMarker, cColorTracer;
 			float flAlphaShadow, flAlphaHitMarker, flAlphaTracer;
-		} sTracer;
+		};
 
 		std::vector<sTracer> vTracers;
 

@@ -57,6 +57,12 @@ namespace NeoGenesys
 			vCommands.push_back("neo_spawnbot");
 			vCommands.push_back("neo_enableai");
 			vCommands.push_back("neo_infinite");
+			vCommands.push_back("neo_godmode");
+			vCommands.push_back("neo_noclip");
+			vCommands.push_back("neo_infammo");
+			vCommands.push_back("neo_invisibile");
+			vCommands.push_back("neo_superspeed");
+			vCommands.push_back("neo_freeze");
 			vCommands.push_back("neo_disconnect");
 
 			AddLog("Ready.");
@@ -152,7 +158,13 @@ namespace NeoGenesys
 			AddLog("23. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
 			AddLog("24. neo_enableai <on|off>\n\t\tEnable/disable AI system for bots in public match (as host).");
 			AddLog("25. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
-			AddLog("26. neo_disconnect\n\t\tDisconnect from the current session.");
+			AddLog("26. neo_godmode <on|off> <all|index>\n\t\tEnable/disable player god mode (as host).");
+			AddLog("27. neo_noclip <on|off> <all|index>\n\t\tEnable/disable player no clip (as host).");
+			AddLog("28. neo_infammo <on|off> <all|index>\n\t\tEnable/disable player infinite ammo (as host).");
+			AddLog("29. neo_invisibile <on|off> <all|index>\n\t\tEnable/disable player invisibility (as host).");
+			AddLog("30. neo_superspeed <on|off> <all|index>\n\t\tEnable/disable player super speed (as host).");
+			AddLog("31. neo_freeze <on|off> <all|index>\n\t\tEnable/disable player freeze position (as host).");
+			AddLog("32. neo_disconnect\n\t\tDisconnect from the current session.");
 
 			bWriteLog = true;
 		} ImGui::SameLine();
@@ -1535,6 +1547,450 @@ namespace NeoGenesys
 
 			AddLog("Score/time limit has been set to unlimited.");
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_godmode"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bGodMode = true;
+
+						AddLog("God mode has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bGodMode = true;
+
+						AddLog("God mode has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bGodMode = false;
+
+						AddLog("God mode has been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bGodMode = false;
+
+						AddLog("God mode has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_noclip"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bNoClip = true;
+
+						AddLog("No clip has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bNoClip = true;
+
+						AddLog("No clip has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bNoClip = false;
+
+						AddLog("No clip has been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bNoClip = false;
+
+						AddLog("No clip has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_infammo"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bInfiniteAmmo = true;
+
+						AddLog("Infinite ammo has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInfiniteAmmo = true;
+
+						AddLog("Infinite ammo has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bInfiniteAmmo = false;
+
+						AddLog("Infinite ammo been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInfiniteAmmo = false;
+
+						AddLog("Infinite ammo has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_invisible"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bInvisibility = true;
+
+						AddLog("Invisibility has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInvisibility = true;
+
+						AddLog("Invisibility has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bInvisibility = false;
+
+						AddLog("Invisibility has been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInvisibility = false;
+
+						AddLog("Invisibility has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_superspeed"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bSuperSpeed = true;
+
+						AddLog("Super speed has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bSuperSpeed = true;
+
+						AddLog("Super speed has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bSuperSpeed = false;
+
+						AddLog("Super speed has been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bSuperSpeed = false;
+
+						AddLog("Super speed has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_freeze"))
+		{
+			if (CmdLine.iArgNum > 1)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bFreezePosition = true;
+
+						AddLog("Freeze position has been enabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bFreezePosition = true;
+
+						AddLog("Freeze position has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				{
+					if (!Stricmp(CmdLine.szCmdArgs[1], "all"))
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
+							_hostMenu.HostMenu.PlayerMod[i].bFreezePosition = false;
+
+						AddLog("Freeze position has been disabled for %s.", CmdLine.szCmdArgs[1]);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else if (atoi(CmdLine.szCmdArgs[1]) >= 0 && atoi(CmdLine.szCmdArgs[1]) < FindVariable("sv_maxclients")->Current.iValue)
+					{
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bFreezePosition = false;
+
+						AddLog("Freeze position has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+					}
+
+					else
+					{
+						AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+					}
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
 		}
 
 		else if (!Stricmp(CmdLine.szCmdName, "neo_disconnect"))

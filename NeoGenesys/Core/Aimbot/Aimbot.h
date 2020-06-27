@@ -12,13 +12,13 @@ namespace NeoGenesys
 	{
 	public:
 
-		typedef enum
+		enum eAimBotMode
 		{
 			AIMBOT_MODE_OFF,
 			AIMBOT_MODE_MANUAL,
 			AIMBOT_MODE_AUTO,
 			AIMBOT_MODE_MAX
-		} eAimBotMode;
+		};
 
 		std::shared_ptr<sCvar> gAimBotMode = std::make_shared<sCvar>("Mode", std::vector<std::string>({ "Off", "Manual", "Auto" }), AIMBOT_MODE_OFF, AIMBOT_MODE_OFF, AIMBOT_MODE_MAX);
 		std::shared_ptr<sCvar> gAutoZoom = std::make_shared<sCvar>("Autozoom", std::vector<std::string>(), false);

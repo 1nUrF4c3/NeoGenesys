@@ -213,7 +213,7 @@ namespace NeoGenesys
 {
 	typedef unsigned __int64 QWORD;
 	
-	typedef enum
+	enum eErrorParam
 	{
 		ERR_FATAL,
 		ERR_DROP,
@@ -224,20 +224,20 @@ namespace NeoGenesys
 		ERR_LOCALIZATION,
 		ERR_MAPLOADERRORSUMMARY,
 		ERR_MAX
-	} eErrorParam;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eSvsCMDType
 	{
 		SV_CMD_CAN_IGNORE,
 		SV_CMD_RELIABLE,
 		SV_CMD_MAX
-	} eSvsCMDType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum 
+	enum eDvarSetSource
 	{
 		DVAR_SOURCE_INTERNAL,
 		DVAR_SOURCE_EXTERNAL,
@@ -245,42 +245,42 @@ namespace NeoGenesys
 		DVAR_SOURCE_UISCRIPT,
 		DVAR_SOURCE_SERVERCMD,
 		DVAR_SOURCE_MAX,
-	} eDvarSetSource;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eWeaponIconRatio
 	{
 		WEAPON_ICON_RATIO_1TO1,
 		WEAPON_ICON_RATIO_2TO1,
 		WEAPON_ICON_RATIO_4TO1,
 		WEAPON_ICON_RATIO_MAX
-	} eWeaponIconRatio;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eTeam
 	{
 		TEAM_FREE,
 		TEAM_AXIS,
 		TEAM_ALLIES,
 		TEAM_SPECTATOR,
 		TEAM_MAX
-	} eTeam;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eTestClientType
 	{
 		TC_NONE,
 		TC_TEST_CLIENT,
 		TC_BOT,
 		TC_MAX
-	} eTestClientType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eTraceHitType
 	{
 		TRACE_HITTYPE_NONE,
 		TRACE_HITTYPE_ENTITY,
@@ -288,22 +288,22 @@ namespace NeoGenesys
 		TRACE_HITTYPE_DYNENT_BRUSH,
 		TRACE_HITTYPE_GLASS,
 		TRACE_HITTYPE_MAX
-	} eTraceHitType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum ePenetrateType
 	{
 		PENETRATE_TYPE_NONE,
 		PENETRATE_TYPE_SMALL,
 		PENETRATE_TYPE_MEDIUM,
 		PENETRATE_TYPE_LARGE,
 		PENETRATE_TYPE_MAX
-	} ePenetrateType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eWeaponType
 	{
 		WEAPTYPE_NONE,
 		WEAPTYPE_BULLET,
@@ -311,11 +311,11 @@ namespace NeoGenesys
 		WEAPTYPE_PROJECTILE,
 		WEAPTYPE_RIOTSHIELD,
 		WEAPTYPE_MAX
-	} eWeaponType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eEntityType
 	{
 		ET_GENERAL,
 		ET_PLAYER,
@@ -339,11 +339,11 @@ namespace NeoGenesys
 		ET_AGENT_CORPSE,
 		ET_EVENTS,
 		ET_MAX
-	} eEntityType;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum ePerk
 	{
 		PERK_ACCURACY,
 		PERK_FASTRELOAD,
@@ -399,11 +399,11 @@ namespace NeoGenesys
 		PERK_SILENTKILL,
 		PERK_NOSCOPEOUTLINE,
 		PREK_MAX
-	} ePerk;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eBone
 	{
 		BONE_HELMET,
 		BONE_HEAD,
@@ -423,11 +423,11 @@ namespace NeoGenesys
 		BONE_LEFT_ANKLE,
 		BONE_RIGHT_ANKLE,
 		BONE_MAX
-	} eBone;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eHitLocation
 	{
 		HITLOC_NONE,
 		HITLOC_HELMET,
@@ -448,11 +448,11 @@ namespace NeoGenesys
 		HITLOC_RIGHT_ANKLE,
 		HITLOC_LEFT_ANKLE,
 		HITLOC_MAX
-	} eHitLocation;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef enum
+	enum eWeapon
 	{
 		WEAPON_C4 = 15,
 		WEAPON_AK_12 = 38,
@@ -507,7 +507,7 @@ namespace NeoGenesys
 		WEAPON_MAVERICK_A2,
 		WEAPON_GOLD_KNIFE,
 		WEAPON_GOLD_PDW
-	} eWeapon;
+	};
 	/*
 	//=====================================================================================
 	*/
@@ -784,7 +784,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sDvar
 	{
 		LPSTR szName;
 		char _0x8[0x8];
@@ -821,20 +821,20 @@ namespace NeoGenesys
 		} Domain;
 
 		char _0x50[0x10];
-	} sDvar;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sSnapShot
 	{
 		char _0x0[0x3C78];
 		int iPing;
 		int iServerTime;
-	} sSnapShot;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sClientState
 	{
 		int iClientIndex;
 		eTeam iTeam;
@@ -847,28 +847,28 @@ namespace NeoGenesys
 		char _0x68[0x8];
 		int iPerks[2];
 		char _0x78[0x78];
-	} sClientState;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sGlobalAmmo
 	{
 		char _0x0[0x8];
 		int iAmmoCount;
 		char _0xC[0x4];
-	} sGlobalAmmo;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sClipAmmo
 	{
 		char _0x0[0x8];
 		int iAmmoCount[2];
-	} sClipAmmo;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sPlayerState
 	{
 		int iCommandTime;
 		int iMoveType;
@@ -903,11 +903,11 @@ namespace NeoGenesys
 		char _0x3398[0x5C];
 		sClientState ClientState;
 		char _0x34E4[0x584];
-	} sPlayerState;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sCG
 	{
 		sPlayerState PredictedPlayerState;
 		char _0x3A68[0xA6028];
@@ -915,11 +915,11 @@ namespace NeoGenesys
 		ImVec3 vWeaponAngles;
 		char _0xA9AA8[0x24];
 		ImVec3 vThirdPersonViewAngles;
-	} sCG;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sRefDef
 	{
 		int iWidth;
 		int iHeight;
@@ -927,11 +927,11 @@ namespace NeoGenesys
 		float flFovY;
 		ImVec3 vViewOrigin;
 		ImVec3 vViewAxis[3];
-	} sRefDef;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sCharacterInfo
 	{
 		int iEntityNum;
 		int iInfoValid;
@@ -945,22 +945,22 @@ namespace NeoGenesys
 		int iDualWielding;
 		int iIsFemale;
 		char _0x59C[0x3C];
-	} sCharacterInfo;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sTrajectory
 	{
 		int iType;
 		int iTime;
 		int iDuration;
 		ImVec3 vBase;
 		ImVec3 vDelta;
-	} sTrajectory;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sLerpEntityState
 	{
 		int iEntityFlags;
 		sTrajectory PositionTrajectory;
@@ -969,19 +969,19 @@ namespace NeoGenesys
 		int iPrimaryWeapon;
 		int iSecondaryWeapon;
 		char _0x64[0x4];
-	} sLerpEntityState;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sEntityEvent
 	{
 		int iEventType;
 		int iEventParam;
-	} sEntityEvent;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sEntityState
 	{
 		int iEntityNum;
 		int iEntityType;
@@ -1002,11 +1002,11 @@ namespace NeoGenesys
 		char _0xCC[0x8];
 		int iEventParam2;
 		char _0xD8[0x30];
-	} sEntityState;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sCEntity
 	{
 		char _0x0[0x2];
 		short wValid;
@@ -1018,11 +1018,11 @@ namespace NeoGenesys
 		sEntityState NextEntityState;
 		int iIsAlive;
 		char _0x204[0x34];
-	} sCEntity;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sGEntity
 	{
 		sEntityState EntityState;
 		char _0x108[0x60];
@@ -1033,11 +1033,11 @@ namespace NeoGenesys
 		int iHealth;
 		int iMaxHealth;
 		char _0x1E4[0x10C];
-	} sGEntity;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sUserCmd
 	{
 		int iServerTime;
 		int iButtons;
@@ -1045,11 +1045,11 @@ namespace NeoGenesys
 		char _0x14[0x8];
 		char szMove[3];
 		char _0x1F[0x1D];
-	} sUserCmd;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sClientActive
 	{
 		sUserCmd UserCmd[128];
 		int iCurrentCmd;
@@ -1058,11 +1058,11 @@ namespace NeoGenesys
 		{
 			return &UserCmd[number & 0x7F];
 		}
-	} sClientActive;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sClientInfo
 	{
 		int iClientNum;
 		char szName[32];
@@ -1074,11 +1074,11 @@ namespace NeoGenesys
 		char _0x3C[4];
 		int iHealth;
 		char _0x44[0x2C];
-	} sClientInfo;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sTrace
 	{
 		float flFraction;
 		ImVec3 vNormal;
@@ -1090,11 +1090,11 @@ namespace NeoGenesys
 		bool bAllSolid;
 		bool bStartSolid;
 		char _0x28[0x4];
-	} sTrace;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sBulletTraceResults
 	{
 		sTrace Trace;
 		char _0x2C[0x4];
@@ -1103,11 +1103,11 @@ namespace NeoGenesys
 		int iIgnoreHitEnt;
 		int iDepthSurfaceType;
 		int iHitClientNum;
-	} sBulletTraceResults;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sBulletFireParams
 	{
 		int iMaxEntNum;
 		int iEntityNum;
@@ -1118,19 +1118,19 @@ namespace NeoGenesys
 		ImVec3 vStart;
 		ImVec3 vEnd;
 		ImVec3 vDir;
-	} sBulletFireParams;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sOrientation
 	{
 		ImVec3 vOrigin;
 		ImVec3 vAxis[3];
-	} sOrientation;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sNetAddr
 	{
 		int iType;
 		char szIP[4];
@@ -1138,7 +1138,7 @@ namespace NeoGenesys
 		char _0xA[0x2];
 		int iLocalNetID;
 		int iServerID;
-	} sNetAddr;
+	};
 	/*
 	//=====================================================================================
 	*/
@@ -1157,20 +1157,20 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sWeaponDef
 	{
 		char _0x0[0x94];
 		eWeaponType iWeaponType;
 		char _0x98[0x4];
 		ePenetrateType iPenetrateType;
 		char _0x100[0x2D0];
-		LPVOID pHUDIcon;
+		LPVOID lpHUDIcon;
 		eWeaponIconRatio iHUDIconRatio;
 		char _0x37C[0x4];
-		LPVOID pPickupIcon;
+		LPVOID lpPickupIcon;
 		eWeaponIconRatio iPickupIconRatio;
 		char _0x38C[0x4];
-		LPVOID pAmmoCounterIcon;
+		LPVOID lpAmmoCounterIcon;
 		eWeaponIconRatio iAmmoCounterIconRatio;
 		char _0x39C[0x320];
 		eWeaponIconRatio iKillIconRatio;
@@ -1179,18 +1179,18 @@ namespace NeoGenesys
 		char _0xA52[0x13];
 		bool bFlipKillIcon;
 		char _0xA66[0x32];
-	} sWeaponDef;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sWeapons
 	{
 		sWeaponDef* WeaponDef[160];
-	} sWeapons;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sWeaponCompleteDef
 	{
 		LPSTR szInternalName;
 		sWeaponDef* WeaponDef;
@@ -1198,44 +1198,44 @@ namespace NeoGenesys
 		char _0x18[0x94];
 		eWeaponIconRatio iDPadIconRatio;
 		char _0xB0[0x28];
-		LPVOID pKillIcon;
-		LPVOID pDPadIcon;
+		LPVOID lpKillIcon;
+		LPVOID lpDPadIcon;
 		char _0xE8[0x40];
-	} sWeaponCompleteDef;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sCompleteWeapons
 	{
 		sWeaponCompleteDef* WeaponCompleteDef[160];
-	} sCompleteWeapons;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sWindow
 	{
 		int iWidth;
 		int iHeight;
-	} sWindow;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sViewMatrix
 	{
 		ImVec3 vRecoilAngles;
 		ImVec3 vOrigin;
 		char _0xC[0x84];
 		ImVec3 vViewAngles;
-	} sViewMatrix;
+	};
 	/*
 	//=====================================================================================
 	*/
-	typedef struct
+	struct sPunch
 	{
 		ImVec2 vPunchAngles;
 		float flVelocity;
 		ImVec3 vWeaponPunchAngles[3];
-	} sPunch;
+	};
 	/*
 	//=====================================================================================
 	*/
@@ -1244,9 +1244,9 @@ namespace NeoGenesys
 
 	static bool bGameOverlayRenderer64 = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage);
 
-	static LPVOID pPresent = bGameOverlayRenderer64 ?
-		(LPVOID)ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
-		*(LPVOID*)OFF_SWAPCHAIN;
+	static DWORD_PTR dwPresent = bGameOverlayRenderer64 ?
+		(DWORD_PTR)ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
+		*(DWORD_PTR*)OFF_SWAPCHAIN;
 	/*
 	//=====================================================================================
 	*/

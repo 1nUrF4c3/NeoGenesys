@@ -12,57 +12,57 @@ namespace NeoGenesys
 	{
 	public:
 
-		typedef enum
+		enum eBoneScan
 		{
 			BONESCAN_OFF,
 			BONESCAN_ONTIMER,
 			BONESCAN_IMMEDIATE,
 			BONESCAN_MAX
-		} eBoneScan;
+		};
 
-		typedef enum
+		enum eSortMethod
 		{
 			SORT_METHOD_DISTANCE,
 			SORT_METHOD_DAMAGE,
 			SORT_METHOD_FOV,
 			SORT_METHOD_MAX
-		} eSortMethod;
+		};
 
-		typedef enum
+		enum eRiotShield
 		{
 			RIOTSHIELD_OFF,
 			RIOTSHIELD_IGNOREPLAYER,
 			RIOTSHIELD_TARGETFEET,
 			RIOTSHIELD_MAX
-		} eRiotShield;
+		};
 
 		std::shared_ptr<sCvar> gAutoWall = std::make_shared<sCvar>("Autowall", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTargetAgents = std::make_shared<sCvar>("Target Agents", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gTargetMissiles = std::make_shared<sCvar>("Target Missiles", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gBoneScan = std::make_shared<sCvar>("Bonescan", std::vector<std::string>({ "Off", "On Timer", "Immediate" }), BONESCAN_OFF, BONESCAN_OFF, BONESCAN_MAX);
-		std::shared_ptr<sCvar> gSortMethod = std::make_shared<sCvar>("Sort Method", std::vector<std::string>({ "Distance", "Damage", "Field of View" }), SORT_METHOD_DISTANCE, SORT_METHOD_DISTANCE, SORT_METHOD_MAX - 1);
+		std::shared_ptr<sCvar> gSortMethod = std::make_shared<sCvar>("Sort Method", std::vector<std::string>({ "Distance", "Damage", "Field of View" }), SORT_METHOD_DISTANCE, SORT_METHOD_DISTANCE, SORT_METHOD_MAX);
 		std::shared_ptr<sCvar> gRiotShielders = std::make_shared<sCvar>("Riotshielders", std::vector<std::string>({ "Off", "Ignore Player", "Target Feet" }), RIOTSHIELD_OFF, RIOTSHIELD_OFF, RIOTSHIELD_MAX);
 		std::shared_ptr<sCvar> gAimBone = std::make_shared<sCvar>("Aimbone", std::vector<std::string>(), BONE_HELMET, BONE_HELMET, BONE_MAX - 1);
 		std::shared_ptr<sCvar> gAimAngle = std::make_shared<sCvar>("Aimangle", std::vector<std::string>(), 180, 1, 180);
 
-		typedef struct
+		struct sTargetInfo
 		{
 			bool bIsPriority;
 			int iIndex;
 			float flDistance = FLT_MAX, flDamage = FLT_MAX, flFOV = FLT_MAX;
-		} sTargetInfo;
+		};
 
-		typedef struct
+		struct sAntiAimTargetInfo
 		{
 			int iIndex;
 			float flDistance = FLT_MAX, flDamage = FLT_MAX, flFOV = FLT_MAX;
-		} sAntiAimTargetInfo;
+		};
 
-		typedef struct
+		struct sDamageInfo
 		{
 			float flDamage;
 			eBone iBoneIndex;
-		} sDamageInfo;
+		};
 
 		struct sEntityList
 		{

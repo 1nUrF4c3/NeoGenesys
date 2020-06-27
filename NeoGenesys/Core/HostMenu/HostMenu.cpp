@@ -158,15 +158,15 @@ namespace NeoGenesys
 			return;
 
 		bool bTeamBased = FindVariable("party_teambased")->Current.bValue;
-		LPBYTE pResult = VariadicCall<LPBYTE>(0x1402D6880);
+		LPBYTE lpResult = VariadicCall<LPBYTE>(0x1402D6880);
 
-		if (pResult[78])
+		if (lpResult[78])
 		{
 			LPVOID* v1 = VariadicCall<LPVOID*>(0x1402D6870);
 			VariadicCall<LPBYTE>(0x1402E9A60, v1);
 		}
 
-		if (!pResult[78] || !bTeamBased)
+		if (!lpResult[78] || !bTeamBased)
 		{
 			_mutex.unlock();
 			return;

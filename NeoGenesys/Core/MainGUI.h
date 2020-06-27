@@ -27,7 +27,7 @@ namespace NeoGenesys
 
 		cMainGUI() : _thunkWindowProcess(&cMainGUI::WindowProcess, this) {}
 
-		typedef enum
+		enum eMenuTab
 		{
 			MENU_TAB_AIMBOT,
 			MENU_TAB_WALLHACK,
@@ -35,7 +35,7 @@ namespace NeoGenesys
 			MENU_TAB_TWEAKS,
 			MENU_TAB_STYLES,
 			MENU_TAB_MAX
-		} eMenuTab;
+		};
 
 		std::shared_ptr<sCvar> gMenuTabs = std::make_shared<sCvar>("Menu Tab", std::vector<std::string>({ "Aimbot", "ESP", "Misc.", "Tweaks", "Styles" }), MENU_TAB_AIMBOT, MENU_TAB_AIMBOT, MENU_TAB_MAX);
 		std::shared_ptr<sCvar> gNameSpam = std::make_shared<sCvar>("Namespam", std::vector<std::string>(), false);
