@@ -427,7 +427,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	enum eHitLocation
+	enum eHitLocation : SHORT
 	{
 		HITLOC_NONE,
 		HITLOC_HELMET,
@@ -447,6 +447,10 @@ namespace NeoGenesys
 		HITLOC_LEFT_KNEE,
 		HITLOC_RIGHT_ANKLE,
 		HITLOC_LEFT_ANKLE,
+		HITLOC_GUN,
+		HITLOC_SHIELD,
+		HITLOC_ARMOR,
+		HITLOC_SOFT,
 		HITLOC_MAX
 	};
 	/*
@@ -1086,7 +1090,7 @@ namespace NeoGenesys
 		eTraceHitType TraceHitType;
 		short wHitID;
 		char _0x1E[0x6];
-		short wPartGroup;
+		eHitLocation wPartGroup;
 		bool bAllSolid;
 		bool bStartSolid;
 		char _0x28[0x4];

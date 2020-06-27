@@ -38,6 +38,7 @@ namespace NeoGenesys
 		FP_Enter.vEnd = end;
 
 		FP_Enter.vDir = end - start;
+		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
@@ -47,9 +48,12 @@ namespace NeoGenesys
 			if (iPenetrateType <= PENETRATE_TYPE_NONE)
 				return 0.0f;
 
+			if (GetTraceHitType(&TR_Enter.Trace) == entity->NextEntityState.iEntityNum)
+				return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
+
 			float flEnterDepth = 0.0f, flExitDepth = 0.0f, flSurfaceDepth = 0.0f;
 
-			ImVec3 vHitPos;
+			ImVec3 vHitPos, vTemp;
 
 			for (int iSurfaceCount = 0; bEnterHit && iSurfaceCount < 5; ++iSurfaceCount)
 			{
@@ -62,6 +66,10 @@ namespace NeoGenesys
 					return 0.0f;
 
 				vHitPos = TR_Enter.vHitPos;
+				vTemp = vHitPos - FP_Enter.vStart;
+
+				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
 					return 0.0f;
@@ -120,10 +128,16 @@ namespace NeoGenesys
 							if (!bEnterHit)
 								return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 						}
+
+						if (GetTraceHitType(&TR_Exit.Trace) == entity->NextEntityState.iEntityNum)
+							return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 					}
 				}
 
 				else if (!bEnterHit)
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
+
+				if (GetTraceHitType(&TR_Enter.Trace) == entity->NextEntityState.iEntityNum)
 					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 			}
 
@@ -201,11 +215,12 @@ namespace NeoGenesys
 		FP_Enter.vEnd = end;
 
 		FP_Enter.vDir = end - start;
+		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
-		if (TR_Enter.Trace.wPartGroup == 19)
+		if (TR_Enter.Trace.wPartGroup == HITLOC_SHIELD)
 			return 0.0f;
 
 		if (bEnterHit)
@@ -213,9 +228,12 @@ namespace NeoGenesys
 			if (iPenetrateType <= PENETRATE_TYPE_NONE)
 				return 0.0f;
 
+			if (GetTraceHitType(&TR_Enter.Trace) == entity->EntityState.iEntityNum)
+				return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+
 			float flEnterDepth = 0.0f, flExitDepth = 0.0f, flSurfaceDepth = 0.0f;
 
-			ImVec3 vHitPos;
+			ImVec3 vHitPos, vTemp;
 
 			for (int iSurfaceCount = 0; bEnterHit && iSurfaceCount < 5; ++iSurfaceCount)
 			{
@@ -228,13 +246,17 @@ namespace NeoGenesys
 					return 0.0f;
 
 				vHitPos = TR_Enter.vHitPos;
+				vTemp = vHitPos - FP_Enter.vStart;
+
+				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
 					return 0.0f;
 
 				bEnterHit = G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TR_Enter.iDepthSurfaceType);
 
-				if (TR_Enter.Trace.wPartGroup == 19)
+				if (TR_Enter.Trace.wPartGroup == HITLOC_SHIELD)
 					return 0.0f;
 
 				CopyMemory(&FP_Exit, &FP_Enter, sizeof(sBulletFireParams));
@@ -251,7 +273,7 @@ namespace NeoGenesys
 				bool bExitHit = G_BulletTrace(&FP_Exit, iWeapon, iInAltWeaponMode, pGEntity, &TR_Exit, TR_Exit.iDepthSurfaceType);
 				bool bStaticModel = (bExitHit && TR_Exit.Trace.bAllSolid) || (TR_Enter.Trace.bStartSolid && TR_Exit.Trace.bStartSolid);
 
-				if (TR_Exit.Trace.wPartGroup == 19)
+				if (TR_Exit.Trace.wPartGroup == HITLOC_SHIELD)
 					return 0.0f;
 
 				if (bExitHit || bStaticModel)
@@ -290,19 +312,25 @@ namespace NeoGenesys
 						if (_mathematics.DotProduct(vLength, vLength) > 900.0f)
 						{
 							if (!bEnterHit)
-								return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+								return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 						}
+
+						if (GetTraceHitType(&TR_Exit.Trace) == entity->EntityState.iEntityNum)
+							return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 					}
 				}
 
 				else if (!bEnterHit)
-					return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+
+				if (GetTraceHitType(&TR_Enter.Trace) == entity->EntityState.iEntityNum)
+					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 			}
 
 			return 0.0f;
 		}
 
-		return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+		return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 	}
 	/*
 	//=====================================================================================
@@ -335,11 +363,11 @@ namespace NeoGenesys
 
 		G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
 
-		if (TR_Enter.Trace.wPartGroup == 19)
+		if (TR_Enter.Trace.wPartGroup == HITLOC_SHIELD)
 			return 0.0f;
 
 		if (GetTraceHitType(&TR_Enter.Trace) == entity->EntityState.iEntityNum || TR_Enter.Trace.flFraction == 1.0f)
-			return GetRemainingDamage(&FP_Enter, &TR_Enter, (eHitLocation)TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
+			return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 		return 0.0f;
 	}
