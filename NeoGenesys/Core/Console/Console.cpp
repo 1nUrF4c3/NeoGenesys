@@ -24,7 +24,6 @@ namespace NeoGenesys
 
 		if (bFirstTime)
 		{
-			ClearLog();
 			ZeroMemory(szInput, sizeof(szInput));
 			iHistoryPos = -1;
 
