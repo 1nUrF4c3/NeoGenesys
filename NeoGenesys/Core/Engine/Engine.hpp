@@ -49,6 +49,7 @@
 #define AngleNormalize360(a) (ShortToAngle(AngleToShort((a))))
 #define AngleNormalize180(a) (((a)/360.0f-floorf((a)/360.0f+0.5f))*360.0f)
 #define AngleCompare180(a) (((a)<90.0f&&(a)>-90.0f)||((a)>270.0f||(a)<-270.0f))
+#define Dereference(a) (*reinterpret_cast<decltype(a)*>(a))
 
 #define OFF_CHATHEIGHT_DVAR 0x1419A9788
 #define OFF_CHATHEIGHT_EXCEPTION 0x14025C709
@@ -194,6 +195,10 @@
 #define OFF_SQUADMEMBERNAME 0x14459F835
 #define OFF_SQUADMEMBEREXP 0x14459F857
 #define OFF_SQUADMEMBERSIZE 0x564
+#define OFF_EXTINCTIONTEETH 0x1445A6B62
+#define OFF_EXTINCTIONPRESTIGE 0x1445A5F96
+#define OFF_EXTINCTIONRANK 0x1445A5F90
+#define OFF_EXTINCTIONEXP 0x1445A5EF4
 #define OFF_STEAMAPI 0x147D4B048
 #define OFF_STEAMNAME 0x1D2
 #define OFF_ISPRIVATEMATCH 0x147AC9E50

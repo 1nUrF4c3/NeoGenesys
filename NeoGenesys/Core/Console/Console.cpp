@@ -31,37 +31,40 @@ namespace NeoGenesys
 			vCommands.push_back("history");
 			vCommands.push_back("quit");
 
-			vCommands.push_back("neo_name");
-			vCommands.push_back("neo_namespam");
-			vCommands.push_back("neo_end");
-			vCommands.push_back("neo_crash");
-			vCommands.push_back("neo_minimap");
-			vCommands.push_back("neo_hostawall");
-			vCommands.push_back("neo_rapidfire");
-			vCommands.push_back("neo_superjump");
-			vCommands.push_back("neo_gravitygun");
-			vCommands.push_back("neo_masskill");
-			vCommands.push_back("neo_antileave");
-			vCommands.push_back("neo_bhop");
-			vCommands.push_back("neo_tbag");
-			vCommands.push_back("neo_experience");
-			vCommands.push_back("neo_prestige");
-			vCommands.push_back("neo_squadpoints");
-			vCommands.push_back("neo_unlockall");
-			vCommands.push_back("neo_resetstats");
-			vCommands.push_back("neo_hostdvar");
-			vCommands.push_back("neo_message");
-			vCommands.push_back("neo_chatspam");
-			vCommands.push_back("neo_killspam");
-			vCommands.push_back("neo_spawnbot");
-			vCommands.push_back("neo_enableai");
-			vCommands.push_back("neo_infinite");
-			vCommands.push_back("neo_godmode");
-			vCommands.push_back("neo_noclip");
-			vCommands.push_back("neo_infammo");
-			vCommands.push_back("neo_invisibile");
-			vCommands.push_back("neo_superspeed");
-			vCommands.push_back("neo_freeze");
+			vCommands.push_back("neo_name_change");
+			vCommands.push_back("neo_name_spam");
+			vCommands.push_back("neo_end_round");
+			vCommands.push_back("neo_crash_game");
+			vCommands.push_back("neo_mini_map");
+			vCommands.push_back("neo_host_autowall");
+			vCommands.push_back("neo_rapid_fire");
+			vCommands.push_back("neo_super_jump");
+			vCommands.push_back("neo_gravity_gun");
+			vCommands.push_back("neo_mass_kill");
+			vCommands.push_back("neo_anti_leave");
+			vCommands.push_back("neo_bunny_hop");
+			vCommands.push_back("neo_tea_bag");
+			vCommands.push_back("neo_experience_mp");
+			vCommands.push_back("neo_rank_ext");
+			vCommands.push_back("neo_prestige_mp");
+			vCommands.push_back("neo_prestige_ext");
+			vCommands.push_back("neo_squad_points_mp");
+			vCommands.push_back("neo_teeth_ext");
+			vCommands.push_back("neo_unlock_all");
+			vCommands.push_back("neo_reset_stats");
+			vCommands.push_back("neo_host_dvar");
+			vCommands.push_back("neo_send_message");
+			vCommands.push_back("neo_chat_spam");
+			vCommands.push_back("neo_kill_spam");
+			vCommands.push_back("neo_spawn_bots");
+			vCommands.push_back("neo_enable_ai");
+			vCommands.push_back("neo_unlimited_match");
+			vCommands.push_back("neo_god_mode");
+			vCommands.push_back("neo_no_clip");
+			vCommands.push_back("neo_infinite_ammo");
+			vCommands.push_back("neo_invisibility");
+			vCommands.push_back("neo_super_speed");
+			vCommands.push_back("neo_freeze_position");
 			vCommands.push_back("neo_disconnect");
 
 			AddLog("Ready.");
@@ -132,38 +135,41 @@ namespace NeoGenesys
 
 		if (ImGui::Button("Help", ImVec2(50, 0)))
 		{
-			AddLog("1. neo_name <name>\n\t\tChange your name.");
-			AddLog("2. neo_namespam <on|off>\n\t\tEnable/disable random name spam.");
-			AddLog("3. neo_end\n\t\tForce the current match to end.");
-			AddLog("4. neo_crash\n\t\tCrash everyone in the lobby except yourself.");
-			AddLog("5. neo_minimap <on|off>\n\t\tEnable/disable enemy blips on the minimap.");
-			AddLog("6. neo_hostawall <on|off>\n\t\tEnable/disable host autowall (as host).");
-			AddLog("7. neo_rapidfire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
-			AddLog("8. neo_superjump <on|off>\n\t\tEnable/disable super high jump (as host).");
-			AddLog("9. neo_gravitygun <on|off>\n\t\tEnable/disable gravity gun (as host).");
-			AddLog("10. neo_masskill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
-			AddLog("11. neo_antileave <off|on>\n\t\tEnable/disable player antileave (as host).");
-			AddLog("12. neo_bhop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
-			AddLog("13. neo_tbag <on|off> <message>\n\t\tEnable/disable auto tea bag on kill with optional message (as host).");
-			AddLog("14. neo_experience <all|index> <max|experience>\n\t\tSet your experience.");
-			AddLog("15. neo_prestige <max|number>\n\t\tSet your prestige.");
-			AddLog("16. neo_squadpoints <max|squadpoints>\n\t\tSet your squadpoints.");
-			AddLog("17. neo_unlockall\n\t\tUnlock everything in the game.");
-			AddLog("18. neo_resetstats\n\t\tCompletely erase your save game.");
-			AddLog("19. neo_hostdvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
-			AddLog("20. neo_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
-			AddLog("21. neo_chatspam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
-			AddLog("22. neo_killspam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
-			AddLog("23. neo_spawnbot <max|number>\n\t\tSpawn bots into the current match (as host).");
-			AddLog("24. neo_enableai <on|off>\n\t\tEnable/disable AI system for bots in public match (as host).");
-			AddLog("25. neo_infinite\n\t\tSet scorelimit and timelimit to unlimited (as host).");
-			AddLog("26. neo_godmode <on|off> <all|index>\n\t\tEnable/disable player god mode (as host).");
-			AddLog("27. neo_noclip <on|off> <all|index>\n\t\tEnable/disable player no clip (as host).");
-			AddLog("28. neo_infammo <on|off> <all|index>\n\t\tEnable/disable player infinite ammo (as host).");
-			AddLog("29. neo_invisibile <on|off> <all|index>\n\t\tEnable/disable player invisibility (as host).");
-			AddLog("30. neo_superspeed <on|off> <all|index>\n\t\tEnable/disable player super speed (as host).");
-			AddLog("31. neo_freeze <on|off> <all|index>\n\t\tEnable/disable player freeze position (as host).");
-			AddLog("32. neo_disconnect\n\t\tDisconnect from the current session.");
+			AddLog("1. neo_name_change <name>\n\t\tChange your name.");
+			AddLog("2. neo_name_spam <on|off>\n\t\tEnable/disable random name spam.");
+			AddLog("3. neo_end_round\n\t\tForce the current match to end.");
+			AddLog("4. neo_crash_game\n\t\tCrash everyone in the lobby except yourself.");
+			AddLog("5. neo_mini_map <on|off>\n\t\tEnable/disable enemy blips on the minimap.");
+			AddLog("6. neo_host_autowall <on|off>\n\t\tEnable/disable host autowall (as host).");
+			AddLog("7. neo_rapid_fire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
+			AddLog("8. neo_super_jump <on|off>\n\t\tEnable/disable super high jump (as host).");
+			AddLog("9. neo_gravity_gun <on|off>\n\t\tEnable/disable gravity gun (as host).");
+			AddLog("10. neo_mass_kill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
+			AddLog("11. neo_anti_leave <off|on>\n\t\tEnable/disable player antileave (as host).");
+			AddLog("12. neo_bunny_hop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
+			AddLog("13. neo_tea_bag <on|off> <message>\n\t\tEnable/disable auto tea bag on kill with optional message (as host).");
+			AddLog("14. neo_experience_mp <all|index> <max|experience>\n\t\tSet your experience in multiplayer.");
+			AddLog("15. neo_rank_ext <max|rank>\n\t\tSet your rank in extinction.");
+			AddLog("16. neo_prestige_mp <max|prestige>\n\t\tSet your prestige in multiplayer.");
+			AddLog("17. neo_prestige_ext <max|prestige>\n\t\tSet your prestige in extinction.");
+			AddLog("18. neo_squad_points_mp <max|squadpoints>\n\t\tSet your squadpoints in multiplayer.");
+			AddLog("19. neo_teeth_ext <max|squadpoints>\n\t\tSet your teeth in extinction.");
+			AddLog("20. neo_unlock_all\n\t\tUnlock everything in the game.");
+			AddLog("21. neo_reset_stats\n\t\tCompletely erase your save game.");
+			AddLog("22. neo_host_dvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
+			AddLog("23. neo_send_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
+			AddLog("24. neo_chat_spam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
+			AddLog("25. neo_kill_spam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
+			AddLog("26. neo_spawn_bots <max|number>\n\t\tSpawn bots into the current match (as host).");
+			AddLog("27. neo_enable_ai <on|off>\n\t\tEnable/disable AI system for bots in public match (as host).");
+			AddLog("28. neo_unlimited_match\n\t\tSet scorelimit and timelimit to unlimited (as host).");
+			AddLog("29. neo_god_mode <on|off> <all|index>\n\t\tEnable/disable player god mode (as host).");
+			AddLog("30. neo_no_clip <on|off> <all|index>\n\t\tEnable/disable player no clip (as host).");
+			AddLog("31. neo_infinite_ammo <on|off> <all|index>\n\t\tEnable/disable player infinite ammo (as host).");
+			AddLog("32. neo_invisibility <on|off> <all|index>\n\t\tEnable/disable player invisibility (as host).");
+			AddLog("33. neo_super_speed <on|off> <all|index>\n\t\tEnable/disable player super speed (as host).");
+			AddLog("34. neo_freeze_position <on|off> <all|index>\n\t\tEnable/disable player freeze position (as host).");
+			AddLog("35. neo_disconnect\n\t\tDisconnect from the current session.");
 
 			bWriteLog = true;
 		} ImGui::SameLine();
@@ -340,7 +346,7 @@ namespace NeoGenesys
 			exit(EXIT_SUCCESS);
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_name"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_name_change"))
 		{
 			char szArgBuff[512] = { NULL };
 
@@ -366,7 +372,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_namespam"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_name_spam"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -402,7 +408,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_end"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_end_round"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -412,7 +418,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_crash"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_crash_game"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -422,7 +428,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_minimap"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_mini_map"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -458,7 +464,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_hostawall"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_host_autowall"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -496,7 +502,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_rapidfire"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_rapid_fire"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -534,7 +540,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_superjump"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_super_jump"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -570,7 +576,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_gravitygun"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_gravity_gun"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -606,7 +612,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_masskill"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_mass_kill"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -662,7 +668,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_antileave"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_anti_leave"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -698,7 +704,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_bhop"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_bunny_hop"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -734,7 +740,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_tbag"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_tea_bag"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -792,7 +798,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_experience"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_experience_mp"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -866,7 +872,43 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_prestige"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_rank_ext"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "max"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONRANK = 27;
+
+					AddLog("Extinction rank has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (atoi(CmdLine.szCmdArgs[0]) >= 0 && atoi(CmdLine.szCmdArgs[0]) <= 27)
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONRANK = atoi(CmdLine.szCmdArgs[0]);
+
+					AddLog("Extinction rank has been set to %i.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_prestige_mp"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -876,7 +918,7 @@ namespace NeoGenesys
 
 					*(int*)OFF_PRESTIGE = 10;
 
-					AddLog("Prestige has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("Multiplayer prestige has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -886,7 +928,7 @@ namespace NeoGenesys
 
 					*(int*)OFF_PRESTIGE = atoi(CmdLine.szCmdArgs[0]);
 
-					AddLog("Prestige has been set to %i.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("Multiplayer prestige has been set to %i.", atoi(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -902,7 +944,43 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_squadpoints"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_prestige_ext"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "max"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONPRESTIGE = 25;
+
+					AddLog("Extinction prestige has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (atoi(CmdLine.szCmdArgs[0]) >= 0 && atoi(CmdLine.szCmdArgs[0]) <= 25)
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONPRESTIGE = atoi(CmdLine.szCmdArgs[0]);
+
+					AddLog("Extinction prestige has been set to %i.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_squad_points_mp"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -912,7 +990,7 @@ namespace NeoGenesys
 
 					*(int*)OFF_SQUADPOINTS = 99000000;
 
-					AddLog("Squad points have been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("Multiplayer squad points have been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -922,7 +1000,7 @@ namespace NeoGenesys
 
 					*(int*)OFF_SQUADPOINTS = atoi(CmdLine.szCmdArgs[0]);
 
-					AddLog("Squad points have been set to %i.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("Multiplayer squad points have been set to %i.", atoi(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -938,7 +1016,43 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_unlockall"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_teeth_ext"))
+		{
+			if (CmdLine.iArgNum > 0)
+			{
+				if (!Stricmp(CmdLine.szCmdArgs[0], "max"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONTEETH = 99000000;
+
+					AddLog("Extinction teeth have been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (atoi(CmdLine.szCmdArgs[0]) >= 0 && atoi(CmdLine.szCmdArgs[0]) <= 99000000)
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					*(int*)OFF_EXTINCTIONTEETH = atoi(CmdLine.szCmdArgs[0]);
+
+					AddLog("Extinction teeth have been set to %i.", atoi(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else
+				{
+					AddLog("%s Invalid argument(s).", PREFIX_ERROR);
+				}
+			}
+
+			else
+			{
+				AddLog("%s Missing argument(s).", PREFIX_ERROR);
+			}
+		}
+
+		else if (!Stricmp(CmdLine.szCmdName, "neo_unlock_all"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -952,7 +1066,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_resetstats"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_reset_stats"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -962,7 +1076,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_hostdvar"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_host_dvar"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -989,7 +1103,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_message"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_send_message"))
 		{
 			if (CmdLine.iArgNum > 2)
 			{
@@ -1353,7 +1467,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_chatspam"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_chat_spam"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -1406,7 +1520,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_killspam"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_kill_spam"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -1459,7 +1573,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_spawnbot"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_spawn_bots"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -1501,7 +1615,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_enableai"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_enable_ai"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -1537,7 +1651,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_infinite"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_unlimited_match"))
 		{
 			AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
@@ -1548,7 +1662,7 @@ namespace NeoGenesys
 			AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_godmode"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_god_mode"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -1622,7 +1736,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_noclip"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_no_clip"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -1696,7 +1810,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_infammo"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_infinite_ammo"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -1844,7 +1958,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_superspeed"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_super_speed"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
@@ -1918,7 +2032,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_freeze"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_freeze_position"))
 		{
 			if (CmdLine.iArgNum > 1)
 			{
