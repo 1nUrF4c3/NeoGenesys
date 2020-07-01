@@ -72,6 +72,8 @@ namespace NeoGenesys
 
 						else
 							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRELEFT : BUTTON_FIRERIGHT);
+
+						AimState.bAkimbo = !AimState.bAkimbo;
 					}
 
 					else
@@ -147,17 +149,6 @@ namespace NeoGenesys
 		{
 			_mathematics.CalculateAntiAimAngles(CEntity[AimState.iAntiAimTargetNum].vOrigin, CG->PredictedPlayerState.vOrigin, AimState.vAntiAimAngles);
 		}
-
-		AimState.iFireTMR++;
-
-		if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)))
-		{
-			if (!(AimState.iFireTMR % ((BYTE)GetViewmodelWeapon(&CG->PredictedPlayerState) == WEAPON_44_MAGNUM ? 12 : 6)))
-				AimState.bAkimbo = !AimState.bAkimbo;
-		}
-
-		else
-			AimState.bAkimbo = false;
 	}
 }
 

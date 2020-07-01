@@ -33,7 +33,7 @@ namespace NeoGenesys
 		struct sAimState
 		{
 			bool bAkimbo, bTargetAcquired, bAntiAimTargetAcquired, bIsZooming, bLockonTarget, bIsAutoAiming, bIsAutoFiring;
-			int iFireTMR, iCurrentAimTime, iCurrentAimDelay, iCurrentZoomDelay, iCurrentFireDelay, iDeltaTMR, iTargetNum, iLastTargetNum, iAntiAimTargetNum;
+			int iCurrentAimTime, iCurrentAimDelay, iCurrentZoomDelay, iCurrentFireDelay, iDeltaTMR, iTargetNum, iLastTargetNum, iAntiAimTargetNum;
 			ImVec3 vAimPosition, vAimAngles, vAntiAimAngles;
 		} AimState;
 
