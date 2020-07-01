@@ -492,9 +492,11 @@ namespace NeoGenesys
 		if (GetKeyPress(VK_INSERT, false))
 			Menu.bShowWindow = !Menu.bShowWindow;
 
-		if (GetKeyPress(VK_DELETE, false))
-			if (!LocalClientIsInGame())
-				std::thread(&cHostMenu::StartMatch, &_hostMenu).detach();
+		if (LocalClientIsInGame())
+			_packets.bIsAirStuck = GetKeyPress(VK_DELETE, true);
+
+		else if (GetKeyPress(VK_DELETE, false))
+			std::thread(&cHostMenu::StartMatch, &_hostMenu).detach();
 
 		if (GetKeyPress(VK_HOME, false))
 			_profiler.LoadProfile("");

@@ -55,7 +55,7 @@ namespace NeoGenesys
 			sUserCmd* pCurrentCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd);
 			sUserCmd* pNewCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd + 1);
 
-			if (_mainGui.GetKeyPress(VK_DELETE, true))
+			if (_packets.bIsAirStuck)
 				CopyMemory(pCurrentCmd, pOldCmd, sizeof(sUserCmd));
 
 			CopyMemory(pNewCmd, pCurrentCmd, sizeof(sUserCmd));

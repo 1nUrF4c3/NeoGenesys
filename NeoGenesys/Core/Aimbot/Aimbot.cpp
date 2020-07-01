@@ -117,7 +117,7 @@ namespace NeoGenesys
 			AimState.iCurrentAimTime = 0;
 		}
 
-		if (!AimState.bTargetAcquired)
+		if (!AimState.bTargetAcquired || _packets.bIsAirStuck)
 			AimState.iCurrentAimDelay = AimState.iCurrentZoomDelay = AimState.iCurrentFireDelay = 0;
 
 		if (AimState.iCurrentAimTime > gAutoAimTime->Current.iValue)

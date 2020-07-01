@@ -21,9 +21,13 @@ namespace NeoGenesys
 		MakeVector(CG->vRefDefViewAngles, vAngles);
 		MakeVector(vAimAngles, vAimAngles);
 
-		float flMag = VectorLength(vAngles, vAngles),
-			flDot = DotProduct(vAngles, vAimAngles),
-			flReturn = RadiansToDegrees(acosf(flDot / powf(flMag, 2.0f)));
+		ImVec2 vLengthDot
+		(
+			VectorLength(vAngles, vAngles),
+			DotProduct(vAngles, vAimAngles)
+		);
+
+		float flReturn = RadiansToDegrees(acosf(vLengthDot.y / powf(vLengthDot.x, 2.0f)));
 
 		if (isnan(flReturn))
 			flReturn = 0.0f;
@@ -245,12 +249,15 @@ namespace NeoGenesys
 	*/
 	void cMathematics::MakeVector(ImVec3 angles, ImVec3& out)
 	{
-		float flPitch = DegreesToRadians(angles.x),
-			flYaw = DegreesToRadians(angles.y);
+		ImVec2 vAngles
+		(
+			DegreesToRadians(angles.x),
+			DegreesToRadians(angles.y)
+		);
 
-		out.x = -cosf(flPitch) * -cosf(flYaw);
-		out.y = sinf(flYaw) * cosf(flPitch);
-		out.z = -sinf(flPitch);
+		out.x = -cosf(vAngles.x) * -cosf(vAngles.y);
+		out.y = sinf(vAngles.y) * cosf(vAngles.x);
+		out.z = -sinf(vAngles.x);
 	}
 	/*
 	//=====================================================================================
@@ -295,17 +302,19 @@ namespace NeoGenesys
 	{
 		ImVec3 vViewOrigin;
 		ImVec2 vDelta, vLocation;
+		ImVec2 vCosSin
+		(
+			cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y)),
+			sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y))
+		);
 
 		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-
-		float flCosYaw = cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y)),
-			flSinYaw = sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y));
 
 		vDelta.x = world.x - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.x : vViewOrigin.x);
 		vDelta.y = world.y - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.y : vViewOrigin.y);
 
-		vLocation.x = (vDelta.y * flCosYaw - vDelta.x * flSinYaw) / scale;
-		vLocation.y = (vDelta.x * flCosYaw + vDelta.y * flSinYaw) / scale;
+		vLocation.x = (vDelta.y * vCosSin.x - vDelta.x * vCosSin.y) / scale;
+		vLocation.y = (vDelta.x * vCosSin.x + vDelta.y * vCosSin.y) / scale;
 
 		if (vLocation.x < -(radarsize / 2.0f - blipsize / 2.0f - 1.0f))
 			vLocation.x = -(radarsize / 2.0f - blipsize / 2.0f - 1.0f);
@@ -326,16 +335,18 @@ namespace NeoGenesys
 	*/
 	void cMathematics::RotatePoint(ImVec3 point, ImVec3 center, float yaw, ImVec3& out)
 	{
-		ImVec2 vDifference;
+		ImVec2 vDelta;
+		ImVec2 vCosSin
+		(
+			cosf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE),
+			sinf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE)
+		);
 
-		float flAngleCos = cosf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE),
-			flAngleSin = sinf(((-yaw + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE);
+		vDelta.x = point.x - center.x;
+		vDelta.y = point.y - center.y;
 
-		vDifference.x = point.x - center.x;
-		vDifference.y = point.y - center.y;
-
-		out.x = center.x + flAngleSin * vDifference.x - flAngleCos * vDifference.y;
-		out.y = center.y + flAngleCos * vDifference.x + flAngleSin * vDifference.y;
+		out.x = center.x + vCosSin.y * vDelta.x - vCosSin.x * vDelta.y;
+		out.y = center.y + vCosSin.x * vDelta.x + vCosSin.y * vDelta.y;
 		out.z = point.z;
 	}
 	/*
