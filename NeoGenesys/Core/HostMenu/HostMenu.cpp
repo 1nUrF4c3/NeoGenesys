@@ -92,7 +92,7 @@ namespace NeoGenesys
 		{
 			if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 			{
-				if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
+				if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
 				{
 					HostMenu.iGravityGunNum = -1;
 
@@ -107,7 +107,7 @@ namespace NeoGenesys
 					}
 				}
 
-				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < MAX_CLIENTS && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
+				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
 				{
 					ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
 					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;

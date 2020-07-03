@@ -35,7 +35,6 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)Detours\Include;$(ProjectDir)VMProtect\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)Detours\Lib\x64;$(ProjectDir)VMProtect\Lib\x64;$(LibraryPath)</LibraryPath>
-    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

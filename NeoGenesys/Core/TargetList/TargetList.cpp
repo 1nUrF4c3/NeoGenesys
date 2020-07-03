@@ -30,13 +30,8 @@ namespace NeoGenesys
 			if (!EntityIsValid(i))
 				continue;
 
-			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER || CEntity[i].NextEntityState.iEntityType == ET_AGENT)
+			if (i < FindVariable("sv_maxclients")->Current.iValue)
 			{
-				LPVOID lpDObj = GetEntityDObj(i);
-
-				if (!lpDObj)
-					continue;
-
 				if (_targetList.Priorities[i].bIsPrioritized && !_targetList.Priorities[i].bIsIgnored)
 				{
 					AntiAimTargetInfo.iIndex = i;
@@ -47,6 +42,14 @@ namespace NeoGenesys
 
 					vAntiAimTargetInfo.push_back(AntiAimTargetInfo);
 				}
+			}
+
+			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER || CEntity[i].NextEntityState.iEntityType == ET_AGENT)
+			{
+				LPVOID lpDObj = GetEntityDObj(i);
+
+				if (!lpDObj)
+					continue;
 
 				ImVec3 vMinTemp = { FLT_MAX, FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 

@@ -49,7 +49,7 @@
 #define AngleNormalize360(a) (ShortToAngle(AngleToShort((a))))
 #define AngleNormalize180(a) (((a)/360.0f-floorf((a)/360.0f+0.5f))*360.0f)
 #define AngleCompare180(a) (((a)<90.0f&&(a)>-90.0f)||((a)>270.0f||(a)<-270.0f))
-#define Dereference(a) (*reinterpret_cast<decltype(a)*>(a))
+#define Dereference(a) (*(decltype(a)*)(a))
 
 #define OFF_CHATHEIGHT_DVAR 0x1419A9788
 #define OFF_CHATHEIGHT_EXCEPTION 0x14025C709

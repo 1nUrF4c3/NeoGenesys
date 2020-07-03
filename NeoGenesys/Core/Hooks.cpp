@@ -106,13 +106,7 @@ namespace NeoGenesys
 		{
 			if (gPlayerBulletTracers->Current.bValue)
 			{
-				if (sourcenum == CG->PredictedPlayerState.iClientNum &&
-					_targetList.EntityIsEnemy(targetnum) &&
-					_aimBot.AimState.bIsAutoFiring &&
-					(CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER ||
-					(_targetList.gTargetMissiles->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_MISSILE &&
-					(CEntity[targetnum].NextEntityState.iWeapon == WEAPON_C4 || CEntity[targetnum].NextEntityState.iWeapon == WEAPON_IED)) ||
-					(_targetList.gTargetAgents->Current.bValue && CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT)))
+				if (sourcenum == CG->PredictedPlayerState.iClientNum && targetnum < FindVariable("sv_maxclients")->Current.iValue)
 				{
 					ImVec3 vTracerStart;
 					GetPlayerViewOrigin(&CG->PredictedPlayerState, &vTracerStart);
