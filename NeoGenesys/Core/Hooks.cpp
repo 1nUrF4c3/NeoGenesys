@@ -106,7 +106,7 @@ namespace NeoGenesys
 		{
 			if (gPlayerBulletTracers->Current.bValue)
 			{
-				if (sourcenum == CG->PredictedPlayerState.iClientNum && targetnum < FindVariable("sv_maxclients")->Current.iValue)
+				if (sourcenum == CG->PredictedPlayerState.iClientNum && (CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER || CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT))
 				{
 					ImVec3 vTracerStart;
 					GetPlayerViewOrigin(&CG->PredictedPlayerState, &vTracerStart);

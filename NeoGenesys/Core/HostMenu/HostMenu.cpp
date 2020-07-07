@@ -344,8 +344,8 @@ namespace NeoGenesys
 			GetWeaponNameComplete(WeaponID, false, szComplete, 1024);
 			GetWeaponDisplayName(WeaponID, false, szDisplay, 1024);
 
-			HostMenu.vWeaponCompleteNames.push_back(VariadicText(acut::StripColorCodes(szComplete)));
-			HostMenu.vWeaponDisplayNames.push_back(VariadicText(acut::StripColorCodes(szDisplay)));
+			HostMenu.vWeaponCompleteNames.push_back(_strdup(acut::StripColorCodes(szComplete).c_str()));
+			HostMenu.vWeaponDisplayNames.push_back(_strdup(acut::StripColorCodes(szDisplay).c_str()));
 		}
 
 		if (ImGui::Combo("Weapon", &HostMenu.iWeaponID, HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size()))

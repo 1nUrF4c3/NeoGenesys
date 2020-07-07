@@ -40,7 +40,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gMenuTabs = std::make_shared<sCvar>("Menu Tab", std::vector<std::string>({ "Aimbot", "ESP", "Misc.", "Tweaks", "Styles" }), MENU_TAB_AIMBOT, MENU_TAB_AIMBOT, MENU_TAB_MAX);
 		std::shared_ptr<sCvar> gNameSpam = std::make_shared<sCvar>("Namespam", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gChatSpam = std::make_shared<sCvar>("Chatspam", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gChatSpamMessage = std::make_shared<sCvar>("Chatspam Message", std::vector<std::string>(), VariadicText(""));
+		std::shared_ptr<sCvar> gChatSpamMessage = std::make_shared<sCvar>("Chatspam Message", std::vector<std::string>(), _strdup(""));
 
 		bool bInitialized = false;
 

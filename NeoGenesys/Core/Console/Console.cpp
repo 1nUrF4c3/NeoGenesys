@@ -153,7 +153,7 @@ namespace NeoGenesys
 			AddLog("16. neo_prestige_mp <max|prestige>\n\t\tSet your prestige in multiplayer.");
 			AddLog("17. neo_prestige_ext <max|prestige>\n\t\tSet your prestige in extinction.");
 			AddLog("18. neo_squad_points_mp <max|squadpoints>\n\t\tSet your squadpoints in multiplayer.");
-			AddLog("19. neo_teeth_ext <max|squadpoints>\n\t\tSet your teeth in extinction.");
+			AddLog("19. neo_teeth_ext <max|teeth>\n\t\tSet your teeth in extinction.");
 			AddLog("20. neo_unlock_all\n\t\tUnlock everything in the game.");
 			AddLog("21. neo_reset_stats\n\t\tCompletely erase your save game.");
 			AddLog("22. neo_host_dvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
@@ -757,7 +757,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_hooks.gTeaBagMessage->Current.szValue = VariadicText(szTeaBagMessage);
+						_hooks.gTeaBagMessage->Current.szValue = Strdup(szTeaBagMessage);
 						_hooks.gTeaBag->Current.bValue = true;
 
 						AddLog("Auto tea bag has been enabled with message \"%s.\"", szTeaBagMessage);
@@ -779,7 +779,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hooks.gTeaBagMessage->Current.szValue = VariadicText("");
+					_hooks.gTeaBagMessage->Current.szValue = Strdup("");
 					_hooks.gTeaBag->Current.bValue = false;
 
 					AddLog("Auto tea bag has been disabled.");
@@ -1484,7 +1484,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_mainGui.gChatSpamMessage->Current.szValue = VariadicText(szChatSpam);
+						_mainGui.gChatSpamMessage->Current.szValue = Strdup(szChatSpam);
 						_mainGui.gChatSpam->Current.bValue = true;
 
 						AddLog("Custom chatspam message \"%s\" has been enabled.", szChatSpam);
@@ -1501,7 +1501,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_mainGui.gChatSpamMessage->Current.szValue = VariadicText("");
+					_mainGui.gChatSpamMessage->Current.szValue = Strdup("");
 					_mainGui.gChatSpam->Current.bValue = false;
 
 					AddLog("Custom chatspam message has been disabled.");
@@ -1537,7 +1537,7 @@ namespace NeoGenesys
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_hooks.gKillSpamMessage->Current.szValue = VariadicText(szKillSpam);
+						_hooks.gKillSpamMessage->Current.szValue = Strdup(szKillSpam);
 						_hooks.gKillSpam->Current.bValue = true;
 
 						AddLog("Custom killspam message \"%s\" has been enabled.", szKillSpam);
@@ -1554,7 +1554,7 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hooks.gKillSpamMessage->Current.szValue = VariadicText("");
+					_hooks.gKillSpamMessage->Current.szValue = Strdup("");
 					_hooks.gKillSpam->Current.bValue = false;
 
 					AddLog("Custom killspam message has been disabled.");
