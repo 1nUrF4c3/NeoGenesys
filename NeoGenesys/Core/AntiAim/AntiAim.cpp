@@ -73,7 +73,7 @@ namespace NeoGenesys
 		else if (gAntiAim->Current.iValue == ANTIAIM_REVERSED)
 		{
 
-			if (_aimBot.AimState.bAntiAimTargetAcquired || _aimBot.AimState.bIsAutoAiming)
+			if (_aimBot.AimState.bTargetAcquired || _aimBot.AimState.bAntiAimTargetAcquired)
 			{
 				vAntiAimAngles.x = _aimBot.AimState.vAntiAimAngles.x;
 				vAntiAimAngles.y = _aimBot.AimState.vAntiAimAngles.y;
