@@ -49,18 +49,18 @@ namespace NeoGenesys
 		{
 			bool bIsPriority;
 			int iIndex;
-			float flDistance = FLT_MAX, flDamage = FLT_MAX, flFOV = FLT_MAX;
+			float flDistance = FLT_MAX, flDamage = -FLT_MAX, flFOV = FLT_MAX;
 		};
 
 		struct sAntiAimTargetInfo
 		{
 			int iIndex;
-			float flDistance = FLT_MAX, flDamage = FLT_MAX, flFOV = FLT_MAX;
+			float flDistance = FLT_MAX, flDamage = -FLT_MAX, flFOV = FLT_MAX;
 		};
 
 		struct sDamageInfo
 		{
-			float flDamage;
+			float flDamage = -FLT_MAX;
 			eBone iBoneIndex;
 		};
 
@@ -69,7 +69,7 @@ namespace NeoGenesys
 			bool bIsValid, bW2SSuccess, bAimFeet, bIsVisible;
 			eBone iBoneIndex, iLastBone;
 			std::string szWeapon;
-			float flDamage;
+			float flDistance, flDamage, flFOV;
 			ImVec2 vBones2D[BONE_MAX], vCorners2D[8], vCenter2D, vPosition, vDimentions, vLower, vUpper;
 			ImVec3 vBones3D[BONE_MAX], vCorners3D[8], vCenter3D, vHitLocation;
 			ImVec4 cColor;

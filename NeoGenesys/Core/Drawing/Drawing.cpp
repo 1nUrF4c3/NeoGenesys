@@ -517,8 +517,7 @@ namespace NeoGenesys
 
 			if (Tracer->cColorShadow.w <= 0.0f && Tracer->cColorHitMarker.w <= 0.0f && Tracer->cColorTracer.w <= 0.0f)
 			{
-				Tracer = vTracers.erase(Tracer);
-				Tracer--;
+				Tracer = vTracers.erase(Tracer) - 1;
 			}
 		}
 	}

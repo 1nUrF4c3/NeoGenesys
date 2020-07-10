@@ -144,11 +144,6 @@ namespace NeoGenesys
 			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAimAngles);
 			_mathematics.CalculateAntiAimAngles(CEntity[AimState.iTargetNum].vOrigin, CG->PredictedPlayerState.vOrigin, AimState.vAntiAimAngles);
 		}
-
-		if (AimState.bAntiAimTargetAcquired)
-		{
-			_mathematics.CalculateAntiAimAngles(CEntity[AimState.iAntiAimTargetNum].vOrigin, CG->PredictedPlayerState.vOrigin, AimState.vAntiAimAngles);
-		}
 	}
 }
 

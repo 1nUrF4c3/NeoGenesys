@@ -27,22 +27,12 @@ namespace NeoGenesys
 			EntityList[i].bIsValid = false;
 			EntityList[i].bAimFeet = false;
 
+			EntityList[i].flDistance = FLT_MAX;
+			EntityList[i].flDamage = 0.0f;
+			EntityList[i].flFOV = FLT_MAX;
+
 			if (!EntityIsValid(i))
 				continue;
-
-			if (i < FindVariable("sv_maxclients")->Current.iValue)
-			{
-				if (_targetList.Priorities[i].bIsPrioritized && !_targetList.Priorities[i].bIsIgnored)
-				{
-					AntiAimTargetInfo.iIndex = i;
-
-					AntiAimTargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
-					AntiAimTargetInfo.flDamage = EntityList[i].flDamage;
-					AntiAimTargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
-
-					vAntiAimTargetInfo.push_back(AntiAimTargetInfo);
-				}
-			}
 
 			if (CEntity[i].NextEntityState.iEntityType == ET_PLAYER || CEntity[i].NextEntityState.iEntityType == ET_AGENT)
 			{
@@ -135,7 +125,7 @@ namespace NeoGenesys
 			if (!(CEntity[i].NextEntityState.iEntityType == ET_PLAYER ||
 				(gTargetMissiles->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_MISSILE &&
 				(CEntity[i].NextEntityState.iWeapon == WEAPON_C4 || CEntity[i].NextEntityState.iWeapon == WEAPON_IED)) ||
-					(gTargetAgents->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_AGENT)))
+				(gTargetAgents->Current.bValue && CEntity[i].NextEntityState.iEntityType == ET_AGENT)))
 				continue;
 
 			ImVec3 vDirection, vAngles, vDelta;
@@ -223,6 +213,9 @@ namespace NeoGenesys
 				EntityList[i].vHitLocation = CEntity[i].vOrigin;
 			}
 
+			EntityList[i].flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+			EntityList[i].flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+
 			if (i < FindVariable("sv_maxclients")->Current.iValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				if (GEntity[i].iHealth < 1)
 					continue;
@@ -241,7 +234,9 @@ namespace NeoGenesys
 
 			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Current.iValue)
 			{
-				TargetInfo.bIsPriority = _targetList.Priorities[i].bIsPrioritized;
+				if (i < FindVariable("sv_maxclients")->Current.iValue)
+					TargetInfo.bIsPriority = _targetList.Priorities[i].bIsPrioritized;
+
 				TargetInfo.iIndex = i;
 
 				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
@@ -294,32 +289,6 @@ namespace NeoGenesys
 			}
 
 			vTargetInfo.clear();
-		}
-
-		if (!vAntiAimTargetInfo.empty())
-		{
-			if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
-			{
-				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDistance < b.flDistance; });
-
-				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
-			}
-
-			else if (gSortMethod->Current.iValue == SORT_METHOD_DAMAGE)
-			{
-				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDamage > b.flDamage; });
-
-				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
-			}
-
-			else if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
-			{
-				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flFOV < b.flFOV; });
-
-				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
-			}
-
-			vAntiAimTargetInfo.clear();
 		}
 
 		iCounter++;
@@ -418,6 +387,7 @@ namespace NeoGenesys
 
 		sDamageInfo DamageInfo;
 		std::vector<sDamageInfo> vDamageInfo;
+		std::vector<sDamageInfo> vDamageInfoFinal;
 		std::vector<std::future<bool>> vIsVisible(BONE_MAX);
 
 		if (bonescan)
@@ -425,14 +395,17 @@ namespace NeoGenesys
 			for (auto& Bone : vBones)
 			{
 				vIsVisible[Bone.first.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage);
+
+				DamageInfo.iBoneIndex = Bone.first.first;
+
+				vDamageInfo.push_back(DamageInfo);
 			}
 
 			for (auto& Bone : vBones)
 			{
 				if (vIsVisible[Bone.first.first].get())
 				{
-					DamageInfo.iBoneIndex = Bone.first.first;
-					vDamageInfo.push_back(DamageInfo);
+					vDamageInfoFinal.push_back(vDamageInfo[Bone.first.first]);
 
 					bReturn = true;
 				}
@@ -444,16 +417,15 @@ namespace NeoGenesys
 			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].first.second, autowall, damage).get();
 		}
 
-		if (!vDamageInfo.empty())
+		if (!vDamageInfoFinal.empty())
 		{
-			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
+			std::stable_sort(vDamageInfoFinal.begin(), vDamageInfoFinal.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
 
-			index = vDamageInfo.front().iBoneIndex;
+			if (damage) *damage = vDamageInfoFinal.front().flDamage;
 
-			if (damage)
-				*damage = vDamageInfo.front().flDamage;
+			index = vDamageInfoFinal.front().iBoneIndex;
 
-			vDamageInfo.clear();
+			vDamageInfoFinal.clear();
 		}
 
 		return bReturn;
