@@ -21,7 +21,7 @@ namespace NeoGenesys
 		void AngleVectors(ImVec3 angles, ImVec3& forward, ImVec3& right, ImVec3& up);
 		void VectorNormalize(ImVec3& direction);
 		void ClampAngles(ImVec3& angles);
-		void ClampMove(char value[]);
+		char ClampMove(char value);
 		void CalculateAimAngles(ImVec3 start, ImVec3 end, ImVec3& angles);
 		void CalculateAntiAimAngles(ImVec3 start, ImVec3 end, ImVec3& angles);
 		void MakeVector(ImVec3 angles, ImVec3& out);
