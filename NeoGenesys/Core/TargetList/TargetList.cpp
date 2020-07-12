@@ -235,7 +235,7 @@ namespace NeoGenesys
 			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Current.iValue)
 			{
 				if (i < FindVariable("sv_maxclients")->Current.iValue)
-					TargetInfo.bIsPriority = _targetList.Priorities[i].bIsPrioritized;
+					TargetInfo.bIsPriority = Priorities[i].bIsPrioritized;
 
 				TargetInfo.iIndex = i;
 
