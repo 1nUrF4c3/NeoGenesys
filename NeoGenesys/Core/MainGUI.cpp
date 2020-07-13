@@ -643,9 +643,7 @@ namespace NeoGenesys
 				bInitialized = false;
 			}
 
-			static int iTime = Sys_Milliseconds();
-
-			if (Sys_Milliseconds() - iTime > max(*(int*)OFF_FRAMETIME, *(int*)OFF_PING))
+			if (SpamTimer.Ready())
 			{
 				if (LocalClientIsInGame() && !IsMigrating() && CG->PredictedPlayerState.iOtherFlags & 0x4000)
 				{
@@ -663,7 +661,7 @@ namespace NeoGenesys
 					}
 				}
 
-				iTime = Sys_Milliseconds();
+				SpamTimer.Wait(max(*(int*)OFF_FRAMETIME, *(int*)OFF_PING));
 			}
 		}
 	}

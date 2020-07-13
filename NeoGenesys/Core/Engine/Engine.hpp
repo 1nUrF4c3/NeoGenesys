@@ -1933,6 +1933,28 @@ namespace NeoGenesys
 	{
 		*(int*)((DWORD_PTR)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) &= ~(0x1 << (perk & 0x1F));
 	}
+	/*
+	//=====================================================================================
+	*/
+	struct sTimer
+	{
+	private:
+
+		int iTick = 0, iWait = 0;
+
+	public:
+
+		bool Ready()
+		{
+			return ((Sys_Milliseconds() - iTick) >= iWait);
+		};
+
+		void Wait(int timeout)
+		{
+			iTick = Sys_Milliseconds();
+			iWait = timeout;
+		};
+	};
 }
 
 //=====================================================================================

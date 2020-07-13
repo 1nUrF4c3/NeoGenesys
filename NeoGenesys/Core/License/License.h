@@ -15,14 +15,16 @@ namespace NeoGenesys
 	class cLicense
 	{
 	public:
-		cLicense() : _threadCheckLicense(&cLicense::CheckLicense, this) {}
+		cLicense() : _threadAuthenticate(&cLicense::Authenticate, this) {}
+
+		sTimer License;
 
 		std::string HttpRequest(std::string url, std::string file);
 		std::string GetHwid();
-		void CheckLicense();
+		void Authenticate();
 
 		std::vector<std::string> vHwidList;
-		std::thread _threadCheckLicense;
+		std::thread _threadAuthenticate;
 	} extern _license;
 }
 

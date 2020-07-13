@@ -172,7 +172,7 @@ namespace NeoGenesys
 			{
 				if (gTeaBag->Current.bValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				{
-					_packets.iTeaBagTime = Sys_Milliseconds();
+					_packets.TeaBagTimer.Wait(3000);
 					_packets.vTeaBagPos = PlayerState[entitystate->iOtherEntityNum].vOrigin;
 
 					std::string szTeaBag = gTeaBagMessage->Current.szValue;

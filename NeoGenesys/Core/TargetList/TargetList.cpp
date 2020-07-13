@@ -28,7 +28,7 @@ namespace NeoGenesys
 			EntityList[i].bAimFeet = false;
 
 			EntityList[i].flDistance = FLT_MAX;
-			EntityList[i].flDamage = 0.0f;
+			EntityList[i].flDamage = -FLT_MAX;
 			EntityList[i].flFOV = FLT_MAX;
 
 			if (!EntityIsValid(i))
@@ -209,7 +209,7 @@ namespace NeoGenesys
 
 			else
 			{
-				EntityList[i].bIsVisible = std::async(&cTargetList::IsVisibleInternal, this, &CEntity[i], CEntity[i].vOrigin, HITLOC_NONE, gAutoWall->Current.bValue, nullptr).get();
+				EntityList[i].bIsVisible = IsVisibleInternal(&CEntity[i], CEntity[i].vOrigin, HITLOC_NONE, gAutoWall->Current.bValue, NULL);
 				EntityList[i].vHitLocation = CEntity[i].vOrigin;
 			}
 
@@ -387,25 +387,16 @@ namespace NeoGenesys
 
 		sDamageInfo DamageInfo;
 		std::vector<sDamageInfo> vDamageInfo;
-		std::vector<sDamageInfo> vDamageInfoFinal;
 		std::vector<std::future<bool>> vIsVisible(BONE_MAX);
 
 		if (bonescan)
 		{
 			for (auto& Bone : vBones)
 			{
-				vIsVisible[Bone.first.first] = std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage);
-
-				DamageInfo.iBoneIndex = Bone.first.first;
-
-				vDamageInfo.push_back(DamageInfo);
-			}
-
-			for (auto& Bone : vBones)
-			{
-				if (vIsVisible[Bone.first.first].get())
+				if (IsVisibleInternal(entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage))
 				{
-					vDamageInfoFinal.push_back(vDamageInfo[Bone.first.first]);
+					DamageInfo.iBoneIndex = Bone.first.first;
+					vDamageInfo.push_back(DamageInfo);
 
 					bReturn = true;
 				}
@@ -414,18 +405,17 @@ namespace NeoGenesys
 
 		else
 		{
-			return std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[index], vBones[index].first.second, autowall, damage).get();
+			return IsVisibleInternal(entity, bones3d[index], vBones[index].first.second, autowall, damage);
 		}
 
-		if (!vDamageInfoFinal.empty())
+		if (!vDamageInfo.empty())
 		{
-			std::stable_sort(vDamageInfoFinal.begin(), vDamageInfoFinal.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
+			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
 
-			if (damage) *damage = vDamageInfoFinal.front().flDamage;
+			if (damage) *damage = vDamageInfo.front().flDamage;
+			index = vDamageInfo.front().iBoneIndex;
 
-			index = vDamageInfoFinal.front().iBoneIndex;
-
-			vDamageInfoFinal.clear();
+			vDamageInfo.clear();
 		}
 
 		return bReturn;

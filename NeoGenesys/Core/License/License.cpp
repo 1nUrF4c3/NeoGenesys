@@ -79,28 +79,31 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cLicense::CheckLicense()
+	void cLicense::Authenticate()
 	{
 		while (true)
 		{
-			vHwidList.clear();
-
-			std::string szLine;
-			std::stringstream szStream;
-
-			szStream << HttpRequest(VMProtectDecryptString("www.pastebin.com"), VMProtectDecryptString("/raw/tCxFhwnd"));
-
-			while (std::getline(szStream, szLine))
+			if (License.Ready())
 			{
-				vHwidList.push_back(szLine);
-			}
+				vHwidList.clear();
 
-			if (std::find_if(vHwidList.begin(), vHwidList.end(), [&](const std::string& hwid) { return !strncmp(hwid.c_str(), GetHwid().c_str(), GetHwid().length()); }) == vHwidList.end())
-			{
-				exit(EXIT_FAILURE);
-			}
+				std::string szLine;
+				std::stringstream szStream;
 
-			Sleep(60000);
+				szStream << HttpRequest(VMProtectDecryptString("www.pastebin.com"), VMProtectDecryptString("/raw/tCxFhwnd"));
+
+				while (std::getline(szStream, szLine))
+				{
+					vHwidList.push_back(acut::FindAndEraseString(szLine, "\r"));
+				}
+
+				if (std::find_if(vHwidList.begin(), vHwidList.end(), [&](const std::string& hwid) { return !GetHwid().compare(hwid); }) == vHwidList.end())
+				{
+					exit(EXIT_FAILURE);
+				}
+
+				License.Wait(60000);
+			}
 		}
 	}
 }

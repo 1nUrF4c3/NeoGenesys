@@ -15,8 +15,9 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gBunnyHop = std::make_shared<sCvar>("Bunny Hop", std::vector<std::string>(), false);
 
 		bool bIsAirStuck;
-		int iTeaBagTime = -3000;
 		ImVec3 vTeaBagPos;
+
+		sTimer TeaBagTimer;
 
 		void WritePacket(sUserCmd* usercmd);
 		void PredictPlayerState(sUserCmd* usercmd);
