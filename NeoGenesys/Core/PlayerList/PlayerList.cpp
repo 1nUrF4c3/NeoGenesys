@@ -17,7 +17,7 @@ namespace NeoGenesys
 		}
 
 		ImGui::SetNextWindowSize(ImVec2(400.0f, 440.0f));
-		ImGui::Begin("PLAYER LIST", &PlayerList.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+		ImGui::Begin("PLAYER LIST", &gPlayerList->Current.bValue, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 		ImGui::BeginChild("ContentRegion", ImVec2(0.0f, 0.0f), true);
 
 		ImGui::Columns(3, "PlayerList");

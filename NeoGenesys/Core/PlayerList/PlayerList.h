@@ -12,9 +12,11 @@ namespace NeoGenesys
 	{
 	public:
 
+		std::shared_ptr<sCvar> gPlayerList = std::make_shared<sCvar>("Player List", std::vector<std::string>(), false);
+
 		struct sPlayerList
 		{
-			bool bShowWindow = false, bWriteLog = false;
+			bool bWriteLog = false;
 			sNetAddr NetAddr[MAX_CLIENTS];
 		} PlayerList;
 

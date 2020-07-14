@@ -49,6 +49,10 @@ namespace NeoGenesys
 			XML.set("NeoGenesys.Miscellaneous.CrossHair", _drawing.gPlayerCrossHair->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Compass", _drawing.gPlayerCompass->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Radar", _drawing.gPlayerRadar->Current.bValue);
+			XML.set("NeoGenesys.Miscellaneous.Console", _mainGui.gConsole->Current.bValue);
+			XML.set("NeoGenesys.Miscellaneous.PlayerList", _playerList.gPlayerList->Current.bValue);
+			XML.set("NeoGenesys.Miscellaneous.HostMenu", _hostMenu.gHostMenu->Current.bValue);
+			XML.set("NeoGenesys.Miscellaneous.MemoryEditor", _mainGui.gMemoryEditor->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.RiotShield", _targetList.gRiotShielders->Current.iValue);
 
 			XML.set("NeoGenesys.Tweaks.AimBone", _targetList.gAimBone->Current.iValue);
@@ -154,6 +158,10 @@ namespace NeoGenesys
 			XML.get_if_present("NeoGenesys.Miscellaneous.CrossHair", _drawing.gPlayerCrossHair->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Compass", _drawing.gPlayerCompass->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Radar", _drawing.gPlayerRadar->Current.bValue);
+			XML.get_if_present("NeoGenesys.Miscellaneous.Console", _mainGui.gConsole->Current.bValue);
+			XML.get_if_present("NeoGenesys.Miscellaneous.PlayerList", _playerList.gPlayerList->Current.bValue);
+			XML.get_if_present("NeoGenesys.Miscellaneous.HostMenu", _hostMenu.gHostMenu->Current.bValue);
+			XML.get_if_present("NeoGenesys.Miscellaneous.MemoryEditor", _mainGui.gMemoryEditor->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.RiotShield", _targetList.gRiotShielders->Current.iValue);
 
 			XML.get_if_present("NeoGenesys.Tweaks.AimBone", _targetList.gAimBone->Current.iValue);
@@ -241,6 +249,10 @@ namespace NeoGenesys
 		_drawing.gPlayerCrossHair->Current.bValue = _drawing.gPlayerCrossHair->Reset.bValue;
 		_drawing.gPlayerCompass->Current.bValue = _drawing.gPlayerCompass->Reset.bValue;
 		_drawing.gPlayerRadar->Current.bValue = _drawing.gPlayerRadar->Reset.bValue;
+		_mainGui.gConsole->Current.bValue = _mainGui.gConsole->Reset.bValue;
+		_playerList.gPlayerList->Current.bValue = _playerList.gPlayerList->Reset.bValue;
+		_hostMenu.gHostMenu->Current.bValue = _hostMenu.gHostMenu->Reset.bValue;
+		_mainGui.gMemoryEditor->Current.bValue = _mainGui.gMemoryEditor->Reset.bValue;
 		_targetList.gRiotShielders->Current.iValue = _targetList.gRiotShielders->Reset.iValue;
 
 		_mainGui.gNameSpam->Current.bValue = _mainGui.gNameSpam->Reset.bValue;

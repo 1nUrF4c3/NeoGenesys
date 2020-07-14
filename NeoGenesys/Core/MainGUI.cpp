@@ -217,22 +217,22 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox("Console", &Menu.bShowConsole))
+			if (ImGui::Checkbox(gConsole->szName.c_str(), &gConsole->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox("Player List", &_playerList.PlayerList.bShowWindow))
+			if (ImGui::Checkbox(_playerList.gPlayerList->szName.c_str(), &_playerList.gPlayerList->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			if (ImGui::Checkbox("Host Menu", &_hostMenu.HostMenu.bShowWindow))
+			if (ImGui::Checkbox(_hostMenu.gHostMenu->szName.c_str(), &_hostMenu.gHostMenu->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
 
-			if (ImGui::Checkbox("Memory Editor", &Menu.bShowMemoryEditor))
+			if (ImGui::Checkbox(gMemoryEditor->szName.c_str(), &gMemoryEditor->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine(); ImGui::Separator(); ImGui::NewLine();
@@ -615,16 +615,16 @@ namespace NeoGenesys
 			{
 				DrawMainGUI();
 
-				if (Menu.bShowMemoryEditor)
-					Menu.MemEdit.DrawMemoryEditor(&Menu.bShowMemoryEditor, hIw6mp64_ship.lpBaseOfDll, hIw6mp64_ship.SizeOfImage, (size_t)hIw6mp64_ship.lpBaseOfDll);
+				if (gMemoryEditor->Current.bValue)
+					Menu.MemEdit.DrawMemoryEditor(&gMemoryEditor->Current.bValue, hIw6mp64_ship.lpBaseOfDll, hIw6mp64_ship.SizeOfImage, (size_t)hIw6mp64_ship.lpBaseOfDll);
 
-				if (Menu.bShowConsole)
-					_console.DrawConsole(&Menu.bShowConsole);
+				if (gConsole->Current.bValue)
+					_console.DrawConsole(&gConsole->Current.bValue);
 
-				if (_playerList.PlayerList.bShowWindow && LocalClientIsInGame())
+				if (_playerList.gPlayerList->Current.bValue && LocalClientIsInGame())
 					_playerList.DrawPlayerList();
 
-				if (_hostMenu.HostMenu.bShowWindow && LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) && !*(bool*)OFF_ISALIENSMODE)
+				if (_hostMenu.gHostMenu->Current.bValue && LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) && !*(bool*)OFF_ISALIENSMODE)
 					_hostMenu.DrawHostMenu();
 			}
 

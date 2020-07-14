@@ -272,7 +272,7 @@ namespace NeoGenesys
 		}
 
 		ImGui::SetNextWindowSize(ImVec2(484.0f, 650.0f));
-		ImGui::Begin("HOST MENU", &HostMenu.bShowWindow, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
+		ImGui::Begin("HOST MENU", &gHostMenu->Current.bValue, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 			if (CharacterInfo[i].iInfoValid)

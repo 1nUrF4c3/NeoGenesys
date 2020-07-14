@@ -21,13 +21,14 @@ namespace NeoGenesys
 			MASSKILL_MAX
 		};
 
+		std::shared_ptr<sCvar> gHostMenu = std::make_shared<sCvar>("Host Menu", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gGravityGun = std::make_shared<sCvar>("Gravity Gun", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>(), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
 
 		struct sHostMenu
 		{
 			char szKickReason[64] = { NULL };
-			bool bShowWindow = false, bWriteLog = false;
+			bool bWriteLog = false;
 
 			int iGravityGunNum;
 			float flGravityGunDist;
