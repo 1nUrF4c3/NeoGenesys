@@ -87,7 +87,6 @@ namespace NeoGenesys
 	*/
 	void cAimbot::SetAimState()
 	{
-
 		AimState.bTargetAcquired = (AimState.iTargetNum > -1);
 		AimState.bAntiAimTargetAcquired = (AimState.iAntiAimTargetNum > -1);
 		AimState.bIsZooming = (CEntity[CG->PredictedPlayerState.iClientNum].NextEntityState.LerpEntityState.iEntityFlags & EF_ZOOM);

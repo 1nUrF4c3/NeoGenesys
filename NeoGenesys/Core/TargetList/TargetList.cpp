@@ -93,11 +93,11 @@ namespace NeoGenesys
 
 				if (!EntityIsEnemy(i))
 				{
-					EntityList[i].cColor = _drawing.gColorAllies->Current.cValue;
+					EntityList[i].cColor = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, false, vBones[BONE_HEAD].first.first, NULL) ? _drawing.gColorAlliesVisible->Current.cValue : _drawing.gColorAlliesInvisible->Current.cValue;
 					continue;
 				}
 
-				EntityList[i].cColor = _drawing.gColorAxis->Current.cValue;
+				EntityList[i].cColor = IsVisible(&CEntity[i], EntityList[i].vBones3D, false, false, vBones[BONE_HEAD].first.first, NULL) ? _drawing.gColorAxisVisible->Current.cValue : _drawing.gColorAxisInvisible->Current.cValue;
 			}
 
 			else if (CEntity[i].NextEntityState.iEntityType == ET_ITEM)

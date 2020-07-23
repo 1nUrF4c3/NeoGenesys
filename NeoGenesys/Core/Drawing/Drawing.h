@@ -61,8 +61,10 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gPlayerCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerCompass = std::make_shared<sCvar>("Compass", std::vector<std::string>(), false);
 		std::shared_ptr<sCvar> gPlayerRadar = std::make_shared<sCvar>("Radar", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gColorAxis = std::make_shared<sCvar>("Axis", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
-		std::shared_ptr<sCvar> gColorAllies = std::make_shared<sCvar>("Allies", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
+		std::shared_ptr<sCvar> gColorAxisVisible = std::make_shared<sCvar>("Axis Visible", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
+		std::shared_ptr<sCvar> gColorAxisInvisible = std::make_shared<sCvar>("Axis Invisible", std::vector<std::string>(), ImVec4(ByteToFloat(0), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
+		std::shared_ptr<sCvar> gColorAlliesVisible = std::make_shared<sCvar>("Allies Visible", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
+		std::shared_ptr<sCvar> gColorAlliesInvisible = std::make_shared<sCvar>("Allies Invisible", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(0), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorAccents = std::make_shared<sCvar>("Accents", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(0), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorCrossHair = std::make_shared<sCvar>("Crosshair", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(0), ByteToFloat(255), ByteToFloat(255)));
 		std::shared_ptr<sCvar> gColorText = std::make_shared<sCvar>("Text", std::vector<std::string>(), ImVec4(ByteToFloat(255), ByteToFloat(255), ByteToFloat(255), ByteToFloat(255)));

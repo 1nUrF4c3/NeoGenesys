@@ -321,18 +321,34 @@ namespace NeoGenesys
 
 		case MENU_TAB_STYLES:
 		{
-			_drawing.ColorPicker(_drawing.gColorAxis->szName, _drawing.gColorAxis->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorAxisVisible->szName, _drawing.gColorAxisVisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_drawing.gColorAxis->szName.c_str(), _drawing.gColorAxis->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorAxisVisible->szName.c_str(), _drawing.gColorAxisVisible->Current.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorAllies->szName, _drawing.gColorAllies->Current.cValue);
+			_drawing.ColorPicker(_drawing.gColorAxisInvisible->szName, _drawing.gColorAxisInvisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
-			if (ImGui::ColorEdit4(_drawing.gColorAllies->szName.c_str(), _drawing.gColorAllies->Current.cValue))
+			if (ImGui::ColorEdit4(_drawing.gColorAxisInvisible->szName.c_str(), _drawing.gColorAxisInvisible->Current.cValue))
+			{
+				Menu.bWriteLog = true;
+			} ImGui::NewLine();
+
+			_drawing.ColorPicker(_drawing.gColorAlliesVisible->szName, _drawing.gColorAlliesVisible->Current.cValue);
+			ImGui::SameLine(0.0f, 4.0f);
+
+			if (ImGui::ColorEdit4(_drawing.gColorAlliesVisible->szName.c_str(), _drawing.gColorAlliesVisible->Current.cValue))
+			{
+				Menu.bWriteLog = true;
+			} ImGui::NewLine();
+
+			_drawing.ColorPicker(_drawing.gColorAlliesInvisible->szName, _drawing.gColorAlliesInvisible->Current.cValue);
+			ImGui::SameLine(0.0f, 4.0f);
+
+			if (ImGui::ColorEdit4(_drawing.gColorAlliesInvisible->szName.c_str(), _drawing.gColorAlliesInvisible->Current.cValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
@@ -371,8 +387,10 @@ namespace NeoGenesys
 
 			if (ImGui::Button("Reset to Default", ImVec2(446.0f, 35.0f)))
 			{
-				_drawing.gColorAxis->Current.cValue = _drawing.gColorAxis->Reset.cValue;
-				_drawing.gColorAllies->Current.cValue = _drawing.gColorAllies->Reset.cValue;
+				_drawing.gColorAxisVisible->Current.cValue = _drawing.gColorAxisVisible->Reset.cValue;
+				_drawing.gColorAxisInvisible->Current.cValue = _drawing.gColorAxisInvisible->Reset.cValue;
+				_drawing.gColorAlliesVisible->Current.cValue = _drawing.gColorAlliesVisible->Reset.cValue;
+				_drawing.gColorAlliesInvisible->Current.cValue = _drawing.gColorAlliesInvisible->Reset.cValue;
 				_drawing.gColorAccents->Current.cValue = _drawing.gColorAccents->Reset.cValue;
 				_drawing.gColorCrossHair->Current.cValue = _drawing.gColorCrossHair->Reset.cValue;
 				_drawing.gColorText->Current.cValue = _drawing.gColorText->Reset.cValue;

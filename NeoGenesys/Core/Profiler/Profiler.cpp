@@ -68,15 +68,25 @@ namespace NeoGenesys
 			XML.set("NeoGenesys.Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
 			XML.set("NeoGenesys.Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
 
-			XML.set("NeoGenesys.Colors.Axis.Red", _drawing.gColorAxis->Current.cValue.x);
-			XML.set("NeoGenesys.Colors.Axis.Green", _drawing.gColorAxis->Current.cValue.y);
-			XML.set("NeoGenesys.Colors.Axis.Blue", _drawing.gColorAxis->Current.cValue.z);
-			XML.set("NeoGenesys.Colors.Axis.Alpha", _drawing.gColorAxis->Current.cValue.w);
+			XML.set("NeoGenesys.Colors.AxisVisible.Red", _drawing.gColorAxisVisible->Current.cValue.x);
+			XML.set("NeoGenesys.Colors.AxisVisible.Green", _drawing.gColorAxisVisible->Current.cValue.y);
+			XML.set("NeoGenesys.Colors.AxisVisible.Blue", _drawing.gColorAxisVisible->Current.cValue.z);
+			XML.set("NeoGenesys.Colors.AxisVisible.Alpha", _drawing.gColorAxisVisible->Current.cValue.w);
 
-			XML.set("NeoGenesys.Colors.Allies.Red", _drawing.gColorAllies->Current.cValue.x);
-			XML.set("NeoGenesys.Colors.Allies.Green", _drawing.gColorAllies->Current.cValue.y);
-			XML.set("NeoGenesys.Colors.Allies.Blue", _drawing.gColorAllies->Current.cValue.z);
-			XML.set("NeoGenesys.Colors.Allies.Alpha", _drawing.gColorAllies->Current.cValue.w);
+			XML.set("NeoGenesys.Colors.AxisInvisible.Red", _drawing.gColorAxisInvisible->Current.cValue.x);
+			XML.set("NeoGenesys.Colors.AxisInvisible.Green", _drawing.gColorAxisInvisible->Current.cValue.y);
+			XML.set("NeoGenesys.Colors.AxisInvisible.Blue", _drawing.gColorAxisInvisible->Current.cValue.z);
+			XML.set("NeoGenesys.Colors.AxisInvisible.Alpha", _drawing.gColorAxisInvisible->Current.cValue.w);
+
+			XML.set("NeoGenesys.Colors.AlliesVisible.Red", _drawing.gColorAlliesVisible->Current.cValue.x);
+			XML.set("NeoGenesys.Colors.AlliesVisible.Green", _drawing.gColorAlliesVisible->Current.cValue.y);
+			XML.set("NeoGenesys.Colors.AlliesVisible.Blue", _drawing.gColorAlliesVisible->Current.cValue.z);
+			XML.set("NeoGenesys.Colors.AlliesVisible.Alpha", _drawing.gColorAlliesVisible->Current.cValue.w);
+
+			XML.set("NeoGenesys.Colors.AlliesInvisible.Red", _drawing.gColorAlliesInvisible->Current.cValue.x);
+			XML.set("NeoGenesys.Colors.AlliesInvisible.Green", _drawing.gColorAlliesInvisible->Current.cValue.y);
+			XML.set("NeoGenesys.Colors.AlliesInvisible.Blue", _drawing.gColorAlliesInvisible->Current.cValue.z);
+			XML.set("NeoGenesys.Colors.AlliesInvisible.Alpha", _drawing.gColorAlliesInvisible->Current.cValue.w);
 
 			XML.set("NeoGenesys.Colors.Accents.Red", _drawing.gColorAccents->Current.cValue.x);
 			XML.set("NeoGenesys.Colors.Accents.Green", _drawing.gColorAccents->Current.cValue.y);
@@ -177,15 +187,25 @@ namespace NeoGenesys
 			XML.get_if_present("NeoGenesys.Tweaks.FieldOfView", FindVariable("cg_fov")->Current.flValue);
 			XML.get_if_present("NeoGenesys.Tweaks.FramesPerSecond", FindVariable("com_maxfps")->Current.iValue);
 
-			XML.get_if_present("NeoGenesys.Colors.Axis.Red", _drawing.gColorAxis->Current.cValue.x);
-			XML.get_if_present("NeoGenesys.Colors.Axis.Green", _drawing.gColorAxis->Current.cValue.y);
-			XML.get_if_present("NeoGenesys.Colors.Axis.Blue", _drawing.gColorAxis->Current.cValue.z);
-			XML.get_if_present("NeoGenesys.Colors.Axis.Alpha", _drawing.gColorAxis->Current.cValue.w);
+			XML.get_if_present("NeoGenesys.Colors.AxisVisible.Red", _drawing.gColorAxisVisible->Current.cValue.x);
+			XML.get_if_present("NeoGenesys.Colors.AxisVisible.Green", _drawing.gColorAxisVisible->Current.cValue.y);
+			XML.get_if_present("NeoGenesys.Colors.AxisVisible.Blue", _drawing.gColorAxisVisible->Current.cValue.z);
+			XML.get_if_present("NeoGenesys.Colors.AxisVisible.Alpha", _drawing.gColorAxisVisible->Current.cValue.w);
 
-			XML.get_if_present("NeoGenesys.Colors.Allies.Red", _drawing.gColorAllies->Current.cValue.x);
-			XML.get_if_present("NeoGenesys.Colors.Allies.Green", _drawing.gColorAllies->Current.cValue.y);
-			XML.get_if_present("NeoGenesys.Colors.Allies.Blue", _drawing.gColorAllies->Current.cValue.z);
-			XML.get_if_present("NeoGenesys.Colors.Allies.Alpha", _drawing.gColorAllies->Current.cValue.w);
+			XML.get_if_present("NeoGenesys.Colors.AxisInvisible.Red", _drawing.gColorAxisInvisible->Current.cValue.x);
+			XML.get_if_present("NeoGenesys.Colors.AxisInvisible.Green", _drawing.gColorAxisInvisible->Current.cValue.y);
+			XML.get_if_present("NeoGenesys.Colors.AxisInvisible.Blue", _drawing.gColorAxisInvisible->Current.cValue.z);
+			XML.get_if_present("NeoGenesys.Colors.AxisInvisible.Alpha", _drawing.gColorAxisInvisible->Current.cValue.w);
+
+			XML.get_if_present("NeoGenesys.Colors.AlliesVisible.Red", _drawing.gColorAlliesVisible->Current.cValue.x);
+			XML.get_if_present("NeoGenesys.Colors.AlliesVisible.Green", _drawing.gColorAlliesVisible->Current.cValue.y);
+			XML.get_if_present("NeoGenesys.Colors.AlliesVisible.Blue", _drawing.gColorAlliesVisible->Current.cValue.z);
+			XML.get_if_present("NeoGenesys.Colors.AlliesVisible.Alpha", _drawing.gColorAlliesVisible->Current.cValue.w);
+
+			XML.get_if_present("NeoGenesys.Colors.AlliesInvisible.Red", _drawing.gColorAlliesInvisible->Current.cValue.x);
+			XML.get_if_present("NeoGenesys.Colors.AlliesInvisible.Green", _drawing.gColorAlliesInvisible->Current.cValue.y);
+			XML.get_if_present("NeoGenesys.Colors.AlliesInvisible.Blue", _drawing.gColorAlliesInvisible->Current.cValue.z);
+			XML.get_if_present("NeoGenesys.Colors.AlliesInvisible.Alpha", _drawing.gColorAlliesInvisible->Current.cValue.w);
 
 			XML.get_if_present("NeoGenesys.Colors.Accents.Red", _drawing.gColorAccents->Current.cValue.x);
 			XML.get_if_present("NeoGenesys.Colors.Accents.Green", _drawing.gColorAccents->Current.cValue.y);
