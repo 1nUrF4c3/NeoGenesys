@@ -60,8 +60,8 @@ namespace NeoGenesys
 
 		struct sDamageInfo
 		{
-			float flDamage = -FLT_MAX;
 			eBone iBoneIndex;
+			float flDamage = -FLT_MAX;
 		};
 
 		struct sEntityList
@@ -84,7 +84,7 @@ namespace NeoGenesys
 		bool EntityIsValid(int index);
 		bool EntityIsEnemy(int index);
 		bool IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage);
-		bool IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], bool bonescan, bool autowall, eBone& index, float* damage);
+		bool IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], ImVec3 position, bool bonescan, bool autowall, eBone* index, eHitLocation hitloc, float* damage);
 	} extern _targetList;
 }
 

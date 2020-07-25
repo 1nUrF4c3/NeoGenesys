@@ -161,7 +161,7 @@ namespace NeoGenesys
 			AddLog("23. neo_host_dvar <dvar> <value>\n\t\tSet DVAR value for all clients (as host).");
 			AddLog("24. neo_send_message <self|index> <all|index> <lobby|team|private> <message>\n\t\tSend a message (as host).");
 			AddLog("25. neo_chat_spam <on|off> <message>\n\t\tEnable/disable custom chatspam message.");
-			AddLog("26. neo_kill_spam <on|off> <message>\n\t\tEnable/disable custom killspam message.");
+			AddLog("26. neo_kill_spam <on|off> <message>\n\t\tEnable/disable killspam with optional custom message.");
 			AddLog("27. neo_spawn_bots <max|number>\n\t\tSpawn bots into the current match (as host).");
 			AddLog("28. neo_enable_ai <on|off>\n\t\tEnable/disable AI system for bots in public match (as host).");
 			AddLog("29. neo_unlimited_match\n\t\tSet scorelimit and timelimit to unlimited (as host).");
@@ -1569,22 +1569,27 @@ namespace NeoGenesys
 					for (int i = 1; i < CmdLine.iArgNum; i++)
 						strcat_s(szArgBuff, VariadicText(i == CmdLine.iArgNum - 1 ? "%s" : "%s ", CmdLine.szCmdArgs[i]));
 
-					LPSTR szKillSpam = strtok(szArgBuff, "\n");
+					LPSTR szKillSpamMessage = strtok(szArgBuff, "\n");
 
-					if (szKillSpam)
+					if (szKillSpamMessage)
 					{
 						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-						_hooks.gKillSpamMessage->Current.szValue = Strdup(szKillSpam);
+						_hooks.gKillSpamMessage->Current.szValue = Strdup(szKillSpamMessage);
 						_hooks.gKillSpam->Current.bValue = true;
 
-						AddLog("Custom killspam message \"%s\" has been enabled.", szKillSpam);
+						AddLog("Killspam has been enabled with message \"%s.\"", szKillSpamMessage);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
 					else
 					{
-						AddLog("%s Null argument(s).", PREFIX_ERROR);
+						AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+						_hooks.gKillSpam->Current.bValue = true;
+
+						AddLog("Killspam has been enabled.");
+						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 				}
 
@@ -1595,7 +1600,7 @@ namespace NeoGenesys
 					_hooks.gKillSpamMessage->Current.szValue = Strdup("");
 					_hooks.gKillSpam->Current.bValue = false;
 
-					AddLog("Custom killspam message has been disabled.");
+					AddLog("Killspam has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 

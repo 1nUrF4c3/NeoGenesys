@@ -276,7 +276,7 @@ namespace NeoGenesys
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 			if (CharacterInfo[i].iInfoValid)
-				HostMenu.vPlayers.push_back(std::make_pair(ClientInfo[i].iClientNum, ClientInfo[i].szName));
+				HostMenu.vPlayers.push_back(std::make_pair(i, ClientInfo[i].szName));
 
 		ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 		if (ImGui::BeginCombo("", ClientInfo[HostMenu.iPlayer].szName))

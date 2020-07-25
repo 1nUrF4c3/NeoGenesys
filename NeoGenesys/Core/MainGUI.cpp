@@ -187,7 +187,7 @@ namespace NeoGenesys
 
 		case MENU_TAB_MISCELLANEOUS:
 		{
-			if (ImGui::Checkbox(_hooks.gKillSpam->szName.c_str(), &_hooks.gKillSpam->Current.bValue))
+			if (ImGui::Checkbox(_packets.gLaserAttachment->szName.c_str(), &_packets.gLaserAttachment->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);

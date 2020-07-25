@@ -179,8 +179,16 @@ namespace NeoGenesys
 
 					if (!szTeaBag.empty())
 					{
+						sNetAddr NetAddr;
+						GetPlayerAddr(&NetAddr, GetCurrentSession(), entitystate->iOtherEntityNum);
+
 						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
 						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
+						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%ip", VariadicText("%u.%u.%u.%u",
+							(BYTE)NetAddr.szIPAddress[0],
+							(BYTE)NetAddr.szIPAddress[1],
+							(BYTE)NetAddr.szIPAddress[2],
+							(BYTE)NetAddr.szIPAddress[3]));
 
 						Say(&GEntity[entitystate->iOtherEntityNum], NULL, 0, szTeaBag);
 					}
@@ -192,8 +200,16 @@ namespace NeoGenesys
 
 					if (!szKillSpam.empty())
 					{
+						sNetAddr NetAddr;
+						GetPlayerAddr(&NetAddr, GetCurrentSession(), entitystate->iOtherEntityNum);
+
 						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
 						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
+						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%ip", VariadicText("%u.%u.%u.%u",
+							(BYTE)NetAddr.szIPAddress[0],
+							(BYTE)NetAddr.szIPAddress[1],
+							(BYTE)NetAddr.szIPAddress[2],
+							(BYTE)NetAddr.szIPAddress[3]));
 
 						Cbuf_AddText(VariadicText("say \"%s\"\n", szKillSpam.c_str()));
 					}

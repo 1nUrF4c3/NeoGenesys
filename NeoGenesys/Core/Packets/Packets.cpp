@@ -54,6 +54,10 @@ namespace NeoGenesys
 
 		else
 			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+
+		if (gLaserAttachment->Current.bValue)
+			if (!(CG->PredictedPlayerState.iEntityFlags & 0x10000))
+				CG->PredictedPlayerState.iEntityFlags |= 0x10000;
 	}
 }
 

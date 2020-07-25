@@ -13,6 +13,7 @@ namespace NeoGenesys
 	public:
 
 		std::shared_ptr<sCvar> gBunnyHop = std::make_shared<sCvar>("Bunny Hop", std::vector<std::string>(), false);
+		std::shared_ptr<sCvar> gLaserAttachment = std::make_shared<sCvar>("Laser Attachment", std::vector<std::string>(), false);
 
 		bool bIsAirStuck;
 		ImVec3 vTeaBagPos;

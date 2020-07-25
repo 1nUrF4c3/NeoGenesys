@@ -31,7 +31,7 @@ namespace NeoGenesys
 		{
 			if (CharacterInfo[i].iInfoValid)
 			{
-				GetPlayerAddr(&PlayerList.NetAddr[i], GetCurrentSession(), ClientInfo[i].iClientNum);
+				GetPlayerAddr(&PlayerList.NetAddr[i], GetCurrentSession(), i);
 
 				ImGui::Separator();
 				ImGui::PushID(i);
@@ -102,10 +102,10 @@ namespace NeoGenesys
 					{
 						ImGui::LogToClipboard();
 						ImGui::LogText(VariadicText("%u.%u.%u.%u",
-							(BYTE)PlayerList.NetAddr[i].szIP[0],
-							(BYTE)PlayerList.NetAddr[i].szIP[1],
-							(BYTE)PlayerList.NetAddr[i].szIP[2],
-							(BYTE)PlayerList.NetAddr[i].szIP[3]));
+							(BYTE)PlayerList.NetAddr[i].szIPAddress[0],
+							(BYTE)PlayerList.NetAddr[i].szIPAddress[1],
+							(BYTE)PlayerList.NetAddr[i].szIPAddress[2],
+							(BYTE)PlayerList.NetAddr[i].szIPAddress[3]));
 
 						ImGui::LogFinish();
 
@@ -123,10 +123,10 @@ namespace NeoGenesys
 				} ImGui::NextColumn();
 
 				ImGui::Text(VariadicText("%u.%u.%u.%u",
-					(BYTE)PlayerList.NetAddr[i].szIP[0],
-					(BYTE)PlayerList.NetAddr[i].szIP[1],
-					(BYTE)PlayerList.NetAddr[i].szIP[2],
-					(BYTE)PlayerList.NetAddr[i].szIP[3]));
+					(BYTE)PlayerList.NetAddr[i].szIPAddress[0],
+					(BYTE)PlayerList.NetAddr[i].szIPAddress[1],
+					(BYTE)PlayerList.NetAddr[i].szIPAddress[2],
+					(BYTE)PlayerList.NetAddr[i].szIPAddress[3]));
 
 				if (ImGui::OpenPopupOnItemClick(std::to_string(i).c_str()))
 				{

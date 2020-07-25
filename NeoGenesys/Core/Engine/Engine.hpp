@@ -1143,8 +1143,8 @@ namespace NeoGenesys
 	struct sNetAddr
 	{
 		int iType;
-		char szIP[4];
-		short iPort;
+		char szIPAddress[4];
+		short wPort;
 		char _0xA[0x2];
 		int iLocalNetID;
 		int iServerID;
