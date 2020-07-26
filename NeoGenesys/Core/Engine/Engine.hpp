@@ -795,9 +795,11 @@ namespace NeoGenesys
 	*/
 	struct sDvar
 	{
+	public:
 		LPSTR szName;
+	private:
 		char _0x8[0x8];
-
+	public:
 		union uDvarValue
 		{
 			bool bValue;
@@ -828,7 +830,7 @@ namespace NeoGenesys
 				FLOAT flMax;
 			};
 		} Domain;
-
+	private:
 		char _0x50[0x10];
 	};
 	/*
@@ -836,7 +838,9 @@ namespace NeoGenesys
 	*/
 	struct sSnapShot
 	{
+	private:
 		char _0x0[0x3C78];
+	public:
 		int iPing;
 		int iServerTime;
 	};
@@ -845,16 +849,24 @@ namespace NeoGenesys
 	*/
 	struct sClientState
 	{
+	public:
 		int iClientIndex;
 		eTeam iTeam;
+	private:
 		char _0x8[0x4];
+	public:
 		int iDualWielding;
+	private:
 		char _0x10[0x30];
+	public:
 		char szName[32];
 		int iRank;
 		int iPrestige;
+	private:
 		char _0x68[0x8];
+	public:
 		int iPerks[2];
+	private:
 		char _0x78[0x78];
 	};
 	/*
@@ -862,8 +874,11 @@ namespace NeoGenesys
 	*/
 	struct sGlobalAmmo
 	{
+	private:
 		char _0x0[0x8];
+	public:
 		int iAmmoCount;
+	private:
 		char _0xC[0x4];
 	};
 	/*
@@ -871,7 +886,9 @@ namespace NeoGenesys
 	*/
 	struct sClipAmmo
 	{
+	private:
 		char _0x0[0x8];
+	public:
 		int iAmmoCount[2];
 	};
 	/*
@@ -879,38 +896,64 @@ namespace NeoGenesys
 	*/
 	struct sPlayerState
 	{
+	public:
 		int iCommandTime;
 		int iMoveType;
+	private:
 		char _0x8[0x8];
+	public:
 		int iOtherFlags;
 		int iLinkFlags;
+	private:
 		char _0x18[0x4];
+	public:
 		ImVec3 vOrigin;
 		ImVec3 vVelocity;
+	private:
 		char _0x34[0x28];
+	public:
 		int iGravity;
 		int iSpeed;
 		ImVec3 vDeltaAngles;
+	private:
 		char _0x70[0xB4];
+	public:
 		int iEntityFlags;
+	private:
 		char _0x128[0x54];
+	public:
 		int iEntityNum;
+	private:
 		char _0x180[0x4];
+	public:
 		ImVec3 vViewAngles;
+	private:
 		char _0x190[0x38];
+	public:
 		int iStats[4];
+	private:
 		char _0x1D8[0x84];
+	public:
 		float flSpeedMultiplier;
+	private:
 		char _0x260[0x1E0];
+	public:
 		sGlobalAmmo AmmoNotInClip[15];
 		sClipAmmo AmmoInClip[15];
+	private:
 		char _0x620[0x2D40];
+	public:
 		int iClientNum;
+	private:
 		char _0x3364[0x24];
+	public:
 		sSnapShot* OldSnapShot;
 		sSnapShot* NewSnapShot;
+	private:
 		char _0x3398[0x5C];
+	public:
 		sClientState ClientState;
+	private:
 		char _0x34E4[0x584];
 	};
 	/*
@@ -918,11 +961,16 @@ namespace NeoGenesys
 	*/
 	struct sCG
 	{
+	public:
 		sPlayerState PredictedPlayerState;
+	private:
 		char _0x3A68[0xA6028];
+	public:
 		ImVec3 vRefDefViewAngles;
 		ImVec3 vWeaponAngles;
+	private:
 		char _0xA9AA8[0x24];
+	public:
 		ImVec3 vThirdPersonViewAngles;
 	};
 	/*
@@ -930,6 +978,7 @@ namespace NeoGenesys
 	*/
 	struct sRefDef
 	{
+	public:
 		int iWidth;
 		int iHeight;
 		float flFovX;
@@ -942,17 +991,23 @@ namespace NeoGenesys
 	*/
 	struct sCharacterInfo
 	{
+	public:
 		int iEntityNum;
 		int iInfoValid;
 		int iNextValid;
 		eTeam iTeam;
 		eTeam iOldTeam;
 		int iPerks[2];
+	private:
 		char _0x1C[0x444];
+	public:
 		ImVec3 vViewAngles;
+	private:
 		char _0x46C[0x128];
+	public:
 		int iDualWielding;
 		int iIsFemale;
+	private:
 		char _0x59C[0x3C];
 	};
 	/*
@@ -960,6 +1015,7 @@ namespace NeoGenesys
 	*/
 	struct sTrajectory
 	{
+	public:
 		int iType;
 		int iTime;
 		int iDuration;
@@ -971,12 +1027,16 @@ namespace NeoGenesys
 	*/
 	struct sLerpEntityState
 	{
+	public:
 		int iEntityFlags;
 		sTrajectory PositionTrajectory;
 		sTrajectory AngleTrajectory;
+	private:
 		char _0x4C[0x10];
+	public:
 		int iPrimaryWeapon;
 		int iSecondaryWeapon;
+	private:
 		char _0x64[0x4];
 	};
 	/*
@@ -984,6 +1044,7 @@ namespace NeoGenesys
 	*/
 	struct sEntityEvent
 	{
+	public:
 		int iEventType;
 		int iEventParam;
 	};
@@ -992,24 +1053,34 @@ namespace NeoGenesys
 	*/
 	struct sEntityState
 	{
+	public:
 		int iEntityNum;
 		int iEntityType;
 		sLerpEntityState LerpEntityState;
+	private:
 		char _0x70[0x8];
+	public:
 		int iOtherEntityNum;
 		int iAttackerEntityNum;
 		int iGroundEntityNum;
+	private:
 		char _0x84[0xC];
+	public:
 		int iClientNum;
+	private:
 		char _0x94[0x4];
+	public:
 		int iSolid;
 		int iEventParam;
 		int iEventSequence;
 		sEntityEvent EntityEvent[4];
 		int iWeapon;
 		int iInAltWeaponMode;
+	private:
 		char _0xCC[0x8];
+	public:
 		int iEventParam2;
+	private:
 		char _0xD8[0x30];
 	};
 	/*
@@ -1017,15 +1088,22 @@ namespace NeoGenesys
 	*/
 	struct sCEntity
 	{
+	private:
 		char _0x0[0x2];
+	public:
 		short wValid;
+	private:
 		char _0x4[0x14];
+	public:
 		ImVec3 vOrigin;
 		ImVec3 vViewAngles;
+	private:
 		char _0x30[0x60];
+	public:
 		sLerpEntityState CurrentEntityState;
 		sEntityState NextEntityState;
 		int iIsAlive;
+	private:
 		char _0x204[0x34];
 	};
 	/*
@@ -1033,14 +1111,22 @@ namespace NeoGenesys
 	*/
 	struct sGEntity
 	{
+	public:
 		sEntityState EntityState;
+	private:
 		char _0x108[0x60];
+	public:
 		sPlayerState* pPlayerState;
+	private:
 		char _0x170[0x50];
+	public:
 		int iFlags;
+	private:
 		char _0x1C4[0x18];
+	public:
 		int iHealth;
 		int iMaxHealth;
+	private:
 		char _0x1E4[0x10C];
 	};
 	/*
@@ -1048,12 +1134,16 @@ namespace NeoGenesys
 	*/
 	struct sUserCmd
 	{
+	public:
 		int iServerTime;
 		int iButtons;
 		int iViewAngles[3];
+	private:
 		char _0x14[0x8];
+	public:
 		char szForwardMove;
 		char szRightMove;
+	private:
 		char _0x1E[0x1E];
 	};
 	/*
@@ -1061,6 +1151,7 @@ namespace NeoGenesys
 	*/
 	struct sClientActive
 	{
+	public:
 		sUserCmd UserCmd[128];
 		int iCurrentCmd;
 
@@ -1074,6 +1165,7 @@ namespace NeoGenesys
 	*/
 	struct sClientInfo
 	{
+	public:
 		int iClientNum;
 		char szName[32];
 		int iRankMP;
@@ -1081,8 +1173,11 @@ namespace NeoGenesys
 		int iRankEXT;
 		int iPrestigeEXT;
 		char szClan[8];
+	private:
 		char _0x3C[4];
+	public:
 		int iHealth;
+	private:
 		char _0x44[0x2C];
 	};
 	/*
@@ -1090,15 +1185,21 @@ namespace NeoGenesys
 	*/
 	struct sTrace
 	{
+	public:
 		float flFraction;
 		ImVec3 vNormal;
+	private:
 		char _0x10[0x8];
+	public:
 		eTraceHitType TraceHitType;
 		short wHitID;
+	private:
 		char _0x1E[0x6];
+	public:
 		eHitLocation wPartGroup;
 		bool bAllSolid;
 		bool bStartSolid;
+	private:
 		char _0x28[0x4];
 	};
 	/*
@@ -1106,8 +1207,11 @@ namespace NeoGenesys
 	*/
 	struct sBulletTraceResults
 	{
+	public:
 		sTrace Trace;
+	private:
 		char _0x2C[0x4];
+	public:
 		sCEntity* pHitEnt;
 		ImVec3 vHitPos;
 		int iIgnoreHitEnt;
@@ -1119,11 +1223,14 @@ namespace NeoGenesys
 	*/
 	struct sBulletFireParams
 	{
+	public:
 		int iMaxEntNum;
 		int iEntityNum;
 		float flPower;
 		int iBulletType;
+	private:
 		char _0x10[0x4];
+	public:
 		ImVec3 vViewOrigin;
 		ImVec3 vStart;
 		ImVec3 vEnd;
@@ -1134,6 +1241,7 @@ namespace NeoGenesys
 	*/
 	struct sOrientation
 	{
+	public:
 		ImVec3 vOrigin;
 		ImVec3 vAxis[3];
 	};
@@ -1142,10 +1250,13 @@ namespace NeoGenesys
 	*/
 	struct sNetAddr
 	{
+	public:
 		int iType;
 		char szIPAddress[4];
 		short wPort;
+	private:
 		char _0xA[0x2];
+	public:
 		int iLocalNetID;
 		int iServerID;
 	};
@@ -1154,6 +1265,7 @@ namespace NeoGenesys
 	*/
 	struct sEntRef
 	{
+	public:
 		short wEntityNum;
 		short wClassNum;
 
@@ -1169,25 +1281,42 @@ namespace NeoGenesys
 	*/
 	struct sWeaponDef
 	{
+	private:
 		char _0x0[0x94];
+	public:
 		eWeaponType iWeaponType;
+	private:
 		char _0x98[0x4];
+	public:
 		ePenetrateType iPenetrateType;
+	private:
 		char _0x100[0x2D0];
+	public:
 		LPVOID lpHUDIcon;
 		eWeaponIconRatio iHUDIconRatio;
+	private:
 		char _0x37C[0x4];
+	public:
 		LPVOID lpPickupIcon;
 		eWeaponIconRatio iPickupIconRatio;
+	private:
 		char _0x38C[0x4];
+	public:
 		LPVOID lpAmmoCounterIcon;
 		eWeaponIconRatio iAmmoCounterIconRatio;
+	private:
 		char _0x39C[0x320];
+	public:
 		eWeaponIconRatio iKillIconRatio;
+	private:
 		char _0x6C0[0x391];
+	public:
 		bool bRifleBullet;
+	private:
 		char _0xA52[0x13];
+	public:
 		bool bFlipKillIcon;
+	private:
 		char _0xA66[0x32];
 	};
 	/*
@@ -1195,6 +1324,7 @@ namespace NeoGenesys
 	*/
 	struct sWeapons
 	{
+	public:
 		sWeaponDef* WeaponDef[160];
 	};
 	/*
@@ -1202,14 +1332,20 @@ namespace NeoGenesys
 	*/
 	struct sWeaponCompleteDef
 	{
+	public:
 		LPSTR szInternalName;
 		sWeaponDef* WeaponDef;
 		LPSTR szDisplayName;
+	private:
 		char _0x18[0x94];
+	public:
 		eWeaponIconRatio iDPadIconRatio;
+	private:
 		char _0xB0[0x28];
+	public:
 		LPVOID lpKillIcon;
 		LPVOID lpDPadIcon;
+	private:
 		char _0xE8[0x40];
 	};
 	/*
@@ -1217,6 +1353,7 @@ namespace NeoGenesys
 	*/
 	struct sCompleteWeapons
 	{
+	public:
 		sWeaponCompleteDef* WeaponCompleteDef[160];
 	};
 	/*
@@ -1224,6 +1361,7 @@ namespace NeoGenesys
 	*/
 	struct sWindow
 	{
+	public:
 		int iWidth;
 		int iHeight;
 	};
@@ -1232,9 +1370,12 @@ namespace NeoGenesys
 	*/
 	struct sViewMatrix
 	{
+	public:
 		ImVec3 vRecoilAngles;
 		ImVec3 vOrigin;
+	private:
 		char _0xC[0x84];
+	public:
 		ImVec3 vViewAngles;
 	};
 	/*
@@ -1242,6 +1383,7 @@ namespace NeoGenesys
 	*/
 	struct sPunch
 	{
+	public:
 		ImVec2 vPunchAngles;
 		float flVelocity;
 		ImVec3 vWeaponPunchAngles[3];
@@ -1435,6 +1577,13 @@ namespace NeoGenesys
 	FORCEINLINE sNetAddr* GetPlayerAddr(sNetAddr* netaddr, LPVOID session, int clientnum)
 	{
 		return VariadicCall<sNetAddr*>(OFF_GETPLAYERADDR, netaddr, session, clientnum);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE LPCSTR GetCurrentName()
+	{
+		return VariadicCall<LPCSTR>(OFF_GETCURRENTNAME);
 	}
 	/*
 	//=====================================================================================
