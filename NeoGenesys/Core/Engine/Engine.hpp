@@ -139,6 +139,7 @@
 #define OFF_ADVANCETRACE 0x14023B010
 #define OFF_GETSURFACEPENETRATIONDEPTH 0x140238FD0
 #define OFF_GETWEAPONHITLOCATIONMULTIPLIER 0x140395AE0
+#define OFF_GETWEAPONDAMAGE 0x140377420
 #define OFF_GETBULLETDAMAGEFORPROJECTILE 0x14023DE60
 #define OFF_PENETRATIONCHECK 0x1402AB6C0
 #define OFF_GETHIPFIRESPREADFORWEAPON 0x1402409B0
@@ -1871,6 +1872,13 @@ namespace NeoGenesys
 	FORCEINLINE float GetWeaponHitLocationMultiplier(eHitLocation hitloc, int weapon, bool alternate)
 	{
 		return VariadicCall<float>(OFF_GETWEAPONHITLOCATIONMULTIPLIER, hitloc, weapon, alternate);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE int GetWeaponDamage(sBulletFireParams* fireparams, sBulletTraceResults* traceresults, int weapon, bool alternate, sGEntity* attacker)
+	{
+		return VariadicCall<int>(OFF_GETWEAPONDAMAGE, fireparams, traceresults, weapon, alternate, attacker);
 	}
 	/*
 	//=====================================================================================
