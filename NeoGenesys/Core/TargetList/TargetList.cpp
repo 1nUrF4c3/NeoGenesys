@@ -256,7 +256,7 @@ namespace NeoGenesys
 		{
 			if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
+				std::stable_sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDistance < b.flDistance; });
 
 				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
@@ -269,7 +269,7 @@ namespace NeoGenesys
 
 			else if (gSortMethod->Current.iValue == SORT_METHOD_DAMAGE)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDamage > b.flDamage; });
+				std::stable_sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flDamage > b.flDamage; });
 
 				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
@@ -282,7 +282,7 @@ namespace NeoGenesys
 
 			else if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
 			{
-				std::sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
+				std::stable_sort(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& a, const sTargetInfo& b) { return a.flFOV < b.flFOV; });
 
 				auto itTargetInfo = std::find_if(vTargetInfo.begin(), vTargetInfo.end(), [&](const sTargetInfo& targetinfo) { return targetinfo.bIsPriority; });
 
@@ -392,16 +392,25 @@ namespace NeoGenesys
 
 		sDamageInfo DamageInfo;
 		std::vector<sDamageInfo> vDamageInfo;
-		std::vector<std::future<bool>> vIsVisible(BONE_MAX);
+		std::vector<sDamageInfo> vDamageInfoFinal;
+		std::vector<std::future<bool>> vIsVisible;
 
 		if (bonescan)
 		{
 			for (auto& Bone : vBones)
 			{
-				if (IsVisibleInternal(entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage))
+				DamageInfo.iBoneIndex = Bone.first.first;
+				
+				vIsVisible.push_back(std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage));
+
+				vDamageInfo.push_back(DamageInfo);
+			}
+
+			for (auto& Bone : vBones)
+			{
+				if (vIsVisible[Bone.first.first].get())
 				{
-					DamageInfo.iBoneIndex = Bone.first.first;
-					vDamageInfo.push_back(DamageInfo);
+					vDamageInfoFinal.push_back(vDamageInfo[Bone.first.first]);
 
 					bReturn = true;
 				}
@@ -410,20 +419,20 @@ namespace NeoGenesys
 
 		else
 		{
-			return IsVisibleInternal(entity, position, hitloc, autowall, damage);
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, position, hitloc, autowall, damage).get();
 		}
 
-		if (!vDamageInfo.empty())
+		if (!vDamageInfoFinal.empty())
 		{
-			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
+			std::stable_sort(vDamageInfoFinal.begin(), vDamageInfoFinal.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
 
 			if (index)
-				*index = vDamageInfo.front().iBoneIndex;
+				*index = vDamageInfoFinal.front().iBoneIndex;
 
 			if (damage) 
-				*damage = vDamageInfo.front().flDamage;
+				*damage = vDamageInfoFinal.front().flDamage;
 
-			vDamageInfo.clear();
+			vDamageInfoFinal.clear();
 		}
 
 		return bReturn;
