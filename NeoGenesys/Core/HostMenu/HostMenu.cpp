@@ -103,7 +103,7 @@ namespace NeoGenesys
 					if (Trace.TraceHitType == TRACE_HITTYPE_ENTITY)
 					{
 						HostMenu.iGravityGunNum = GetTraceHitType(&Trace);
-						HostMenu.flGravityGunDist = _mathematics.CalculateDistance(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
+						HostMenu.flGravityGunDist = _mathematics.CalculateDistance3D(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
 					}
 				}
 

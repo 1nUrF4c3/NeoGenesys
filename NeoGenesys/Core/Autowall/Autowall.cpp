@@ -38,7 +38,7 @@ namespace NeoGenesys
 		FP_Enter.vEnd = end;
 
 		FP_Enter.vDir = end - start;
-		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
+		float flLength = _mathematics.VectorLength3D(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = C_BulletTrace(&FP_Enter, pCEntity, &TR_Enter, TRACE_HITTYPE_NONE);
@@ -68,7 +68,7 @@ namespace NeoGenesys
 				vHitPos = TR_Enter.vHitPos;
 				vTemp = vHitPos - FP_Enter.vStart;
 
-				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
+				if (_mathematics.VectorLength3D(vTemp, vTemp) >= flLength)
 					return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
@@ -96,9 +96,9 @@ namespace NeoGenesys
 				if (bExitHit || bStaticModel)
 				{
 					if (bStaticModel)
-						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
+						flSurfaceDepth = _mathematics.CalculateDistance3D(FP_Exit.vEnd, FP_Exit.vStart);
 					else
-						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
+						flSurfaceDepth = _mathematics.CalculateDistance3D(vHitPos, TR_Exit.vHitPos);
 
 					flSurfaceDepth = max(flSurfaceDepth, 1.0f);
 
@@ -126,7 +126,7 @@ namespace NeoGenesys
 
 						vLength = TR_Exit.vHitPos - TR_Enter.vHitPos;
 
-						if (_mathematics.DotProduct(vLength, vLength) > 900.0f)
+						if (_mathematics.DotProduct3D(vLength, vLength) > 900.0f)
 						{
 							if (!bEnterHit)
 								return GetRemainingDamage(&FP_Enter, &TR_Enter, hitloc, iWeapon, iInAltWeaponMode);
@@ -218,7 +218,7 @@ namespace NeoGenesys
 		FP_Enter.vEnd = end;
 
 		FP_Enter.vDir = end - start;
-		float flLength = _mathematics.VectorLength(FP_Enter.vDir, FP_Enter.vDir);
+		float flLength = _mathematics.VectorLength3D(FP_Enter.vDir, FP_Enter.vDir);
 		VectorNormalize(&FP_Enter.vDir);
 
 		bool bEnterHit = G_BulletTrace(&FP_Enter, iWeapon, iInAltWeaponMode, pGEntity, &TR_Enter, TRACE_HITTYPE_NONE);
@@ -253,7 +253,7 @@ namespace NeoGenesys
 				vHitPos = TR_Enter.vHitPos;
 				vTemp = vHitPos - FP_Enter.vStart;
 
-				if (_mathematics.VectorLength(vTemp, vTemp) >= flLength)
+				if (_mathematics.VectorLength3D(vTemp, vTemp) >= flLength)
 					return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);
 
 				if (!AdvanceTrace(&FP_Enter, &TR_Enter, 0.13500001f))
@@ -287,9 +287,9 @@ namespace NeoGenesys
 				if (bExitHit || bStaticModel)
 				{
 					if (bStaticModel)
-						flSurfaceDepth = _mathematics.CalculateDistance(FP_Exit.vEnd, FP_Exit.vStart);
+						flSurfaceDepth = _mathematics.CalculateDistance3D(FP_Exit.vEnd, FP_Exit.vStart);
 					else
-						flSurfaceDepth = _mathematics.CalculateDistance(vHitPos, TR_Exit.vHitPos);
+						flSurfaceDepth = _mathematics.CalculateDistance3D(vHitPos, TR_Exit.vHitPos);
 
 					flSurfaceDepth = max(flSurfaceDepth, 1.0f);
 
@@ -317,7 +317,7 @@ namespace NeoGenesys
 
 						vLength = TR_Exit.vHitPos - TR_Enter.vHitPos;
 
-						if (_mathematics.DotProduct(vLength, vLength) > 900.0f)
+						if (_mathematics.DotProduct3D(vLength, vLength) > 900.0f)
 						{
 							if (!bEnterHit)
 								return GetRemainingDamage(&FP_Enter, &TR_Enter, TR_Enter.Trace.wPartGroup, iWeapon, iInAltWeaponMode);

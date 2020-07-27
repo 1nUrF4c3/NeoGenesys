@@ -218,7 +218,7 @@ namespace NeoGenesys
 				EntityList[i].vHitLocation = CEntity[i].vOrigin;
 			}
 
-			EntityList[i].flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+			EntityList[i].flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
 			EntityList[i].flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 
 			if (i < FindVariable("sv_maxclients")->Current.iValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
@@ -244,7 +244,7 @@ namespace NeoGenesys
 
 				TargetInfo.iIndex = i;
 
-				TargetInfo.flDistance = _mathematics.CalculateDistance(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+				TargetInfo.flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
 				TargetInfo.flDamage = EntityList[i].flDamage;
 				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
 

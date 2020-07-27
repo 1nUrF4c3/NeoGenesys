@@ -23,8 +23,8 @@ namespace NeoGenesys
 
 		ImVec2 vLengthDot
 		(
-			VectorLength(vAngles, vAngles),
-			DotProduct(vAngles, vAimAngles)
+			VectorLength3D(vAngles, vAngles),
+			DotProduct3D(vAngles, vAimAngles)
 		);
 
 		float flReturn = RadiansToDegrees(acosf(vLengthDot.y / powf(vLengthDot.x, 2.0f)));
@@ -37,13 +37,52 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	float cMathematics::CalculateDistance(ImVec3 start, ImVec3 end)
+	float cMathematics::DotProduct3D(ImVec3 left, ImVec3 right)
+	{
+		return (left.x * right.x + left.y * right.y + left.z * right.z);
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::DotProduct2D(ImVec2 left, ImVec2 right)
+	{
+		return (left.x * right.x + left.y * right.y);
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::VectorLength3D(ImVec3 left, ImVec3 right)
+	{
+		return sqrtf(DotProduct3D(left, right));
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::VectorLength2D(ImVec2 left, ImVec2 right)
+	{
+		return sqrtf(DotProduct2D(left, right));
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::CalculateDistance3D(ImVec3 start, ImVec3 end)
 	{
 		ImVec3 vDirection;
 
 		vDirection = start - end;
 
-		return VectorLength(vDirection, vDirection);
+		return VectorLength3D(vDirection, vDirection);
+	}
+	/*
+	//=====================================================================================
+	*/
+	float cMathematics::CalculateDistance2D(ImVec2 start, ImVec2 end)
+	{
+		ImVec2 vDirection;
+
+		vDirection = start - end;
+
+		return VectorLength2D(vDirection, vDirection);
 	}
 	/*
 	//=====================================================================================
@@ -55,20 +94,6 @@ namespace NeoGenesys
 		AngleVectors(angles, vForward, vRight, vUp);
 
 		return (position + (vForward * distance));
-	}
-	/*
-	//=====================================================================================
-	*/
-	float cMathematics::DotProduct(ImVec3 left, ImVec3 right)
-	{
-		return (left.x * right.x + left.y * right.y + left.z * right.z);
-	}
-	/*
-	//=====================================================================================
-	*/
-	float cMathematics::VectorLength(ImVec3 left, ImVec3 right)
-	{
-		return sqrtf(DotProduct(left, right));
 	}
 	/*
 	//=====================================================================================
@@ -151,7 +176,7 @@ namespace NeoGenesys
 	*/
 	void cMathematics::VectorNormalize(ImVec3& direction)
 	{
-		float flLen = VectorLength(direction, direction);
+		float flLen = VectorLength3D(direction, direction);
 
 		if (flLen == 0.0f)
 		{
