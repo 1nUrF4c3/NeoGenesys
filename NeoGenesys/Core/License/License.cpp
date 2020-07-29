@@ -90,7 +90,7 @@ namespace NeoGenesys
 				std::string szLine;
 				std::stringstream szStream;
 
-				szStream << HttpRequest(VMProtectDecryptString("www.pastebin.com"), VMProtectDecryptString("/raw/tCxFhwnd"));
+				szStream << HttpRequest(VMProtectDecryptString("www.genesyscheats.com"), VMProtectDecryptString("/NeoGenesys"));
 
 				while (std::getline(szStream, szLine))
 				{
@@ -102,7 +102,7 @@ namespace NeoGenesys
 					exit(EXIT_FAILURE);
 				}
 
-				License.Wait(60000);
+				License.Wait(1000);
 			}
 		}
 	}
