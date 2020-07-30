@@ -490,10 +490,8 @@ namespace NeoGenesys
 	void cDrawing::DrawAgent(sCEntity* entity, ImVec2 center, float distance, ImVec4 color)
 	{
 		std::string szText(VariadicText("[%im] %s", (int)(distance / M_METERS),
-			std::string((BYTE)entity->NextEntityState.iWeapon ?
-				EntityHasRiotShield(entity) ? "Squadmate" : "Juggernaut" :
-				entity->NextEntityState.iOtherEntityNum >= FindVariable("sv_maxclients")->Current.iValue ?
-				"Alien" : "Guard Dog").c_str()));
+			std::string((BYTE)entity->NextEntityState.iWeapon ? "Soldier" :
+				*(bool*)OFF_ISALIENSMODE ? "Alien" : "Guard Dog").c_str()));
 
 		ImVec2 vStringSize = _mainGui.Bank_Gothic_Pro_Light->CalcTextSizeA(_mainGui.flBank_Gothic_Pro_Light, FLT_MAX, 0.0f, szText.c_str());
 
