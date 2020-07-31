@@ -395,9 +395,9 @@ namespace NeoGenesys
 		EvaluateTrajectory(&entity->CurrentEntityState.AngleTrajectory, CG->PredictedPlayerState.OldSnapShot->iServerTime, &vOldAngles);
 		EvaluateTrajectory(&entity->NextEntityState.LerpEntityState.AngleTrajectory, CG->PredictedPlayerState.NewSnapShot->iServerTime, &vNewAngles);
 
-		vDeltaAngles.x = AngleNormalize180(vNewAngles.x - vOldAngles.x);
-		vDeltaAngles.y = AngleNormalize180(vNewAngles.y - vOldAngles.y);
-		vDeltaAngles.z = AngleNormalize180(vNewAngles.z - vOldAngles.z);
+		vDeltaAngles.x = AngleNormalize180(vNewAngles.x, vOldAngles.x);
+		vDeltaAngles.y = AngleNormalize180(vNewAngles.y, vOldAngles.y);
+		vDeltaAngles.z = AngleNormalize180(vNewAngles.z, vOldAngles.z);
 		
 		vDeltaAngles.x = (float)GetSign(vDeltaAngles.x);
 		vDeltaAngles.y = (float)GetSign(vDeltaAngles.y);

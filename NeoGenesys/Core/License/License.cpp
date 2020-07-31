@@ -90,7 +90,7 @@ namespace NeoGenesys
 				std::string szLine;
 				std::stringstream szStream;
 
-				szStream << HttpRequest(VMProtectDecryptString("www.genesyscheats.com"), VMProtectDecryptString("/NeoGenesys"));
+				szStream << HttpRequest(VMProtectDecryptString("www.genesyscheats.com"), VMProtectDecryptString("/NeoGenesys.txt"));
 
 				while (std::getline(szStream, szLine))
 				{

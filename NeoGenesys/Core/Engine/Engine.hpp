@@ -46,8 +46,7 @@
 #define RadiansToDegrees(a) ((a)*(180.0f/(float)M_PI))
 #define AngleToShort(a) ((int)((a)*(65536/360.0f))&65535)
 #define ShortToAngle(a) ((float)((a)*(360.0f/65536)))
-#define AngleNormalize360(a) (ShortToAngle(AngleToShort((a))))
-#define AngleNormalize180(a) (((a)/360.0f-floorf((a)/360.0f+0.5f))*360.0f)
+#define AngleNormalize(a) (ShortToAngle(AngleToShort((a))))
 #define AngleCompare180(a) (((a)<90.0f&&(a)>-90.0f)||((a)>270.0f||(a)<-270.0f))
 #define Dereference(a) (*(decltype(a)*)(a))
 
@@ -130,6 +129,7 @@
 #define OFF_VECTORANGLES 0x1404E36A0
 #define OFF_ANGLEVECTORS 0x1404E39E0
 #define OFF_VECTORNORMALIZE 0x140147FE0
+#define OFF_ANGLENORMALIZE180 0x1404DEA70
 #define OFF_EXECUTEKEY 0x1402BF0E0
 #define OFF_ISGAMEPADENABLED 0x1402C0DB0
 #define OFF_SETZOOMSTATE 0x1402B9D70
@@ -1809,6 +1809,13 @@ namespace NeoGenesys
 	FORCEINLINE void VectorNormalize(ImVec3* angles)
 	{
 		return VariadicCall<void>(OFF_VECTORNORMALIZE, angles);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE float AngleNormalize180(float angle1, float angle2)
+	{
+		return VariadicCall<float>(OFF_ANGLENORMALIZE180, angle1, angle2);
 	}
 	/*
 	//=====================================================================================

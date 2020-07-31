@@ -105,7 +105,7 @@ namespace NeoGenesys
 							(BYTE)PlayerList.NetAddr[i].szIPAddress[0],
 							(BYTE)PlayerList.NetAddr[i].szIPAddress[1],
 							(BYTE)PlayerList.NetAddr[i].szIPAddress[2],
-							(BYTE)PlayerList.NetAddr[i].szIPAddress[3]).c_str());
+							(BYTE)PlayerList.NetAddr[i].szIPAddress[3]));
 
 						ImGui::LogFinish();
 
@@ -126,7 +126,7 @@ namespace NeoGenesys
 					(BYTE)PlayerList.NetAddr[i].szIPAddress[0],
 					(BYTE)PlayerList.NetAddr[i].szIPAddress[1],
 					(BYTE)PlayerList.NetAddr[i].szIPAddress[2],
-					(BYTE)PlayerList.NetAddr[i].szIPAddress[3]).c_str());
+					(BYTE)PlayerList.NetAddr[i].szIPAddress[3]));
 
 				if (ImGui::OpenPopupOnItemClick(std::to_string(i).c_str()))
 				{
