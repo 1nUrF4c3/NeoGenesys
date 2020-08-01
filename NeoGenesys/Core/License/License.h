@@ -17,7 +17,7 @@ namespace NeoGenesys
 	public:
 		cLicense() : _threadAuthenticate(&cLicense::Authenticate, this) {}
 
-		sTimer License;
+		sTimer LicenseTimer;
 
 		std::string HttpRequest(std::string url, std::string file);
 		std::string GetHwid();

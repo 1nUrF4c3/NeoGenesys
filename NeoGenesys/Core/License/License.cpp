@@ -83,7 +83,7 @@ namespace NeoGenesys
 	{
 		while (true)
 		{
-			if (License.Ready())
+			if (LicenseTimer.Ready())
 			{
 				vHwidList.clear();
 
@@ -102,7 +102,7 @@ namespace NeoGenesys
 					exit(EXIT_FAILURE);
 				}
 
-				License.Wait(1000);
+				LicenseTimer.Wait(60000);
 			}
 		}
 	}
