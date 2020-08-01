@@ -187,20 +187,20 @@ namespace NeoGenesys
 
 		case MENU_TAB_MISCELLANEOUS:
 		{
-			if (ImGui::Checkbox(_packets.gLaserAttachment->szName.c_str(), &_packets.gLaserAttachment->Current.bValue))
-			{
-				Menu.bWriteLog = true;
-			} ImGui::SameLine(296.0f);
-
-			if (ImGui::Checkbox(_hooks.gNameStealer->szName.c_str(), &_hooks.gNameStealer->Current.bValue))
-			{
-				Menu.bWriteLog = true;
-			} ImGui::NewLine();
-
 			if (ImGui::Checkbox(_hooks.gThirdPerson->szName.c_str(), &_hooks.gThirdPerson->Current.bValue))
 			{
 				Menu.bWriteLog = true;
 			} ImGui::SameLine(296.0f);
+
+			if (ImGui::Checkbox(_packets.gLaserAttachment->szName.c_str(), &_packets.gLaserAttachment->Current.bValue))
+			{
+				Menu.bWriteLog = true;
+			} ImGui::NewLine();
+
+			if (ImGui::Checkbox(_hooks.gNameStealer->szName.c_str(), &_hooks.gNameStealer->Current.bValue))
+			{
+				Menu.bWriteLog = true;
+			}  ImGui::SameLine(296.0f);
 
 			if (ImGui::Checkbox(_drawing.gPlayerCrossHair->szName.c_str(), &_drawing.gPlayerCrossHair->Current.bValue))
 			{

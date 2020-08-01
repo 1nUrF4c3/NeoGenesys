@@ -43,9 +43,9 @@ namespace NeoGenesys
 			XML.set("NeoGenesys.WallHack.Missiles", _drawing.gMissiles->Current.bValue);
 			XML.set("NeoGenesys.WallHack.Items", _drawing.gItems->Current.bValue);
 
+			XML.set("NeoGenesys.Miscellaneous.ThirdPerson", _hooks.gThirdPerson->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.LaserAttachment", _packets.gLaserAttachment->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.NameStealer", _hooks.gNameStealer->Current.bValue);
-			XML.set("NeoGenesys.Miscellaneous.ThirdPerson", _hooks.gThirdPerson->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.CrossHair", _drawing.gPlayerCrossHair->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Compass", _drawing.gPlayerCompass->Current.bValue);
 			XML.set("NeoGenesys.Miscellaneous.Radar", _drawing.gPlayerRadar->Current.bValue);
@@ -162,9 +162,9 @@ namespace NeoGenesys
 			XML.get_if_present("NeoGenesys.WallHack.Missiles", _drawing.gMissiles->Current.bValue);
 			XML.get_if_present("NeoGenesys.WallHack.Items", _drawing.gItems->Current.bValue);
 
+			XML.get_if_present("NeoGenesys.Miscellaneous.ThirdPerson", _hooks.gThirdPerson->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.LaserAttachment", _packets.gLaserAttachment->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.NameStealer", _hooks.gNameStealer->Current.bValue);
-			XML.get_if_present("NeoGenesys.Miscellaneous.ThirdPerson", _hooks.gThirdPerson->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.CrossHair", _drawing.gPlayerCrossHair->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Compass", _drawing.gPlayerCompass->Current.bValue);
 			XML.get_if_present("NeoGenesys.Miscellaneous.Radar", _drawing.gPlayerRadar->Current.bValue);
@@ -264,9 +264,9 @@ namespace NeoGenesys
 		_drawing.gMissiles->Current.bValue = _drawing.gMissiles->Reset.bValue;
 		_drawing.gItems->Current.bValue = _drawing.gItems->Reset.bValue;
 
+		_hooks.gThirdPerson->Current.bValue = _hooks.gThirdPerson->Reset.bValue;
 		_packets.gLaserAttachment->Current.bValue = _packets.gLaserAttachment->Reset.bValue;
 		_hooks.gNameStealer->Current.bValue = _hooks.gNameStealer->Reset.bValue;
-		_hooks.gThirdPerson->Current.bValue = _hooks.gThirdPerson->Reset.bValue;
 		_drawing.gPlayerCrossHair->Current.bValue = _drawing.gPlayerCrossHair->Reset.bValue;
 		_drawing.gPlayerCompass->Current.bValue = _drawing.gPlayerCompass->Reset.bValue;
 		_drawing.gPlayerRadar->Current.bValue = _drawing.gPlayerRadar->Reset.bValue;
