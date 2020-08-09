@@ -65,19 +65,41 @@ namespace NeoGenesys
 			{
 				if (AimState.bLockonTarget)
 				{
-					if (WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)))
+					if (WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 					{
 						if (AimState.bAkimbo)
-							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT);
+						{
+							if (IsGamePadEnabled())
+							{
+								usercmd->iButtons |= BUTTON_FIRERIGHT;
+							}
+
+							else
+							{
+								usercmd->iButtons |= BUTTON_FIRELEFT;
+							}
+						}
 
 						else
-							usercmd->iButtons |= (IsGamePadEnabled() ? BUTTON_FIRELEFT : BUTTON_FIRERIGHT);
+						{
+							if (IsGamePadEnabled())
+							{
+								usercmd->iButtons |= BUTTON_FIRELEFT;
+							}
+
+							else
+							{
+								usercmd->iButtons |= BUTTON_FIRERIGHT;
+							}
+						}
 
 						AimState.bAkimbo = !AimState.bAkimbo;
 					}
 
 					else
+					{
 						usercmd->iButtons |= BUTTON_FIRELEFT;
+					}
 				}
 			}
 		}

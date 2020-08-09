@@ -630,38 +630,38 @@ namespace NeoGenesys
 	{
 		for (int i = 0; i < MAX_ENTITIES; i++)
 		{
-			if (_targetList.EntityList[i].bW2SSuccess && _targetList.EntityList[i].bIsValid)
+			if ((gWallHackMode->Current.iValue == WALLHACK_MODE_AXIS && _targetList.EntityIsEnemy(i)) ||
+				(gWallHackMode->Current.iValue == WALLHACK_MODE_ALLIES && !_targetList.EntityIsEnemy(i)) ||
+				gWallHackMode->Current.iValue == WALLHACK_MODE_ALL)
 			{
-				switch (CEntity[i].NextEntityState.iEntityType)
+				if (_targetList.EntityList[i].bW2SSuccess && _targetList.EntityList[i].bIsValid)
 				{
-				case ET_PLAYER:
-				{
-					if ((gWallHackMode->Current.iValue == WALLHACK_MODE_AXIS && _targetList.EntityIsEnemy(i)) ||
-						(gWallHackMode->Current.iValue == WALLHACK_MODE_ALLIES && !_targetList.EntityIsEnemy(i)) ||
-						gWallHackMode->Current.iValue == WALLHACK_MODE_ALL)
+					switch (CEntity[i].NextEntityState.iEntityType)
+					{
+					case ET_PLAYER:
 					{
 						DrawPlayer(&CEntity[i], _targetList.EntityList[i].vBones2D, _targetList.EntityList[i].vCorners2D, _targetList.EntityList[i].vCenter2D, _targetList.EntityList[i].vLower.y - _targetList.EntityList[i].vUpper.y,
 							_mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), ClientInfo[i].szName, _targetList.EntityList[i].cColor);
+					} break;
+
+					case ET_ITEM:
+					{
+						if (gItems->Current.bValue)
+							DrawItem(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
+					} break;
+
+					case ET_MISSILE:
+					{
+						if (gMissiles->Current.bValue && CEntity[i].NextEntityState.iOtherEntityNum < FindVariable("sv_maxclients")->Current.iValue)
+							DrawMissile(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
+					} break;
+
+					case ET_AGENT:
+					{
+						if (gAgents->Current.bValue)
+							DrawAgent(&CEntity[i], _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
+					} break;
 					}
-				} break;
-
-				case ET_ITEM:
-				{
-					if (gItems->Current.bValue)
-						DrawItem(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
-				} break;
-
-				case ET_MISSILE:
-				{
-					if (gMissiles->Current.bValue && _targetList.EntityIsEnemy(i) && CEntity[i].NextEntityState.iOtherEntityNum < FindVariable("sv_maxclients")->Current.iValue)
-						DrawMissile(_targetList.EntityList[i].szWeapon, _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
-				} break;
-
-				case ET_AGENT:
-				{
-					if (gAgents->Current.bValue && _targetList.EntityIsEnemy(i))
-						DrawAgent(&CEntity[i], _targetList.EntityList[i].vCenter2D, _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), gColorText->Current.cValue);
-				} break;
 				}
 			}
 		}

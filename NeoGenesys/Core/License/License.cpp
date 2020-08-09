@@ -10,15 +10,13 @@ namespace NeoGenesys
 
 	std::string cLicense::HttpRequest(std::string url, std::string file)
 	{
-		HINTERNET hInternet = InternetOpen(
-			VMProtectDecryptString("NeoGenesys"),
-			INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, NULL);
+		HINTERNET hInternet = InternetOpen(VMProtectDecryptString("NeoGenesys"), INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, NULL);
 		if (hInternet == NULL)
 		{
 			return "";
 		}
 
-		HINTERNET hConnect = InternetConnect(hInternet, url.c_str(), INTERNET_DEFAULT_HTTP_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, 0, NULL);
+		HINTERNET hConnect = InternetConnect(hInternet, url.c_str(), INTERNET_DEFAULT_HTTPS_PORT, NULL, NULL, INTERNET_SERVICE_HTTP, NULL, NULL);
 		if (hConnect == NULL)
 		{
 			InternetCloseHandle(hInternet);
@@ -26,9 +24,9 @@ namespace NeoGenesys
 		}
 
 		LPCSTR szAcceptTypes[] = { VMProtectDecryptString("text/*"), NULL };
+		DWORD dwFlags = INTERNET_FLAG_SECURE | INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_RELOAD;
 
-		HINTERNET hRequest = HttpOpenRequest(hConnect, VMProtectDecryptString("GET"), file.c_str(), VMProtectDecryptString("HTTP/1.0"), NULL, szAcceptTypes,
-			INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_RELOAD, 0);
+		HINTERNET hRequest = HttpOpenRequest(hConnect, VMProtectDecryptString("GET"), file.c_str(), VMProtectDecryptString("HTTP/1.0"), NULL, szAcceptTypes, dwFlags, NULL);
 		if (hRequest == NULL)
 		{
 			InternetCloseHandle(hConnect);
@@ -36,7 +34,7 @@ namespace NeoGenesys
 			return "";
 		}
 
-		BOOL bRequestSent = HttpSendRequest(hRequest, NULL, 0, NULL, 0);
+		BOOL bRequestSent = HttpSendRequest(hRequest, NULL, NULL, NULL, NULL);
 		if (!bRequestSent)
 		{
 			InternetCloseHandle(hRequest);
@@ -52,7 +50,7 @@ namespace NeoGenesys
 
 		std::string szData;
 
-		while (bKeepReading && dwBytesRead != 0)
+		while (bKeepReading && dwBytesRead)
 		{
 			bKeepReading = InternetReadFile(hRequest, szBuff, BUFF_SIZE, &dwBytesRead);
 			szData.append(szBuff, dwBytesRead);
@@ -90,7 +88,7 @@ namespace NeoGenesys
 				std::string szLine;
 				std::stringstream szStream;
 
-				szStream << HttpRequest(VMProtectDecryptString("www.genesyscheats.com"), VMProtectDecryptString("/NeoGenesys.txt"));
+				szStream << HttpRequest(szUrl, szFile);
 
 				while (std::getline(szStream, szLine))
 				{
@@ -102,7 +100,7 @@ namespace NeoGenesys
 					exit(EXIT_FAILURE);
 				}
 
-				LicenseTimer.Wait(60000);
+				LicenseTimer.Wait(2000);
 			}
 		}
 	}

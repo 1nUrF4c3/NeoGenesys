@@ -33,8 +33,6 @@
 #define BIND_ATTACK0 0x2
 #define BIND_ATTACK_AKIMBO_ACCESSIBLE1 0x4B
 #define BIND_ATTACK_AKIMBO_ACCESSIBLE0 0x4C
-#define WEAPON_DISABLE 0xC3
-#define WEAPON_ENABLE 0x48
 #define M_METERS 55.0f
 #define M_FEET (M_METERS*3.28084f)
 #define M_PI_DOUBLE ((float)M_PI*2.0f)
@@ -107,6 +105,7 @@
 #define OFF_GETPERKINDEX 0x14021BA90
 #define OFF_ISPLAYERRELOADING 0x1402AA1A0
 #define OFF_WEAPONBOTHCLIPEMPTY 0x1402386A0
+#define OFF_WEAPONISDUALWIELD 0x140247B70
 #define OFF_ISRIFLEBULLET 0x1402423F0
 #define OFF_WORLDTOSCREEN 0x140262190
 #define OFF_ADDMESSAGEICON 0x1402BAAE0
@@ -1316,6 +1315,7 @@ namespace NeoGenesys
 	private:
 		char _0xA52[0x13];
 	public:
+		bool bNoDualWield;
 		bool bFlipKillIcon;
 	private:
 		char _0xA66[0x32];
@@ -1655,6 +1655,13 @@ namespace NeoGenesys
 	FORCEINLINE bool WeaponBothClipEmpty(sPlayerState* playerstate)
 	{
 		return VariadicCall<bool>(OFF_WEAPONBOTHCLIPEMPTY, playerstate);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE bool WeaponIsDualWield(int weapon)
+	{
+		return VariadicCall<bool>(OFF_WEAPONISDUALWIELD, weapon);
 	}
 	/*
 	//=====================================================================================

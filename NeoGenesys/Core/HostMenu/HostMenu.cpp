@@ -59,7 +59,7 @@ namespace NeoGenesys
 				if (HostMenu.PlayerMod[i].bFreezePosition)
 				{
 					PlayerState[i].vOrigin = HostMenu.PlayerMod[i].vPosition;
-					PlayerState[i].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+					PlayerState[i].vVelocity *= 0.0f;
 					PlayerState[i].iGravity = 0;
 				}
 
@@ -88,7 +88,7 @@ namespace NeoGenesys
 	*/
 	void cHostMenu::GravityGun()
 	{
-		if (gGravityGun->Current.bValue)
+		if (gGravityGun->Current.iValue > GRAVITY_GUN_OFF)
 		{
 			if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 			{
@@ -110,20 +110,23 @@ namespace NeoGenesys
 				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
 				{
 					ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
-					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vCenter3D - CEntity[HostMenu.iGravityGunNum].vOrigin;
+					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vBones3D[_targetList.EntityList[HostMenu.iGravityGunNum].iBoneIndex] - CEntity[HostMenu.iGravityGunNum].vOrigin;
 					ImVec3 vTeleport = vCrosshair - vOffset;
 
 					PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
-					PlayerState[HostMenu.iGravityGunNum].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+					PlayerState[HostMenu.iGravityGunNum].vVelocity *= 0.0f;
 					PlayerState[HostMenu.iGravityGunNum].iGravity = 0;
 
-					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
-
-					if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+					if (gGravityGun->Current.iValue == GRAVITY_GUN_LAUNCH)
 					{
-						PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
-						HostMenu.iGravityGunNum = -1;
-						SetZoomState(false);
+						sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+
+						if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+						{
+							PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
+							HostMenu.iGravityGunNum = -1;
+							SetZoomState(false);
+						}
 					}
 				}
 			}
@@ -140,11 +143,11 @@ namespace NeoGenesys
 		{
 			if (_targetList.EntityIsValid(i))
 			{
-				ImVec3 vOffset = _targetList.EntityList[i].vCenter3D - CEntity[i].vOrigin;
+				ImVec3 vOffset = _targetList.EntityList[i].vBones3D[_targetList.EntityList[i].iBoneIndex] - CEntity[i].vOrigin;
 				ImVec3 vTeleport = vCrosshair - vOffset;
 
 				PlayerState[i].vOrigin = vTeleport;
-				PlayerState[i].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+				PlayerState[i].vVelocity *= 0.0f;
 				PlayerState[i].iGravity = 0;
 			}
 		}
@@ -348,17 +351,30 @@ namespace NeoGenesys
 			HostMenu.vWeaponDisplayNames.push_back(_strdup(acut::StripColorCodes(szDisplay).c_str()));
 		}
 
+		if (ImGui::Checkbox("", &HostMenu.bAkimbo))
+		{
+			HostMenu.bWriteLog = true;
+		} ImGui::SameLine(0.0f, ImGui::GetStyle().FramePadding.x);
+
+		ImGui::PushItemWidth(304.0f - ImGui::GetFrameHeight() - ImGui::GetStyle().FramePadding.x);
 		if (ImGui::Combo("Weapon", &HostMenu.iWeaponID, HostMenu.vWeaponDisplayNames.data(), (int)vWeaponIDs.size()))
 		{
 			HostMenu.bWriteLog = true;
-		} HostMenu.vWeaponCompleteNames.clear(); HostMenu.vWeaponDisplayNames.clear();
+		} HostMenu.vWeaponCompleteNames.clear(); HostMenu.vWeaponDisplayNames.clear(); ImGui::PopItemWidth();
 
 		if (ImGui::Button("Give Weapon", ImVec2(150.0f, 25.0f)))
 		{
+			std::string szWeaponID(HostMenu.vWeaponCompleteNames[HostMenu.iWeaponID]);
+
+			if (HostMenu.bAkimbo)
+				szWeaponID.append("+akimbo");
+
+			int iWeaponID = GetWeaponForName(szWeaponID);
+
 			TakePlayerWeapon(&PlayerState[HostMenu.iPlayer], GetViewmodelWeapon(&PlayerState[HostMenu.iPlayer]));
-			GivePlayerWeapon(&PlayerState[HostMenu.iPlayer], vWeaponIDs[HostMenu.iWeaponID], false, false, true);
-			GameSendServerCommand(HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", vWeaponIDs[HostMenu.iWeaponID]));
-			AddAmmo(&PlayerState[HostMenu.iPlayer], vWeaponIDs[HostMenu.iWeaponID], false, 255, true);
+			GivePlayerWeapon(&PlayerState[HostMenu.iPlayer], iWeaponID, false, false, false);
+			GameSendServerCommand(HostMenu.iPlayer, SV_CMD_RELIABLE, VariadicText("a %i", iWeaponID));
+			AddAmmo(&PlayerState[HostMenu.iPlayer], iWeaponID, false, 200, true);
 
 			HostMenu.bWriteLog = true;
 		} ImGui::SameLine(0.0f, 4.0f);
@@ -398,7 +414,7 @@ namespace NeoGenesys
 		if (ImGui::Button("Teleport To", ImVec2(98.0f, 25.0f)))
 		{
 			PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin = PlayerState[HostMenu.iPlayer].vOrigin;
-			PlayerState[CG->PredictedPlayerState.iClientNum].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+			PlayerState[CG->PredictedPlayerState.iClientNum].vVelocity *= 0.0f;
 			PlayerState[CG->PredictedPlayerState.iClientNum].iGravity = 0;
 
 			HostMenu.bWriteLog = true;
@@ -407,7 +423,7 @@ namespace NeoGenesys
 		if (ImGui::Button("Teleport From", ImVec2(98.0f, 25.0f)))
 		{
 			PlayerState[HostMenu.iPlayer].vOrigin = PlayerState[CG->PredictedPlayerState.iClientNum].vOrigin;
-			PlayerState[HostMenu.iPlayer].vVelocity = ImVec3(0.0f, 0.0f, 0.0f);
+			PlayerState[HostMenu.iPlayer].vVelocity *= 0.0f;
 			PlayerState[HostMenu.iPlayer].iGravity = 0;
 
 			HostMenu.bWriteLog = true;

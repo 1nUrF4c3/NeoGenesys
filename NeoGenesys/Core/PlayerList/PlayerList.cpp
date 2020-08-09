@@ -56,7 +56,7 @@ namespace NeoGenesys
 				{
 					if (IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 					{
-						if (ImGui::Selectable("Crash"))
+						if (ImGui::MenuItem("Crash"))
 						{
 							Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
 
@@ -64,23 +64,14 @@ namespace NeoGenesys
 						}
 					}
 
-					if (ImGui::Selectable("Ignore"))
+					if (ImGui::MenuItem("Ignore", (const char*)0, &_targetList.Priorities[i].bIsIgnored))
 					{
-						_targetList.Priorities[i].bIsIgnored = !_targetList.Priorities[i].bIsIgnored;
-
 						PlayerList.bWriteLog = true;
-					}
-
-					if (_targetList.Priorities[i].bIsIgnored)
-					{
-						ImGui::SameLine();
-						ImGui::RenderCheckMark(ImGui::GetCurrentWindow()->DrawList, ImGui::GetCurrentWindow()->DC.CursorPos, ImGui::GetColorU32(ImGuiCol_CheckMark), ImGui::GetCurrentContext()->FontSize);
-						ImGui::NewLine();
 					}
 
 					ImGui::Separator();
 
-					if (ImGui::Selectable("Copy ID"))
+					if (ImGui::MenuItem("Copy ID"))
 					{
 						ImGui::LogToClipboard();
 						ImGui::LogText(std::to_string(i).c_str());
@@ -89,7 +80,7 @@ namespace NeoGenesys
 						PlayerList.bWriteLog = true;
 					}
 
-					if (ImGui::Selectable("Copy Name"))
+					if (ImGui::MenuItem("Copy Name"))
 					{
 						ImGui::LogToClipboard();
 						ImGui::LogText(ClientInfo[i].szName);
@@ -98,7 +89,7 @@ namespace NeoGenesys
 						PlayerList.bWriteLog = true;
 					}
 
-					if (ImGui::Selectable("Copy IP Address"))
+					if (ImGui::MenuItem("Copy IP Address"))
 					{
 						ImGui::LogToClipboard();
 						ImGui::LogText(VariadicText("%u.%u.%u.%u",

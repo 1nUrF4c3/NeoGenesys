@@ -145,7 +145,7 @@ namespace NeoGenesys
 			AddLog("7. neo_host_autowall <on|off>\n\t\tEnable/disable host autowall (as host).");
 			AddLog("8. neo_rapid_fire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
 			AddLog("9. neo_super_jump <on|off>\n\t\tEnable/disable super high jump (as host).");
-			AddLog("10. neo_gravity_gun <on|off>\n\t\tEnable/disable gravity gun (as host).");
+			AddLog("10. neo_gravity_gun <off|execute|launch>\n\t\tEnable/disable gravity gun (as host).");
 			AddLog("11. neo_mass_kill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
 			AddLog("12. neo_anti_leave <off|on>\n\t\tEnable/disable player antileave (as host).");
 			AddLog("13. neo_bunny_hop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
@@ -618,23 +618,33 @@ namespace NeoGenesys
 		{
 			if (CmdLine.iArgNum > 0)
 			{
-				if (!Stricmp(CmdLine.szCmdArgs[0], "on"))
+				if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gGravityGun->Current.bValue = true;
+					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_OFF;
 
-					AddLog("Gravity gun has been enabled.");
+					AddLog("Gravity gun has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
-				else if (!Stricmp(CmdLine.szCmdArgs[0], "off"))
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "execute"))
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gGravityGun->Current.bValue = false;
+					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_EXECUTE;
 
-					AddLog("Gravity gun has been disabled.");
+					AddLog("Gravity gun has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
+				}
+
+				else if (!Stricmp(CmdLine.szCmdArgs[0], "launch"))
+				{
+					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
+
+					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_LAUNCH;
+
+					AddLog("Gravity gun has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 

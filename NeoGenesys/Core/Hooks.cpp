@@ -85,7 +85,7 @@ namespace NeoGenesys
 			if (bp->iEntityNum == CG->PredictedPlayerState.iClientNum)
 			{
 				sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
-				int iSeed = _removals.TransformSeed(WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
+				int iSeed = _removals.TransformSeed(WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT), pUserCmd->iServerTime);
 
 				ImVec3 vAngles, vForward, vRight, vUp;
 				vAngles = _aimBot.AimState.vAimAngles;
@@ -114,7 +114,7 @@ namespace NeoGenesys
 					sOrientation Orientation;
 					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
 
-					if (GetTagOrientation((WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
+					if (GetTagOrientation((WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
 					{
 						cDrawing::sTracer Tracer;
 

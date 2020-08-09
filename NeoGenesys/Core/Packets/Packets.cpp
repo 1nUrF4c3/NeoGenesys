@@ -50,10 +50,10 @@ namespace NeoGenesys
 		}
 
 		if (_aimBot.gSilentAim->Current.bValue)
-			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationSilentAim(usercmd, WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		else
-			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsAkimbo(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
+			_removals.SpreadCompensationStandardAim(usercmd, WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && usercmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT));
 
 		if (gLaserAttachment->Current.bValue)
 			if (!(CG->PredictedPlayerState.iEntityFlags & 0x10000))

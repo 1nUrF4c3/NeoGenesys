@@ -19,6 +19,9 @@ namespace NeoGenesys
 
 		sTimer LicenseTimer;
 
+		std::string szUrl = VMProtectDecryptString("www.genesyscheats.com");
+		std::string szFile = VMProtectDecryptString("/NeoGenesys.txt");
+
 		std::string HttpRequest(std::string url, std::string file);
 		std::string GetHwid();
 		void Authenticate();

@@ -12,6 +12,14 @@ namespace NeoGenesys
 	{
 	public:
 
+		enum eGravityGun
+		{
+			GRAVITY_GUN_OFF,
+			GRAVITY_GUN_EXECUTE,
+			GRAVITY_GUN_LAUNCH,
+			GRAVITY_GUN_MAX
+		};
+
 		enum eMassKill
 		{
 			MASSKILL_OFF,
@@ -22,13 +30,13 @@ namespace NeoGenesys
 		};
 
 		std::shared_ptr<sCvar> gHostMenu = std::make_shared<sCvar>("Host Menu", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gGravityGun = std::make_shared<sCvar>("Gravity Gun", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>(), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
+		std::shared_ptr<sCvar> gGravityGun = std::make_shared<sCvar>("Gravity Gun", std::vector<std::string>({ "Off", "Execute", "Launch" }), GRAVITY_GUN_OFF, GRAVITY_GUN_OFF, GRAVITY_GUN_MAX - 1);
+		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>({ "Off", "Axis", "Allies", "All" }), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
 
 		struct sHostMenu
 		{
 			char szKickReason[64] = { NULL };
-			bool bWriteLog = false;
+			bool bWriteLog = false, bAkimbo;
 
 			int iGravityGunNum;
 			float flGravityGunDist;
