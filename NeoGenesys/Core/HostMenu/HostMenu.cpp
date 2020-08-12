@@ -69,7 +69,7 @@ namespace NeoGenesys
 				}
 			}
 
-			if (!CharacterInfo[i].iInfoValid)
+			if (!CharacterInformation[i].iInfoValid)
 			{
 				HostMenu.PlayerMod[i].bGodMode = false;
 				HostMenu.PlayerMod[i].bNoClip = false;
@@ -77,7 +77,10 @@ namespace NeoGenesys
 				HostMenu.PlayerMod[i].bInvisibility = false;
 				HostMenu.PlayerMod[i].bSuperSpeed = false;
 				HostMenu.PlayerMod[i].bFreezePosition = false;
+			}
 
+			if (!IsUserRegistered(GetCurrentSession(), i) && !CharacterInformation[i].iInfoValid)
+			{
 				_targetList.Priorities[i].bIsPrioritized = false;
 				_targetList.Priorities[i].bIsIgnored = false;
 			}
@@ -202,7 +205,7 @@ namespace NeoGenesys
 
 		if (iTargetNum != CG->PredictedPlayerState.iClientNum && CEntity[iTargetNum].NextEntityState.iWeapon)
 		{
-			if (CharacterInfo[iTargetNum].iInfoValid && CharacterInfo[iTargetNum].iNextValid)
+			if (CharacterInformation[iTargetNum].iInfoValid && CharacterInformation[iTargetNum].iNextValid)
 			{
 				if ((gMassKill->Current.iValue == MASSKILL_AXIS && _targetList.EntityIsEnemy(iTargetNum)) ||
 					(gMassKill->Current.iValue == MASSKILL_ALLIES && !_targetList.EntityIsEnemy(iTargetNum)) ||
@@ -250,7 +253,7 @@ namespace NeoGenesys
 
 			for (int i = 0; i < count; iCurrentIndex++)
 			{
-				if (CharacterInfo[iCurrentIndex].iInfoValid)
+				if (CharacterInformation[iCurrentIndex].iInfoValid)
 					continue;
 
 				vSpawnedBots.push_back(AddTestClient(TC_NONE, TEAM_FREE, iCurrentIndex, sEntRef(iCurrentIndex, 0)));
@@ -278,11 +281,11 @@ namespace NeoGenesys
 		ImGui::Begin("HOST MENU", &gHostMenu->Current.bValue, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse);
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
-			if (CharacterInfo[i].iInfoValid)
-				HostMenu.vPlayers.push_back(std::make_pair(i, ClientInfo[i].szName));
+			if (CharacterInformation[i].iInfoValid)
+				HostMenu.vPlayers.push_back(std::make_pair(i, ClientInformation[i].szName));
 
 		ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-		if (ImGui::BeginCombo("", ClientInfo[HostMenu.iPlayer].szName))
+		if (ImGui::BeginCombo("", ClientInformation[HostMenu.iPlayer].szName))
 		{
 			HostMenu.GetPlayerSelection();
 			ImGui::EndCombo();
@@ -331,7 +334,7 @@ namespace NeoGenesys
 
 		if (ImGui::Combo("Team", (int*)&PlayerState[HostMenu.iPlayer].ClientState.iTeam, HostMenu.szTeam.data(), TEAM_MAX))
 		{
-			TeamChanged(ClientInfo[HostMenu.iPlayer].iClientNum);
+			TeamChanged(ClientInformation[HostMenu.iPlayer].iClientNum);
 			HostMenu.bWriteLog = true;
 		}
 

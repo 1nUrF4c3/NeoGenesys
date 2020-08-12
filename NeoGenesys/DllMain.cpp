@@ -171,12 +171,17 @@ void HOOKCALL hClientFrame(sGEntity* entity)
 
 //=====================================================================================
 
-void Initialize()
+void Init()
 {
+	while (!hGameOverlayRenderer64.lpBaseOfDll || !hGameOverlayRenderer64.EntryPoint || !hGameOverlayRenderer64.SizeOfImage)
+		hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
+
+	while (!oPresent)
+		oPresent = *(tPresent*)ReadPointer(FindPattern((std::uintptr_t)hGameOverlayRenderer64.lpBaseOfDll, (std::uintptr_t)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5);
+
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 
-	oPresent = (tPresent)SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)&hPresent, bGameOverlayRenderer64 ? 0 : 8);
-
+	AttachHook(oPresent, hPresent);
 	AttachHook(oRefresh, hRefresh);
 	AttachHook(oWritePacket, hWritePacket);
 	AttachHook(oPredictPlayerState, hPredictPlayerState);
@@ -186,16 +191,17 @@ void Initialize()
 	AttachHook(oObituary, hObituary);
 	AttachHook(oAddCmdDrawText, hAddCmdDrawText);
 	AttachHook(oClientFrame, hClientFrame);
+
+	crash_exploit::init();
 }
 
 //=====================================================================================
 
-void Deallocate()
+void Free()
 {
 	RemoveVectoredExceptionHandler(_hooks.pVectoredExceptionHandler);
 
-	SwapVMT(bGameOverlayRenderer64 ? (DWORD_PTR)&dwPresent : dwPresent, (DWORD_PTR)oPresent, bGameOverlayRenderer64 ? 0 : 8);
-
+	DetachHook(oPresent, hPresent);
 	DetachHook(oRefresh, hRefresh);
 	DetachHook(oWritePacket, hWritePacket);
 	DetachHook(oPredictPlayerState, hPredictPlayerState);
@@ -206,6 +212,8 @@ void Deallocate()
 	DetachHook(oAddCmdDrawText, hAddCmdDrawText);
 	DetachHook(oClientFrame, hClientFrame);
 
+	crash_exploit::free();
+
 	_mainGui._device->Release();
 	_mainGui._deviceContext->Release();
 
@@ -213,7 +221,7 @@ void Deallocate()
 	ImGui_ImplDX11_Shutdown();
 	ImGui::DestroyContext();
 
-	SetWindowLongPtr(_mainGui.hWindow, GWLP_WNDPROC, (LONG_PTR)_mainGui.oWindowProcess);
+	SetWindowLongPtr(_mainGui.hWindow, GWLP_WNDPROC, (std::intptr_t)_mainGui.oWindowProcess);
 }
 
 //=====================================================================================
@@ -225,11 +233,11 @@ BOOL APIENTRY DllMain(_In_ HINSTANCE hinstDLL, _In_ DWORD fdwReason, _In_ LPVOID
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		Initialize();
+		std::thread(Init).detach();
 		return TRUE;
 
 	case DLL_PROCESS_DETACH:
-		Deallocate();
+		std::thread(Free).detach();
 		return TRUE;
 
 	default:

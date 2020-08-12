@@ -106,6 +106,24 @@
     <Filter Include="Core\License">
       <UniqueIdentifier>{94239af5-e03e-49dc-b00d-05a30160df04}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MinHook">
+      <UniqueIdentifier>{42460ed9-e8dc-412a-8c3a-23333882602d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinHook\Include">
+      <UniqueIdentifier>{9f77dde7-a360-4d5e-a10f-3b8d38ef5638}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinHook\Lib">
+      <UniqueIdentifier>{bbeb71ab-a242-4a5e-a1af-ca97593465ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinHook\Lib\x64">
+      <UniqueIdentifier>{69a78922-7153-45be-85d4-c0e7de235871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MinHook\Lib\x86">
+      <UniqueIdentifier>{d79f49cb-f59a-4237-b7ad-cf2aca079974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\CrashExploit">
+      <UniqueIdentifier>{b8fc97d4-5b22-4236-9177-838c0ff83b5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -180,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="Core\License\License.cpp">
       <Filter>Core\License</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CrashExploit\CrashExploit.cpp">
+      <Filter>Core\CrashExploit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,6 +346,12 @@
     <ClInclude Include="ImGui\Fonts\Tahoma.hpp">
       <Filter>ImGui\Fonts</Filter>
     </ClInclude>
+    <ClInclude Include="MinHook\Include\MinHook.h">
+      <Filter>MinHook\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CrashExploit\CrashExploit.h">
+      <Filter>Core\CrashExploit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Detours\Lib\x86\detours.lib">
@@ -338,6 +365,12 @@
     </Library>
     <Library Include="VMProtect\Lib\x64\VMProtectSDK64.lib">
       <Filter>VMProtect\Lib\x64</Filter>
+    </Library>
+    <Library Include="MinHook\Lib\x86\libMinHook.x86.lib">
+      <Filter>MinHook\Lib\x86</Filter>
+    </Library>
+    <Library Include="MinHook\Lib\x64\libMinHook.x64.lib">
+      <Filter>MinHook\Lib\x64</Filter>
     </Library>
   </ItemGroup>
   <ItemGroup>

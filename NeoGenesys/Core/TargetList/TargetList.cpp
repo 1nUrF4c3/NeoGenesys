@@ -312,9 +312,9 @@ namespace NeoGenesys
 	{
 		if (CEntity[index].NextEntityState.iEntityType == ET_PLAYER)
 		{
-			if (CharacterInfo[index].iTeam > TEAM_FREE)
+			if (CharacterInformation[index].iTeam > TEAM_FREE)
 			{
-				if (CharacterInfo[index].iTeam != CharacterInfo[CG->PredictedPlayerState.iClientNum].iTeam)
+				if (CharacterInformation[index].iTeam != CharacterInformation[CG->PredictedPlayerState.iClientNum].iTeam)
 					return true;
 			}
 
@@ -327,9 +327,9 @@ namespace NeoGenesys
 
 		else
 		{
-			if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam > TEAM_FREE)
+			if (CharacterInformation[CEntity[index].NextEntityState.iOtherEntityNum].iTeam > TEAM_FREE)
 			{
-				if (CharacterInfo[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInfo[CG->PredictedPlayerState.iClientNum].iTeam)
+				if (CharacterInformation[CEntity[index].NextEntityState.iOtherEntityNum].iTeam != CharacterInformation[CG->PredictedPlayerState.iClientNum].iTeam)
 					return true;
 			}
 

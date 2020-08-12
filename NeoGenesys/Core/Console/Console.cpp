@@ -361,7 +361,7 @@ namespace NeoGenesys
 			{
 				AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-				strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })), strlen(szUsername) + 1, szUsername, 32);
+				strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })), strlen(szUsername) + 1, szUsername, 32);
 				Cbuf_AddText(VariadicText("name \"%s\"\n", szUsername));
 
 				AddLog("Name has been changed to \"%s.\"", szUsername);
@@ -1257,7 +1257,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 0, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1282,7 +1282,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 1, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1307,7 +1307,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[CG->PredictedPlayerState.iClientNum], &GEntity[atoi(CmdLine.szCmdArgs[1])], 2, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, CmdLine.szCmdArgs[0], ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1348,7 +1348,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], NULL, 0, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1373,7 +1373,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], NULL, 1, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1398,7 +1398,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], NULL, 2, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, CmdLine.szCmdArgs[1], CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1431,7 +1431,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], &GEntity[atoi(CmdLine.szCmdArgs[1])], 0, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1456,7 +1456,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], &GEntity[atoi(CmdLine.szCmdArgs[1])], 1, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1481,7 +1481,7 @@ namespace NeoGenesys
 
 								Say(&GEntity[atoi(CmdLine.szCmdArgs[0])], &GEntity[atoi(CmdLine.szCmdArgs[1])], 2, szMessage);
 
-								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInfo[atoi(CmdLine.szCmdArgs[0])].szName, ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
+								AddLog("Message \"%s\" has been sent from %s to %s in %s mode.", szMessage, ClientInformation[atoi(CmdLine.szCmdArgs[0])].szName, ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName, CmdLine.szCmdArgs[2]);
 								AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 							}
 
@@ -1633,7 +1633,7 @@ namespace NeoGenesys
 				int iCurrentPlayers = 0;
 
 				for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
-					if (CharacterInfo[i].iInfoValid)
+					if (CharacterInformation[i].iInfoValid)
 						iCurrentPlayers++;
 
 				if (!Stricmp(CmdLine.szCmdArgs[0], "max"))
@@ -1738,7 +1738,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bGodMode = true;
 
-						AddLog("God mode has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("God mode has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1767,7 +1767,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bGodMode = false;
 
-						AddLog("God mode has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("God mode has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1812,7 +1812,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bNoClip = true;
 
-						AddLog("No clip has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("No clip has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1841,7 +1841,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bNoClip = false;
 
-						AddLog("No clip has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("No clip has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1886,7 +1886,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInfiniteAmmo = true;
 
-						AddLog("Infinite ammo has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Infinite ammo has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1915,7 +1915,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInfiniteAmmo = false;
 
-						AddLog("Infinite ammo has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Infinite ammo has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1960,7 +1960,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInvisibility = true;
 
-						AddLog("Invisibility has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Invisibility has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -1989,7 +1989,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bInvisibility = false;
 
-						AddLog("Invisibility has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Invisibility has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -2034,7 +2034,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bSuperSpeed = true;
 
-						AddLog("Super speed has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Super speed has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -2063,7 +2063,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bSuperSpeed = false;
 
-						AddLog("Super speed has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Super speed has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -2108,7 +2108,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bFreezePosition = true;
 
-						AddLog("Freeze position has been enabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Freeze position has been enabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 
@@ -2137,7 +2137,7 @@ namespace NeoGenesys
 
 						_hostMenu.HostMenu.PlayerMod[atoi(CmdLine.szCmdArgs[1])].bFreezePosition = false;
 
-						AddLog("Freeze position has been disabled for %s.", ClientInfo[atoi(CmdLine.szCmdArgs[1])].szName);
+						AddLog("Freeze position has been disabled for %s.", ClientInformation[atoi(CmdLine.szCmdArgs[1])].szName);
 						AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 					}
 

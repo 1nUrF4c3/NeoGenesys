@@ -23,7 +23,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gKillSpamMessage = std::make_shared<sCvar>("Killspam Message", std::vector<std::string>(), _strdup(""));
 		std::shared_ptr<sCvar> gAntiLeave = std::make_shared<sCvar>("Anti-Leave", std::vector<std::string>(), false);
 
-		QWORD dwSysValue;
+		std::uint64_t dwSysValue;
 		LPVOID pVectoredExceptionHandler;
 
 		void Refresh(int localnum);

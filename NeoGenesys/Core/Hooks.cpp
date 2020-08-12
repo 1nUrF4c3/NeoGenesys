@@ -152,7 +152,7 @@ namespace NeoGenesys
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PredictedPlayerState.iClientNum)
 				{
-					CharacterInfo[entity->NextEntityState.iEntityNum].vViewAngles.x = _antiAim.vAntiAimAngles.x + CG->PredictedPlayerState.vDeltaAngles.x;
+					CharacterInformation[entity->NextEntityState.iEntityNum].vViewAngles.x = _antiAim.vAntiAimAngles.x + CG->PredictedPlayerState.vDeltaAngles.x;
 					entity->vViewAngles.y = _antiAim.vAntiAimAngles.y + CG->PredictedPlayerState.vDeltaAngles.y;
 				}
 			}
@@ -182,8 +182,8 @@ namespace NeoGenesys
 						sNetAddr NetAddr;
 						GetPlayerAddr(&NetAddr, GetCurrentSession(), entitystate->iOtherEntityNum);
 
-						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
-						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
+						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%attacker", ClientInformation[entitystate->iAttackerEntityNum].szName);
+						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%victim", ClientInformation[entitystate->iOtherEntityNum].szName);
 						szTeaBag = acut::FindAndReplaceString(szTeaBag, "%ip", VariadicText("%u.%u.%u.%u",
 							(BYTE)NetAddr.szIPAddress[0],
 							(BYTE)NetAddr.szIPAddress[1],
@@ -203,8 +203,8 @@ namespace NeoGenesys
 						sNetAddr NetAddr;
 						GetPlayerAddr(&NetAddr, GetCurrentSession(), entitystate->iOtherEntityNum);
 
-						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%attacker", ClientInfo[entitystate->iAttackerEntityNum].szName);
-						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%victim", ClientInfo[entitystate->iOtherEntityNum].szName);
+						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%attacker", ClientInformation[entitystate->iAttackerEntityNum].szName);
+						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%victim", ClientInformation[entitystate->iOtherEntityNum].szName);
 						szKillSpam = acut::FindAndReplaceString(szKillSpam, "%ip", VariadicText("%u.%u.%u.%u",
 							(BYTE)NetAddr.szIPAddress[0],
 							(BYTE)NetAddr.szIPAddress[1],
@@ -227,17 +227,17 @@ namespace NeoGenesys
 						szIcon[iLength] = NULL;
 
 						Cbuf_AddText(VariadicText("say \"^5%s ^7- Get ^6%s ^7courtesy of ^6Neo^0Genesys\"\n",
-							ClientInfo[entitystate->iOtherEntityNum].szName, szIcon));
+							ClientInformation[entitystate->iOtherEntityNum].szName, szIcon));
 					}
 				}
 
 				if (gNameStealer->Current.bValue)
 				{
-					strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })),
-						strlen(ClientInfo[entitystate->iOtherEntityNum].szName) + 1, 
-						ClientInfo[entitystate->iOtherEntityNum].szName, 32);
+					strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })),
+						strlen(ClientInformation[entitystate->iOtherEntityNum].szName) + 1, 
+						ClientInformation[entitystate->iOtherEntityNum].szName, 32);
 					
-					Cbuf_AddText(VariadicText("name \"%s\"\n", ClientInfo[entitystate->iOtherEntityNum].szName));
+					Cbuf_AddText(VariadicText("name \"%s\"\n", ClientInformation[entitystate->iOtherEntityNum].szName));
 				}
 			}
 		}

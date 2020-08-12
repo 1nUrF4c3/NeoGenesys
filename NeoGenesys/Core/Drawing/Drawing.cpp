@@ -641,7 +641,7 @@ namespace NeoGenesys
 					case ET_PLAYER:
 					{
 						DrawPlayer(&CEntity[i], _targetList.EntityList[i].vBones2D, _targetList.EntityList[i].vCorners2D, _targetList.EntityList[i].vCenter2D, _targetList.EntityList[i].vLower.y - _targetList.EntityList[i].vUpper.y,
-							_mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), ClientInfo[i].szName, _targetList.EntityList[i].cColor);
+							_mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin), ClientInformation[i].szName, _targetList.EntityList[i].cColor);
 					} break;
 
 					case ET_ITEM:

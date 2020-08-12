@@ -9,6 +9,7 @@
 
 #include <d3d11.h>
 #include <detours.h>
+#include <MinHook.h>
 #include <VMProtectSDK.h>
 
 #include "ImGui/Addons/FileSystem/imguifilesystem.h"
@@ -26,6 +27,7 @@
 #include "Core/AntiAim/AntiAim.h"
 #include "Core/Autowall/Autowall.h"
 #include "Core/Console/Console.h"
+#include "Core/CrashExploit/CrashExploit.h"
 #include "Core/Drawing/Drawing.h"
 #include "Core/HostMenu/HostMenu.h"
 #include "Core/License/License.h"
@@ -37,5 +39,7 @@
 #include "Core/TargetList/TargetList.h"
 #include "Core/Hooks.h"
 #include "Core/MainGUI.h"
+
+#pragma intrinsic(_ReturnAddress)
 
 //=====================================================================================

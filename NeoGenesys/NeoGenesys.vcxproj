@@ -33,8 +33,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)Detours\Include;$(ProjectDir)VMProtect\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)Detours\Lib\x64;$(ProjectDir)VMProtect\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)Detours\Include;$(ProjectDir)MinHook\Include;$(ProjectDir)VMProtect\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Detours\Lib\x64;$(ProjectDir)MinHook\Lib\x64;$(ProjectDir)VMProtect\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -52,7 +52,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;WinInet.lib;detours.lib;VMProtectSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;dxgi.lib;WinInet.lib;detours.lib;libMinHook.x64.lib;VMProtectSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -60,6 +60,7 @@
     <ClCompile Include="Core\AntiAim\AntiAim.cpp" />
     <ClCompile Include="Core\Autowall\Autowall.cpp" />
     <ClCompile Include="Core\Console\Console.cpp" />
+    <ClCompile Include="Core\CrashExploit\CrashExploit.cpp" />
     <ClCompile Include="Core\Drawing\Drawing.cpp" />
     <ClCompile Include="Core\Hooks.cpp" />
     <ClCompile Include="Core\HostMenu\HostMenu.cpp" />
@@ -87,6 +88,7 @@
     <ClInclude Include="Core\AntiAim\AntiAim.h" />
     <ClInclude Include="Core\Autowall\Autowall.h" />
     <ClInclude Include="Core\Console\Console.h" />
+    <ClInclude Include="Core\CrashExploit\CrashExploit.h" />
     <ClInclude Include="Core\Drawing\Drawing.h" />
     <ClInclude Include="Core\Engine\Engine.hpp" />
     <ClInclude Include="Core\Engine\Helpers.hpp" />
@@ -129,12 +131,15 @@
     <ClInclude Include="ImGui\STB\imstb_textedit.h" />
     <ClInclude Include="ImGui\STB\imstb_truetype.h" />
     <ClInclude Include="ImGui\Win32\imgui_impl_win32.h" />
+    <ClInclude Include="MinHook\Include\MinHook.h" />
     <ClInclude Include="StdAfx.hpp" />
     <ClInclude Include="VMProtect\Include\VMProtectSDK.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Detours\Lib\x64\detours.lib" />
     <Library Include="Detours\Lib\x86\detours.lib" />
+    <Library Include="MinHook\Lib\x64\libMinHook.x64.lib" />
+    <Library Include="MinHook\Lib\x86\libMinHook.x86.lib" />
     <Library Include="VMProtect\Lib\x64\VMProtectSDK64.lib" />
     <Library Include="VMProtect\Lib\x86\VMProtectSDK32.lib" />
   </ItemGroup>

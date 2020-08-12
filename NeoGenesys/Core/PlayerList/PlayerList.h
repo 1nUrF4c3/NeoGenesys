@@ -17,6 +17,7 @@ namespace NeoGenesys
 		struct sPlayerList
 		{
 			bool bWriteLog = false;
+			char szCrashMessage[1024] = { NULL };
 			sNetAddr NetAddr[MAX_CLIENTS];
 		} PlayerList;
 

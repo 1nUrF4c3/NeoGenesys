@@ -73,6 +73,9 @@
 #define OFF_OBITUARY 0x14026A010
 #define OFF_ADDCMDDRAWTEXT 0x140601070
 #define OFF_CLIENTFRAME 0x140382890
+#define OFF_ATOLCLHANDLERELAYPACKET 0x1407316B4
+#define OFF_ATOLCLHANDLERELAYPACKETRET 0x1402C7BD4
+#define OFF_ATOLCLHANDLERELAYPACKETCALL 0x1402C7BCF
 #define OFF_LOCALCLIENTISINGAME 0x1402CFE50
 #define OFF_ISMAINTHREAD 0x140423950
 #define OFF_ISRENDERTHREAD 0x1404239A0
@@ -93,7 +96,19 @@
 #define OFF_GETCURRENTSESSION 0x1404FDA70
 #define OFF_GETSESSIONHOST 0x140580260
 #define OFF_ISSESSIONHOST 0x140580290
+#define OFF_ISUSERREGISTERED 0x14048D320
 #define OFF_GETPLAYERADDR 0x14048D040
+#define OFF_PARTYDATA 0x141E16930
+#define OFF_LOBBYDATA 0x141E0EEA0
+#define OFF_MSGINIT 0x140417BE0
+#define OFF_MSGWRITESTRING 0x140418A70
+#define OFF_NETOUTOFBANDDATA 0x14041D4F0
+#define OFF_CLSENDPEERDATA 0x1402D1050
+#define OFF_CLSSTATE 0x1419E1AE0
+#define OFF_MSGWRITEBYTE 0x140418950
+#define OFF_CLCANWECONNECTTOCLIENT 0x1402D0440
+#define OFF_PARTYFINDMEMBERBYXUID 0x14048CEA0
+#define OFF_LIVEGETXUID 0x1404FDD00
 #define OFF_GETCURRENTNAME 0x1404FDAA0
 #define OFF_GETCURRENTXUID 0x1404FDAB0
 #define OFF_GETSCREENMATRIX 0x1402F6D00
@@ -176,12 +191,13 @@
 #define OFF_PING 0x1419E5100
 #define OFF_CG 0x14176EC00
 #define OFF_REFDEF 0x1417E04D0
-#define OFF_CHARACTERINFO 0x141869AB8
+#define OFF_PLAYERNAME 0x141E0F0C4
+#define OFF_CHARACTERINFORMATION 0x141869AB8
 #define OFF_CENTITY 0x141887350
 #define OFF_GENTITY 0x14427A0E0
 #define OFF_PLAYERSTATE 0x14444CF10
 #define OFF_CLIENTACTIVE 0x1419E5298
-#define OFF_CLIENTINFO 0x141879028
+#define OFF_CLIENTINFORMATION 0x141879028
 #define OFF_WEAPONCOMPLETEDEF 0x141734DE0
 #define OFF_WEAPONDEF 0x1417352E0
 #define OFF_WINDOW 0x14780C394
@@ -216,8 +232,6 @@
 
 namespace NeoGenesys
 {
-	typedef unsigned __int64 QWORD;
-	
 	enum eErrorParam
 	{
 		ERR_FATAL,
@@ -744,16 +758,18 @@ namespace NeoGenesys
 		union uCvarValue
 		{
 			bool bValue;
-			int iValue;
-			float flValue;
-			DWORD dwValue;
+			std::int32_t iValue;
+			std::uint32_t dwValue;
+			std::uint64_t qwValue;
+			std::float_t flValue;
 			ImVec4 cValue;
 			LPSTR szValue;
 
 			uCvarValue(bool value) : bValue(value) {}
-			uCvarValue(int value) : iValue(value) {}
-			uCvarValue(float value) : flValue(value) {}
-			uCvarValue(DWORD value) : dwValue(value) {}
+			uCvarValue(std::int32_t value) : iValue(value) {}
+			uCvarValue(std::uint32_t value) : dwValue(value) {}
+			uCvarValue(std::uint64_t value) : qwValue(value) {}
+			uCvarValue(std::float_t value) : flValue(value) {}
 			uCvarValue(ImVec4 value) : cValue(value) {}
 			uCvarValue(LPSTR value) : szValue(value) {}
 		} Current, Reset;
@@ -762,31 +778,39 @@ namespace NeoGenesys
 		{
 			struct
 			{
-				int iMin;
-				int iMax;
+				std::int32_t iMin;
+				std::int32_t iMax;
 			};
 
 			struct
 			{
-				float flMin;
-				float flMax;
+				std::uint32_t dwMin;
+				std::uint32_t dwMax;
 			};
 
 			struct
 			{
-				DWORD dwMin;
-				DWORD dwMax;
+				std::uint64_t qwMin;
+				std::uint64_t qwMax;
 			};
 
-			uCvarLimits(int min, int max) : iMin(min), iMax(max) {}
-			uCvarLimits(float min, float max) : flMin(min), flMax(max) {}
-			uCvarLimits(DWORD min, DWORD max) : dwMin(min), dwMax(max) {}
+			struct
+			{
+				std::float_t flMin;
+				std::float_t flMax;
+			};
+
+			uCvarLimits(std::int32_t min, std::int32_t max) : iMin(min), iMax(max) {}
+			uCvarLimits(std::uint32_t min, std::uint32_t max) : dwMin(min), dwMax(max) {}
+			uCvarLimits(std::uint64_t min, std::uint64_t max) : qwMin(min), qwMax(max) {}
+			uCvarLimits(std::float_t min, std::float_t max) : flMin(min), flMax(max) {}
 		} Domain;
 
 		sCvar(std::string name, std::vector<std::string> items, bool value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
-		sCvar(std::string name, std::vector<std::string> items, int value, int min, int max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
-		sCvar(std::string name, std::vector<std::string> items, float value, float min, float max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
-		sCvar(std::string name, std::vector<std::string> items, DWORD value, DWORD min, DWORD max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, std::int32_t value, std::int32_t min, std::int32_t max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, std::uint32_t value, std::uint32_t min, std::uint32_t max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, std::uint64_t value, std::uint64_t min, std::uint64_t max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
+		sCvar(std::string name, std::vector<std::string> items, std::float_t value, std::float_t min, std::float_t max) : szName(name), szItems(items), Current(value), Reset(value), Domain(min, max) {}
 		sCvar(std::string name, std::vector<std::string> items, ImVec4 value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
 		sCvar(std::string name, std::vector<std::string> items, LPSTR value) : szName(name), szItems(items), Current(value), Reset(value), Domain(NULL, NULL) {}
 	};
@@ -803,31 +827,34 @@ namespace NeoGenesys
 		union uDvarValue
 		{
 			bool bValue;
-			int iValue;
-			float flValue;
-			DWORD dwValue;
+			std::int32_t iValue;
+			std::uint32_t dwValue;
+			std::uint64_t qwValue;
+			std::float_t flValue;
 			ImVec4 cValue;
 			LPSTR szValue;
 		} Current, Latched, Reset;
-
 		union uDvarLimits
 		{
 			struct
 			{
-				DWORD dwMin;
-				DWORD dwMax;
+				std::int32_t iMin;
+				std::int32_t iMax;
 			};
-
 			struct
 			{
-				QWORD qwMin;
-				QWORD qwMax;
+				std::uint32_t dwMin;
+				std::uint32_t dwMax;
 			};
-
 			struct
 			{
-				FLOAT flMin;
-				FLOAT flMax;
+				std::uint64_t qwMin;
+				std::uint64_t qwMax;
+			};
+			struct
+			{
+				std::float_t flMin;
+				std::float_t flMax;
 			};
 		} Domain;
 	private:
@@ -989,7 +1016,17 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	struct sCharacterInfo
+	struct sPlayerName
+	{
+	public:
+		char szName[32];
+	private:
+		char _0x20[0x1A8];
+	};
+	/*
+	//=====================================================================================
+	*/
+	struct sCharacterInformation
 	{
 	public:
 		int iEntityNum;
@@ -1163,7 +1200,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	struct sClientInfo
+	struct sClientInformation
 	{
 	public:
 		int iClientNum;
@@ -1393,24 +1430,19 @@ namespace NeoGenesys
 	//=====================================================================================
 	*/
 	static MODULEINFO hIw6mp64_ship = GetModuleInfo(NULL);
-	static MODULEINFO hGameOverlayRenderer64 = GetModuleInfo("GameOverlayRenderer64.dll");
-
-	static bool bGameOverlayRenderer64 = (hGameOverlayRenderer64.lpBaseOfDll && hGameOverlayRenderer64.SizeOfImage);
-
-	static DWORD_PTR dwPresent = bGameOverlayRenderer64 ?
-		(DWORD_PTR)ReadPointer(FindPattern((DWORD_PTR)hGameOverlayRenderer64.lpBaseOfDll, (DWORD_PTR)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5) :
-		*(DWORD_PTR*)OFF_SWAPCHAIN;
+	static MODULEINFO hGameOverlayRenderer64;
 	/*
 	//=====================================================================================
 	*/
 #define CG ((sCG*)OFF_CG)
 #define RefDef ((sRefDef*)OFF_REFDEF)
-#define CharacterInfo ((sCharacterInfo*)OFF_CHARACTERINFO)
+#define PlayerName ((sPlayerName*)OFF_PLAYERNAME)
+#define CharacterInformation ((sCharacterInformation*)OFF_CHARACTERINFORMATION)
 #define CEntity ((sCEntity*)OFF_CENTITY)
 #define GEntity ((sGEntity*)OFF_GENTITY)
 #define PlayerState ((sPlayerState*)OFF_PLAYERSTATE)
 #define ClientActive ((sClientActive*)OFF_CLIENTACTIVE)
-#define ClientInfo ((sClientInfo*)OFF_CLIENTINFO)
+#define ClientInformation ((sClientInformation*)OFF_CLIENTINFORMATION)
 #define Weapons ((sWeapons*)OFF_WEAPONDEF)
 #define CompleteWeapons ((sCompleteWeapons*)OFF_WEAPONCOMPLETEDEF)
 #define Window ((sWindow*)OFF_WINDOW)
@@ -1442,9 +1474,9 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE QWORD Sys_GetValue(int value)
+	FORCEINLINE std::uint64_t Sys_GetValue(int value)
 	{
-		return VariadicCall<QWORD>(OFF_SYSGETVALUE, value);
+		return VariadicCall<std::uint64_t>(OFF_SYSGETVALUE, value);
 	}
 	/*
 	//=====================================================================================
@@ -1533,7 +1565,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	FORCEINLINE sDvar* UpdateDvar(DWORD controller, sDvar* dvar, QWORD infoarray)
+	FORCEINLINE sDvar* UpdateDvar(DWORD controller, sDvar* dvar, std::uint64_t infoarray)
 	{
 		return VariadicCall<sDvar*>(OFF_UPDATEDVAR, controller, dvar, infoarray);
 	}
@@ -1571,6 +1603,13 @@ namespace NeoGenesys
 	FORCEINLINE bool IsSessionHost(LPVOID session, int clientnum)
 	{
 		return VariadicCall<bool>(OFF_ISSESSIONHOST, session, clientnum);
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE bool IsUserRegistered(LPVOID session, int clientnum)
+	{
+		return VariadicCall<bool>(OFF_ISUSERREGISTERED, session, clientnum);
 	}
 	/*
 	//=====================================================================================
@@ -2088,21 +2127,21 @@ namespace NeoGenesys
 	*/
 	FORCEINLINE bool HasPerk(int clientnum, ePerk perk)
 	{
-		return (*(DWORD_PTR*)&CharacterInfo[clientnum].iPerks >> perk) & 0x1;
+		return (*(std::uintptr_t*)&CharacterInformation[clientnum].iPerks >> perk) & 0x1;
 	}
 	/*
 	//=====================================================================================
 	*/
 	FORCEINLINE void EnablePerk(int clientnum, ePerk perk)
 	{
-		*(int*)((DWORD_PTR)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) |= 0x1 << (perk & 0x1F);
+		*(int*)((std::uintptr_t)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) |= 0x1 << (perk & 0x1F);
 	}
 	/*
 	//=====================================================================================
 	*/
 	FORCEINLINE void DisablePerk(int clientnum, ePerk perk)
 	{
-		*(int*)((DWORD_PTR)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) &= ~(0x1 << (perk & 0x1F));
+		*(int*)((std::uintptr_t)&PlayerState[clientnum] + 0x4 * (perk >> 0x5) + 0xE14) &= ~(0x1 << (perk & 0x1F));
 	}
 	/*
 	//=====================================================================================

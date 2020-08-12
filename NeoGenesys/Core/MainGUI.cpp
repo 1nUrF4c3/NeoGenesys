@@ -15,7 +15,10 @@ namespace NeoGenesys
 		if (!hWindow || !_device || !_deviceContext)
 			return;
 
-		oWindowProcess = (tWindowProcess)SetWindowLongPtr(hWindow, GWLP_WNDPROC, (LONG_PTR)_thunkWindowProcess.GetThunk());
+		if (!Window->iWidth || !Window->iHeight)
+			return;
+
+		oWindowProcess = (tWindowProcess)SetWindowLongPtr(hWindow, GWLP_WNDPROC, (std::intptr_t)_thunkWindowProcess.GetThunk());
 
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(hWindow);
@@ -615,7 +618,7 @@ namespace NeoGenesys
 					cConnection, szConnection.c_str());
 			}
 
-			std::string szFramesPerSecond(VariadicText("%i", (int)ImGui::GetIO().Framerate));
+			std::string szFramesPerSecond(VariadicText("%.0f", ImGui::GetIO().Framerate));
 			ImVec2 vFramesPerSecond(Eurostile_Extended->CalcTextSizeA(flEurostile_Extended, FLT_MAX, 0.0f, szFramesPerSecond.c_str()));
 			ImU32 cFramesPerSecond = ImGui::ColorConvertFloat4ToU32(ImVec4(1.0f, 1.0f, 0.3f, 1.0f));
 
@@ -639,7 +642,7 @@ namespace NeoGenesys
 				if (gConsole->Current.bValue)
 					_console.DrawConsole(&gConsole->Current.bValue);
 
-				if (_playerList.gPlayerList->Current.bValue && LocalClientIsInGame())
+				if (_playerList.gPlayerList->Current.bValue)
 					_playerList.DrawPlayerList();
 
 				if (_hostMenu.gHostMenu->Current.bValue && LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) && !*(bool*)OFF_ISALIENSMODE)
@@ -669,7 +672,7 @@ namespace NeoGenesys
 					{
 						std::string szUserName = acut::RandomANString(0);
 
-						strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<DWORD_PTR>({ OFF_STEAMNAME })), strlen(szUserName.c_str()) + 1, szUserName.c_str(), 32);
+						strncpy_s((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })), strlen(szUserName.c_str()) + 1, szUserName.c_str(), 32);
 						Cbuf_AddText(VariadicText("name \"%s\"\n", szUserName.c_str()));
 					}
 
