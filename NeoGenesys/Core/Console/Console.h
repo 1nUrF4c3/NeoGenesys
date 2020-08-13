@@ -64,7 +64,7 @@ namespace NeoGenesys
 			return (LPSTR)memcpy(buff, (const void*)str, len);
 		}
 
-		void InitInterface();
+		void Init();
 		void ClearLog();
 		void AddLog(LPCSTR format, ...) IM_FMTARGS(2);
 		void DrawConsole(bool* open);

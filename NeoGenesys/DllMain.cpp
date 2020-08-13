@@ -179,6 +179,7 @@ void Init()
 	while (!oPresent)
 		oPresent = *(tPresent*)ReadPointer(FindPattern((std::uintptr_t)hGameOverlayRenderer64.lpBaseOfDll, (std::uintptr_t)hGameOverlayRenderer64.SizeOfImage, "\x41\x5E\x48\xFF\x25\x00\x00\x00\x00\x48\x89\x5C\x24\x00", "xxxxx????xxxx?"), 0x5);
 
+	_console.Init();
 	_hooks.pVectoredExceptionHandler = AddVectoredExceptionHandler(TRUE, _hooks._thunkVectoredExceptionHandler.GetThunk());
 
 	AttachHook(oPresent, hPresent);

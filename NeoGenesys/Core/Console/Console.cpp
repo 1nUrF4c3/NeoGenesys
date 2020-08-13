@@ -18,7 +18,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	void cConsole::InitInterface()
+	void cConsole::Init()
 	{
 		static bool bFirstTime = true;
 
@@ -109,7 +109,6 @@ namespace NeoGenesys
 			bWriteLog = false;
 		}
 
-		InitInterface();
 		ImGui::SetNextWindowSize(ImVec2(510.0f, 350.0f));
 
 		if (!ImGui::Begin("CONSOLE", open, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse))

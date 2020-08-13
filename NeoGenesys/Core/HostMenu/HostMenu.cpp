@@ -79,7 +79,7 @@ namespace NeoGenesys
 				HostMenu.PlayerMod[i].bFreezePosition = false;
 			}
 
-			if (!IsUserRegistered(GetCurrentSession(), i) && !CharacterInformation[i].iInfoValid)
+			if ((LocalClientIsInGame() ? !CharacterInformation[i].iInfoValid : !IsUserRegistered(GetCurrentSession(), i)))
 			{
 				_targetList.Priorities[i].bIsPrioritized = false;
 				_targetList.Priorities[i].bIsIgnored = false;

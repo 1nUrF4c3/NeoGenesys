@@ -29,7 +29,7 @@ namespace NeoGenesys
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 		{
-			if (IsUserRegistered(GetCurrentSession(), i) || CharacterInformation[i].iInfoValid)
+			if ((LocalClientIsInGame() ? CharacterInformation[i].iInfoValid : IsUserRegistered(GetCurrentSession(), i)))
 			{
 				GetPlayerAddr(&PlayerList.NetAddr[i], GetCurrentSession(), i);
 
@@ -70,8 +70,18 @@ namespace NeoGenesys
 								sNetAddr NetAddr;
 								GetPlayerAddr(&NetAddr, GetCurrentSession(), i);
 
-								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", PlayerName[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
-								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", PlayerName[i].szName);
+								if (LocalClientIsInGame())
+								{
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", ClientInformation[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", ClientInformation[i].szName);
+								}
+
+								else
+								{
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", PlayerName[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", PlayerName[i].szName);
+								}
+
 								szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%ip", VariadicText("%u.%u.%u.%u",
 									(BYTE)NetAddr.szIPAddress[0],
 									(BYTE)NetAddr.szIPAddress[1],
@@ -106,7 +116,16 @@ namespace NeoGenesys
 					if (ImGui::MenuItem("Copy Name"))
 					{
 						ImGui::LogToClipboard();
-						ImGui::LogText(PlayerName[i].szName);
+
+						if (t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
+							ImGui::LogText((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })));
+
+						else if (LocalClientIsInGame())
+							ImGui::LogText(ClientInformation[i].szName);
+
+						else
+							ImGui::LogText(PlayerName[i].szName);
+
 						ImGui::LogFinish();
 
 						PlayerList.bWriteLog = true;
@@ -129,7 +148,14 @@ namespace NeoGenesys
 					ImGui::EndPopup();
 				} ImGui::NextColumn();
 
-				ImGui::Text(PlayerName[i].szName);
+				if (t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
+					ImGui::Text((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })));
+
+				else if (LocalClientIsInGame())
+					ImGui::Text(ClientInformation[i].szName);
+
+				else
+					ImGui::Text(PlayerName[i].szName);
 
 				if (ImGui::OpenPopupOnItemClick(std::to_string(i).c_str()))
 				{
