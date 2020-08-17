@@ -345,7 +345,7 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
-	bool cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage)
+	float cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage)
 	{
 		ImVec3 vViewOrigin;
 
@@ -353,10 +353,12 @@ namespace NeoGenesys
 
 		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
 		{
-			bool bTraceHit = _autoWall.TraceLine(entity, RefDef->vViewOrigin, position);
+			float flDamage = _autoWall.C_TraceBullet(entity, RefDef->vViewOrigin, position, hitloc);
 
-			if (bTraceHit)
-				return true;
+			if (damage)
+				*damage = flDamage;
+
+			return flDamage;
 		}
 
 		else if (autowall)
@@ -366,8 +368,7 @@ namespace NeoGenesys
 			if (damage)
 				*damage = flDamage;
 
-			if (flDamage >= 1.0f)
-				return true;
+			return flDamage;
 		}
 
 		else
@@ -377,8 +378,7 @@ namespace NeoGenesys
 			if (damage)
 				*damage = flDamage;
 
-			if (flDamage >= 1.0f)
-				return true;
+			return flDamage;
 		}
 
 		return false;
@@ -388,45 +388,51 @@ namespace NeoGenesys
 	*/
 	bool cTargetList::IsVisible(sCEntity* entity, ImVec3 bones3d[BONE_MAX], ImVec3 position, bool bonescan, bool autowall, eBone* index, eHitLocation hitloc, float* damage)
 	{
-		bool bReturn = false;
-
 		sDamageInfo DamageInfo;
 		std::vector<sDamageInfo> vDamageInfo;
+		std::vector<sDamageInfo> vDamageInfoFinal;
+		std::vector<std::future<float>> vIsVisible;
 
 		if (bonescan)
 		{
 			for (auto& Bone : vBones)
 			{
-				if (IsVisibleInternal(entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage))
+				vIsVisible.push_back(std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage));
+				DamageInfo.iBoneIndex = Bone.first.first;
+
+				vDamageInfo.push_back(DamageInfo);
+			}
+
+			for (auto& Bone : vBones)
+			{
+				if ((vDamageInfo[Bone.first.first].flDamage = vIsVisible[Bone.first.first].get()) >= 1.0f)
 				{
-					DamageInfo.iBoneIndex = Bone.first.first;
-
-					vDamageInfo.push_back(DamageInfo);
-
-					bReturn = true;
+					vDamageInfoFinal.push_back(vDamageInfo[Bone.first.first]);
 				}
 			}
 		}
 
 		else
 		{
-			bReturn = IsVisibleInternal(entity, position, hitloc, autowall, damage);
+			return std::async(&cTargetList::IsVisibleInternal, this, entity, position, hitloc, autowall, damage).get() >= 1.0f;
 		}
 
-		if (!vDamageInfo.empty())
+		if (!vDamageInfoFinal.empty())
 		{
-			std::stable_sort(vDamageInfo.begin(), vDamageInfo.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
+			std::stable_sort(vDamageInfoFinal.begin(), vDamageInfoFinal.end(), [&](const sDamageInfo& a, const sDamageInfo& b) { return a.flDamage > b.flDamage; });
 
 			if (index)
-				*index = vDamageInfo.front().iBoneIndex;
+				*index = vDamageInfoFinal.front().iBoneIndex;
 
 			if (damage) 
-				*damage = vDamageInfo.front().flDamage;
+				*damage = vDamageInfoFinal.front().flDamage;
 
-			vDamageInfo.clear();
+			vDamageInfoFinal.clear();
+
+			return true;
 		}
 
-		return bReturn;
+		return false;
 	}
 }
 
