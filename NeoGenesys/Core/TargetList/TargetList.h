@@ -42,7 +42,7 @@ namespace NeoGenesys
 		std::shared_ptr<sCvar> gBoneScan = std::make_shared<sCvar>("Bonescan", std::vector<std::string>({ "Off", "On Timer", "Immediate" }), BONESCAN_OFF, BONESCAN_OFF, BONESCAN_MAX);
 		std::shared_ptr<sCvar> gSortMethod = std::make_shared<sCvar>("Sort Method", std::vector<std::string>({ "Distance", "Damage", "Field of View" }), SORT_METHOD_DISTANCE, SORT_METHOD_DISTANCE, SORT_METHOD_MAX);
 		std::shared_ptr<sCvar> gRiotShielders = std::make_shared<sCvar>("Riotshielders", std::vector<std::string>({ "Off", "Ignore Player", "Target Feet" }), RIOTSHIELD_OFF, RIOTSHIELD_OFF, RIOTSHIELD_MAX);
-		std::shared_ptr<sCvar> gAimBone = std::make_shared<sCvar>("Aimbone", std::vector<std::string>(), BONE_HELMET, BONE_HELMET, BONE_MAX - 1);
+		std::shared_ptr<sCvar> gAimBone = std::make_shared<sCvar>("Aimbone", std::vector<std::string>(), BONE_HEAD, BONE_HEAD, BONE_MAX - 1);
 		std::shared_ptr<sCvar> gAimAngle = std::make_shared<sCvar>("Aimangle", std::vector<std::string>(), 180, 1, 180);
 
 		struct sTargetInfo

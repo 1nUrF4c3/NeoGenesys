@@ -43,27 +43,27 @@ namespace NeoGenesys
 
 				ImVec3 vMinTemp = { FLT_MAX, FLT_MAX, FLT_MAX }, vMaxTemp = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 
-				for (auto& Bone : vBones)
+				for (int j = BONE_HELMET; j < BONE_MAX; j++)
 				{
-					GetTagPosition(&CEntity[i], lpDObj, RegisterTag(Bone.second.second), &EntityList[i].vBones3D[Bone.first.first]);
+					GetTagPosition(&CEntity[i], lpDObj, RegisterTag(vBones[j].second.second), &EntityList[i].vBones3D[j]);
 
-					if (EntityList[i].vBones3D[Bone.first.first].x < vMinTemp.x)
-						vMinTemp.x = EntityList[i].vBones3D[Bone.first.first].x;
+					if (EntityList[i].vBones3D[j].x < vMinTemp.x)
+						vMinTemp.x = EntityList[i].vBones3D[j].x;
 
-					if (EntityList[i].vBones3D[Bone.first.first].x > vMaxTemp.x)
-						vMaxTemp.x = EntityList[i].vBones3D[Bone.first.first].x;
+					if (EntityList[i].vBones3D[j].x > vMaxTemp.x)
+						vMaxTemp.x = EntityList[i].vBones3D[j].x;
 
-					if (EntityList[i].vBones3D[Bone.first.first].y < vMinTemp.y)
-						vMinTemp.y = EntityList[i].vBones3D[Bone.first.first].y;
+					if (EntityList[i].vBones3D[j].y < vMinTemp.y)
+						vMinTemp.y = EntityList[i].vBones3D[j].y;
 
-					if (EntityList[i].vBones3D[Bone.first.first].y > vMaxTemp.y)
-						vMaxTemp.y = EntityList[i].vBones3D[Bone.first.first].y;
+					if (EntityList[i].vBones3D[j].y > vMaxTemp.y)
+						vMaxTemp.y = EntityList[i].vBones3D[j].y;
 
-					if (EntityList[i].vBones3D[Bone.first.first].z < vMinTemp.z)
-						vMinTemp.z = EntityList[i].vBones3D[Bone.first.first].z;
+					if (EntityList[i].vBones3D[j].z < vMinTemp.z)
+						vMinTemp.z = EntityList[i].vBones3D[j].z;
 
-					if (EntityList[i].vBones3D[Bone.first.first].z > vMaxTemp.z)
-						vMaxTemp.z = EntityList[i].vBones3D[Bone.first.first].z;
+					if (EntityList[i].vBones3D[j].z > vMaxTemp.z)
+						vMaxTemp.z = EntityList[i].vBones3D[j].z;
 				}
 
 				EntityList[i].vCenter3D = (vMinTemp + vMaxTemp) / 2.0f;
@@ -395,19 +395,19 @@ namespace NeoGenesys
 
 		if (bonescan)
 		{
-			for (auto& Bone : vBones)
+			for (int i = BONE_HEAD; i < BONE_MAX; i++)
 			{
-				vIsVisible.push_back(std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[Bone.first.first], Bone.first.second, autowall, &DamageInfo.flDamage));
-				DamageInfo.iBoneIndex = Bone.first.first;
+				vIsVisible.push_back(std::async(&cTargetList::IsVisibleInternal, this, entity, bones3d[i], vBones[i].first.second, autowall, &DamageInfo.flDamage));
+				DamageInfo.iBoneIndex = (eBone)i;
 
 				vDamageInfo.push_back(DamageInfo);
 			}
 
-			for (auto& Bone : vBones)
+			for (int i = BONE_HEAD; i < BONE_MAX; i++)
 			{
-				if ((vDamageInfo[Bone.first.first].flDamage = vIsVisible[Bone.first.first].get()) >= 1.0f)
+				if ((vDamageInfo[i - BONE_HEAD].flDamage = vIsVisible[i - BONE_HEAD].get()) >= 1.0f)
 				{
-					vDamageInfoFinal.push_back(vDamageInfo[Bone.first.first]);
+					vDamageInfoFinal.push_back(vDamageInfo[i - BONE_HEAD]);
 				}
 			}
 		}
