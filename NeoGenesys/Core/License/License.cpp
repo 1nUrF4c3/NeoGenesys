@@ -100,7 +100,7 @@ namespace NeoGenesys
 					exit(EXIT_FAILURE);
 				}
 
-				LicenseTimer.Wait(2000);
+				LicenseTimer.Wait(60000);
 			}
 		}
 	}
