@@ -113,7 +113,6 @@ namespace NeoGenesys
 		void DrawRadar();
 		void DrawCrosshair();
 		void DrawTracers();
-		void ColorPicker(std::string label, ImVec4& color);
 	} extern _drawing;
 }
 

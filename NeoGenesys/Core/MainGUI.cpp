@@ -324,7 +324,7 @@ namespace NeoGenesys
 
 		case MENU_TAB_STYLES:
 		{
-			_drawing.ColorPicker(_drawing.gColorAxisVisible->szName, _drawing.gColorAxisVisible->Current.cValue);
+			ColorPicker(_drawing.gColorAxisVisible->szName, _drawing.gColorAxisVisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorAxisVisible->szName.c_str(), _drawing.gColorAxisVisible->Current.cValue))
@@ -332,7 +332,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorAxisInvisible->szName, _drawing.gColorAxisInvisible->Current.cValue);
+			ColorPicker(_drawing.gColorAxisInvisible->szName, _drawing.gColorAxisInvisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorAxisInvisible->szName.c_str(), _drawing.gColorAxisInvisible->Current.cValue))
@@ -340,7 +340,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorAlliesVisible->szName, _drawing.gColorAlliesVisible->Current.cValue);
+			ColorPicker(_drawing.gColorAlliesVisible->szName, _drawing.gColorAlliesVisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorAlliesVisible->szName.c_str(), _drawing.gColorAlliesVisible->Current.cValue))
@@ -348,7 +348,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorAlliesInvisible->szName, _drawing.gColorAlliesInvisible->Current.cValue);
+			ColorPicker(_drawing.gColorAlliesInvisible->szName, _drawing.gColorAlliesInvisible->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorAlliesInvisible->szName.c_str(), _drawing.gColorAlliesInvisible->Current.cValue))
@@ -356,7 +356,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorAccents->szName, _drawing.gColorAccents->Current.cValue);
+			ColorPicker(_drawing.gColorAccents->szName, _drawing.gColorAccents->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorAccents->szName.c_str(), _drawing.gColorAccents->Current.cValue))
@@ -364,7 +364,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorCrossHair->szName, _drawing.gColorCrossHair->Current.cValue);
+			ColorPicker(_drawing.gColorCrossHair->szName, _drawing.gColorCrossHair->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorCrossHair->szName.c_str(), _drawing.gColorCrossHair->Current.cValue))
@@ -372,7 +372,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorText->szName, _drawing.gColorText->Current.cValue);
+			ColorPicker(_drawing.gColorText->szName, _drawing.gColorText->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorText->szName.c_str(), _drawing.gColorText->Current.cValue))
@@ -380,7 +380,7 @@ namespace NeoGenesys
 				Menu.bWriteLog = true;
 			} ImGui::NewLine();
 
-			_drawing.ColorPicker(_drawing.gColorShadow->szName, _drawing.gColorShadow->Current.cValue);
+			ColorPicker(_drawing.gColorShadow->szName, _drawing.gColorShadow->Current.cValue);
 			ImGui::SameLine(0.0f, 4.0f);
 
 			if (ImGui::ColorEdit4(_drawing.gColorShadow->szName.c_str(), _drawing.gColorShadow->Current.cValue))
@@ -444,6 +444,79 @@ namespace NeoGenesys
 		ImGui::InputText("", Menu.szProfilePath, IM_ARRAYSIZE(Menu.szProfilePath), ImGuiInputTextFlags_ReadOnly);
 		ImGui::PopItemWidth();
 		ImGui::End();
+	}
+	/*
+	//=====================================================================================
+	*/
+	void cMainGUI::ColorPicker(std::string label, ImVec4& color)
+	{
+		int iMiscFlags = ImGuiColorEditFlags_AlphaPreview;
+		static bool bSavedPaletteInited = false;
+		static ImVec4 cSavedPalette[40];
+
+		if (!bSavedPaletteInited)
+		{
+			for (int n = 0; n < IM_ARRAYSIZE(cSavedPalette); n++)
+			{
+				ImGui::ColorConvertHSVtoRGB(n / 39.0f, 0.8f, 0.8f, cSavedPalette[n].x, cSavedPalette[n].y, cSavedPalette[n].z);
+				cSavedPalette[n].w = 1.0f;
+			}
+		}
+
+		bSavedPaletteInited = true;
+
+		static ImVec4 cBackupColor;
+
+		if (ImGui::ColorButton(label.c_str(), color, iMiscFlags))
+		{
+			ImGui::OpenPopup(label.c_str());
+			cBackupColor = color;
+		}
+
+		if (ImGui::BeginPopup(label.c_str()))
+		{
+			ImGui::Text(("CUSTOM COLOR PICKER FOR " + acut::ToUpper(label)).c_str());
+			ImGui::Separator();
+			ImGui::ColorPicker4("##picker", (float*)&color, iMiscFlags | ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview);
+			ImGui::SameLine();
+			ImGui::BeginGroup();
+			ImGui::Text("Current");
+			ImGui::ColorButton("##current", color, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf, ImVec2(60, 40));
+			ImGui::Text("Previous");
+
+			if (ImGui::ColorButton("##previous", cBackupColor, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_AlphaPreviewHalf, ImVec2(60, 40)))
+				color = cBackupColor;
+
+			ImGui::Separator();
+			ImGui::Text("Palette");
+
+			for (int i = 0; i < IM_ARRAYSIZE(cSavedPalette); i++)
+			{
+				ImGui::PushID(i);
+
+				if ((i % 8) != 0)
+					ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+
+				if (ImGui::ColorButton("##palette", cSavedPalette[i], ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip, ImVec2(20, 20)))
+					color = ImVec4(cSavedPalette[i].x, cSavedPalette[i].y, cSavedPalette[i].z, color.w);
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_3F))
+						memcpy((float*)&cSavedPalette[i], payload->Data, sizeof(float) * 3);
+
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(IMGUI_PAYLOAD_TYPE_COLOR_4F))
+						memcpy((float*)&cSavedPalette[i], payload->Data, sizeof(float) * 4);
+
+					ImGui::EndDragDropTarget();
+				}
+
+				ImGui::PopID();
+			}
+
+			ImGui::EndGroup();
+			ImGui::EndPopup();
+		}
 	}
 	/*
 	//=====================================================================================

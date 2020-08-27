@@ -45,7 +45,7 @@ namespace NeoGenesys
 				{
 					ImGui::SameLine();
 					ImGui::PushStyleColor(ImGuiCol_Text,
-						IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum) ?
+						IsSessionHost(GetCurrentSession(), t6::Party_FindMemberByXUID((SessionData*)GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))) ?
 						ImVec4(0.3f, 1.0f, 0.3f, 1.0f) :
 						ImVec4(1.0f, 0.4f, 0.4f, 1.0f));
 					ImGui::Text("[HOST]");
@@ -72,13 +72,13 @@ namespace NeoGenesys
 
 								if (LocalClientIsInGame())
 								{
-									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", ClientInformation[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", ClientInformation[t6::Party_FindMemberByXUID((SessionData*)GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
 									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", ClientInformation[i].szName);
 								}
 
 								else
 								{
-									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", PlayerName[t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
+									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%attacker", PlayerName[t6::Party_FindMemberByXUID((SessionData*)GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0))].szName);
 									szCrashMessage = acut::FindAndReplaceString(szCrashMessage, "%victim", PlayerName[i].szName);
 								}
 
@@ -117,7 +117,7 @@ namespace NeoGenesys
 					{
 						ImGui::LogToClipboard();
 
-						if (t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
+						if (t6::Party_FindMemberByXUID((SessionData*)GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
 							ImGui::LogText((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })));
 
 						else if (LocalClientIsInGame())
@@ -148,7 +148,7 @@ namespace NeoGenesys
 					ImGui::EndPopup();
 				} ImGui::NextColumn();
 
-				if (t6::Party_FindMemberByXUID((SessionData*)NeoGenesys::GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
+				if (t6::Party_FindMemberByXUID((SessionData*)GetCurrentSession(), t6::Live_GetXuid((ControllerIndex_t)0)) == i)
 					ImGui::Text((LPSTR)FindDmaAddy(OFF_STEAMAPI, std::vector<std::uintptr_t>({ OFF_STEAMNAME })));
 
 				else if (LocalClientIsInGame())

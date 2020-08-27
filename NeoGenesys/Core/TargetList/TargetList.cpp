@@ -250,6 +250,20 @@ namespace NeoGenesys
 
 				vTargetInfo.push_back(TargetInfo);
 			}
+
+			if (i < FindVariable("sv_maxclients")->Current.iValue)
+			{
+				if (_targetList.Priorities[i].bIsPrioritized && !_targetList.Priorities[i].bIsIgnored)
+				{
+					AntiAimTargetInfo.iIndex = i;
+
+					AntiAimTargetInfo.flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+					AntiAimTargetInfo.flDamage = EntityList[i].flDamage;
+					AntiAimTargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+
+					vAntiAimTargetInfo.push_back(AntiAimTargetInfo);
+				}
+			}
 		}
 
 		if (!vTargetInfo.empty())
@@ -294,6 +308,32 @@ namespace NeoGenesys
 			}
 
 			vTargetInfo.clear();
+		}
+
+		if (!vAntiAimTargetInfo.empty())
+		{
+			if (gSortMethod->Current.iValue == SORT_METHOD_DISTANCE)
+			{
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDistance < b.flDistance; });
+
+				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
+			}
+
+			else if (gSortMethod->Current.iValue == SORT_METHOD_DAMAGE)
+			{
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flDamage > b.flDamage; });
+
+				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
+			}
+
+			else if (gSortMethod->Current.iValue == SORT_METHOD_FOV)
+			{
+				std::sort(vAntiAimTargetInfo.begin(), vAntiAimTargetInfo.end(), [&](const sAntiAimTargetInfo& a, const sAntiAimTargetInfo& b) { return a.flFOV < b.flFOV; });
+
+				_aimBot.AimState.iAntiAimTargetNum = vAntiAimTargetInfo.front().iIndex;
+			}
+
+			vAntiAimTargetInfo.clear();
 		}
 
 		iCounter++;

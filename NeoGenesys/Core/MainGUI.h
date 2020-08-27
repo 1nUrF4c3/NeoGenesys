@@ -73,6 +73,7 @@ namespace NeoGenesys
 
 		void InitInterface();
 		void DrawMainGUI();
+		void ColorPicker(std::string label, ImVec4& color);
 		bool GetKeyPress(int vkey, bool immediate);
 
 		void WINAPI Present(_In_ IDXGISwapChain* pSwapChain, _In_ UINT SyncInterval, _In_ UINT Flags);
