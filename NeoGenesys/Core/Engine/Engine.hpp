@@ -2147,6 +2147,22 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	FORCEINLINE ImVec3 GetViewOrigin()
+	{
+		ImVec3 vViewOrigin;
+		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
+		return WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin;
+	}
+	/*
+	//=====================================================================================
+	*/
+	FORCEINLINE ImVec3 GetViewAngles()
+	{
+		return WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles;
+	}
+	/*
+	//=====================================================================================
+	*/
 	struct sTimer
 	{
 	private:

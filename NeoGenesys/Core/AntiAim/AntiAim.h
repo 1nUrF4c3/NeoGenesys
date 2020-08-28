@@ -27,7 +27,9 @@ namespace NeoGenesys
 
 		ImVec3 vAntiAimAngles;
 
-		void AntiAim(sUserCmd* usercmd);
+		void AntiAimPitch(sUserCmd* usercmd);
+		void AntiAimYaw(sUserCmd* usercmd);
+		void AntiAimRoll(sUserCmd* usercmd);
 		bool IsAntiAiming();
 	} extern _antiAim;
 }

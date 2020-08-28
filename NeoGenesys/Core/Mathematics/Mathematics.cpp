@@ -8,17 +8,14 @@ namespace NeoGenesys
 {
 	cMathematics _mathematics;
 
-	float cMathematics::CalculateFOV(ImVec3 position)
+	float cMathematics::CalculateFOV(ImVec3 start, ImVec3 end, ImVec3 angles)
 	{
-		ImVec3 vViewOrigin, vDirection, vAngles, vAimAngles;
-
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-		vDirection = position - vViewOrigin;
+		ImVec3 vDirection = start - end, vAngles, vAimAngles;
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAimAngles);
 
-		MakeVector(CG->vRefDefViewAngles, vAngles);
+		MakeVector(angles, vAngles);
 		MakeVector(vAimAngles, vAimAngles);
 
 		ImVec2 vLengthDot
@@ -238,7 +235,7 @@ namespace NeoGenesys
 
 		ClampAngles(angles);
 
-		angles -= WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles;
+		angles -= GetViewAngles();
 
 		ClampAngles(angles);
 	}
@@ -294,15 +291,14 @@ namespace NeoGenesys
 	{
 		float flAngle;
 
-		ImVec3 vViewOrigin, vDirection, vAngles;
+		ImVec3 vDirection, vAngles;
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-		vDirection = (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin) - world;
+		vDirection = GetViewOrigin() - world;
 
 		VectorNormalize(vDirection);
 		VectorAngles(vDirection, vAngles);
 
-		vAngles = (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles) - vAngles;
+		vAngles = GetViewAngles() - vAngles;
 
 		ClampAngles(vAngles);
 
@@ -316,18 +312,15 @@ namespace NeoGenesys
 	*/
 	void cMathematics::WorldToRadar(ImVec3 world, ImVec2 radarpos, float scale, float radarsize, float blipsize, ImVec2& screen)
 	{
-		ImVec3 vViewOrigin;
 		ImVec2 vDelta, vLocation;
 		ImVec2 vCosSin
 		(
-			cosf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y)),
-			sinf(DegreesToRadians(WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles.y : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles.y : CG->vWeaponAngles.y))
+			cosf(DegreesToRadians(GetViewAngles().y)),
+			sinf(DegreesToRadians(GetViewAngles().y))
 		);
 
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-
-		vDelta.x = world.x - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.x : vViewOrigin.x);
-		vDelta.y = world.y - (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin.y : vViewOrigin.y);
+		vDelta.x = world.x - GetViewOrigin().x;
+		vDelta.y = world.y - GetViewOrigin().y;
 
 		vLocation.x = (vDelta.y * vCosSin.x - vDelta.x * vCosSin.y) / scale;
 		vLocation.y = (vDelta.x * vCosSin.x + vDelta.y * vCosSin.y) / scale;

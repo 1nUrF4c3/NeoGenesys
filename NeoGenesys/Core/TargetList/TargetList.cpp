@@ -219,7 +219,7 @@ namespace NeoGenesys
 			}
 
 			EntityList[i].flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
-			EntityList[i].flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+			EntityList[i].flFOV = _mathematics.CalculateFOV(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin, GetViewAngles());
 
 			if (i < FindVariable("sv_maxclients")->Current.iValue && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 				if (GEntity[i].iHealth < 1)
@@ -237,16 +237,16 @@ namespace NeoGenesys
 					continue;
 			}
 
-			if (EntityList[i].bIsVisible && _mathematics.CalculateFOV(EntityList[i].vHitLocation) <= gAimAngle->Current.iValue)
+			if (EntityList[i].bIsVisible && EntityList[i].flFOV <= gAimAngle->Current.iValue)
 			{
 				if (i < FindVariable("sv_maxclients")->Current.iValue)
 					TargetInfo.bIsPriority = Priorities[i].bIsPrioritized;
 
 				TargetInfo.iIndex = i;
 
-				TargetInfo.flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+				TargetInfo.flDistance = EntityList[i].flDistance;
 				TargetInfo.flDamage = EntityList[i].flDamage;
-				TargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+				TargetInfo.flFOV = EntityList[i].flFOV;
 
 				vTargetInfo.push_back(TargetInfo);
 			}
@@ -257,9 +257,9 @@ namespace NeoGenesys
 				{
 					AntiAimTargetInfo.iIndex = i;
 
-					AntiAimTargetInfo.flDistance = _mathematics.CalculateDistance3D(CEntity[i].vOrigin, CG->PredictedPlayerState.vOrigin);
+					AntiAimTargetInfo.flDistance = EntityList[i].flDistance;
 					AntiAimTargetInfo.flDamage = EntityList[i].flDamage;
-					AntiAimTargetInfo.flFOV = _mathematics.CalculateFOV(EntityList[i].vHitLocation);
+					AntiAimTargetInfo.flFOV = EntityList[i].flFOV;
 
 					vAntiAimTargetInfo.push_back(AntiAimTargetInfo);
 				}
@@ -387,23 +387,9 @@ namespace NeoGenesys
 	*/
 	float cTargetList::IsVisibleInternal(sCEntity* entity, ImVec3 position, eHitLocation hitloc, bool autowall, float* damage)
 	{
-		ImVec3 vViewOrigin;
-
-		GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-
-		if (WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)))
+		if (autowall)
 		{
-			float flDamage = _autoWall.C_TraceBullet(entity, RefDef->vViewOrigin, position, hitloc);
-
-			if (damage)
-				*damage = flDamage;
-
-			return flDamage;
-		}
-
-		else if (autowall)
-		{
-			float flDamage = _autoWall.C_Autowall(entity, vViewOrigin, position, hitloc);
+			float flDamage = _autoWall.C_Autowall(entity, GetViewOrigin(), position, hitloc);
 
 			if (damage)
 				*damage = flDamage;
@@ -413,7 +399,7 @@ namespace NeoGenesys
 
 		else
 		{
-			float flDamage = _autoWall.C_TraceBullet(entity, vViewOrigin, position, hitloc);
+			float flDamage = _autoWall.C_TraceBullet(entity, GetViewOrigin(), position, hitloc);
 
 			if (damage)
 				*damage = flDamage;

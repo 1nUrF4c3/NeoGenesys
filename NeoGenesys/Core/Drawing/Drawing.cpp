@@ -686,7 +686,7 @@ namespace NeoGenesys
 						(gWallHackMode->Current.iValue == WALLHACK_MODE_ALLIES && !_targetList.EntityIsEnemy(i)) ||
 						gWallHackMode->Current.iValue == WALLHACK_MODE_ALL)
 					{
-						float flAngle = (((CG->vRefDefViewAngles.y - CEntity[i].vViewAngles.y) + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
+						float flAngle = (((GetViewAngles().y - CEntity[i].vViewAngles.y) + 180.0f) / 360.0f - 0.25f) * M_PI_DOUBLE;
 
 						ImVec2 vBaseX = ImVec2(Compass.flArrowSize / -2.0f, 0.0f);
 						ImVec2 vBaseY = ImVec2(Compass.flArrowSize / 2.0f, Compass.flArrowSize / 2.0f * -0.75f);

@@ -101,18 +101,18 @@ namespace NeoGenesys
 
 					sTrace Trace;
 
-					LocationalTrace(&Trace, RefDef->vViewOrigin, _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 8192.0f), CG->PredictedPlayerState.iClientNum, MASK_NONKILLSTREAK);
+					LocationalTrace(&Trace, GetViewOrigin(), _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), 8192.0f), CG->PredictedPlayerState.iClientNum, MASK_NONKILLSTREAK);
 
 					if (Trace.TraceHitType == TRACE_HITTYPE_ENTITY)
 					{
 						HostMenu.iGravityGunNum = GetTraceHitType(&Trace);
-						HostMenu.flGravityGunDist = _mathematics.CalculateDistance3D(CEntity[HostMenu.iGravityGunNum].vOrigin, RefDef->vViewOrigin);
+						HostMenu.flGravityGunDist = _mathematics.CalculateDistance3D(CEntity[HostMenu.iGravityGunNum].vOrigin, GetViewOrigin());
 					}
 				}
 
 				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
 				{
-					ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, HostMenu.flGravityGunDist);
+					ImVec3 vCrosshair = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), HostMenu.flGravityGunDist);
 					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vBones3D[_targetList.EntityList[HostMenu.iGravityGunNum].iBoneIndex] - CEntity[HostMenu.iGravityGunNum].vOrigin;
 					ImVec3 vTeleport = vCrosshair - vOffset;
 
@@ -126,7 +126,7 @@ namespace NeoGenesys
 
 						if (pUserCmd->iButtons & BUTTON_FIRELEFT)
 						{
-							PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, 10000.0f) - RefDef->vViewOrigin;
+							PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), 10000.0f) - GetViewOrigin();
 							HostMenu.iGravityGunNum = -1;
 							SetZoomState(false);
 						}
@@ -140,7 +140,7 @@ namespace NeoGenesys
 	*/
 	void cHostMenu::TeleportAll()
 	{
-		ImVec3 vCrosshair = _mathematics.AngleToForward(RefDef->vViewOrigin, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, M_METERS);
+		ImVec3 vCrosshair = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), M_METERS);
 
 		for (int i = 0; i < FindVariable("sv_maxclients")->Current.iValue; i++)
 		{

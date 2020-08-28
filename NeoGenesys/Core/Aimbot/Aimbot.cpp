@@ -157,12 +157,9 @@ namespace NeoGenesys
 
 		if (AimState.bTargetAcquired)
 		{
-			ImVec3 vViewOrigin;
-			GetPlayerViewOrigin(&CG->PredictedPlayerState, &vViewOrigin);
-
 			AimState.vAimPosition = _targetList.EntityList[AimState.iTargetNum].vHitLocation;
 
-			_mathematics.CalculateAimAngles(AimState.vAimPosition, WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? RefDef->vViewOrigin : vViewOrigin, AimState.vAimAngles);
+			_mathematics.CalculateAimAngles(AimState.vAimPosition, GetViewOrigin(), AimState.vAimAngles);
 			_mathematics.CalculateAntiAimAngles(CEntity[AimState.iTargetNum].vOrigin, CG->PredictedPlayerState.vOrigin, AimState.vAntiAimAngles);
 		}
 

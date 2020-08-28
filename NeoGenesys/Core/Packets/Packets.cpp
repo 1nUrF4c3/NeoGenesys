@@ -16,7 +16,9 @@ namespace NeoGenesys
 			_aimBot.AutoFire(usercmd);
 		}
 
-		_antiAim.AntiAim(usercmd);
+		_antiAim.AntiAimPitch(usercmd);
+		_antiAim.AntiAimYaw(usercmd);
+		_antiAim.AntiAimRoll(usercmd);
 
 		if (gBunnyHop->Current.bValue && _mainGui.GetKeyPress(VK_SPACE, true))
 		{

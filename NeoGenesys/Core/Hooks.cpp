@@ -90,9 +90,9 @@ namespace NeoGenesys
 				ImVec3 vAngles, vForward, vRight, vUp;
 				vAngles = _aimBot.AimState.vAimAngles;
 
-				vAngles += WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles;
+				vAngles += GetViewAngles();
 
-				AngleVectors(_aimBot.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)) ? CG->vRefDefViewAngles : IsThirdPersonMode(&CG->PredictedPlayerState) ? CG->vThirdPersonViewAngles : CG->vWeaponAngles, &vForward, &vRight, &vUp);
+				AngleVectors(_aimBot.gSilentAim->Current.bValue && _aimBot.AimState.bIsAutoAiming ? vAngles : GetViewAngles(), &vForward, &vRight, &vUp);
 				BulletEndPosition(&iSeed, _removals.GetWeaponSpread() * _removals.gSpreadFactor->Current.flValue, bp->vStart, &bp->vEnd, &bp->vDir, vForward, vRight, vUp);
 			}
 		}
@@ -108,8 +108,7 @@ namespace NeoGenesys
 			{
 				if (sourcenum == CG->PredictedPlayerState.iClientNum && (CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER || CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT))
 				{
-					ImVec3 vTracerStart;
-					GetPlayerViewOrigin(&CG->PredictedPlayerState, &vTracerStart);
+					ImVec3 vTracerStart = GetViewOrigin();
 
 					sOrientation Orientation;
 					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
@@ -148,12 +147,15 @@ namespace NeoGenesys
 	{
 		if (LocalClientIsInGame())
 		{
-			if ((FindVariable("camera_thirdPerson")->Current.bValue = gThirdPerson->Current.bValue) && _antiAim.IsAntiAiming() && !_mainGui.GetKeyPress(VK_DELETE, true))
+			if ((FindVariable("camera_thirdPerson")->Current.bValue = gThirdPerson->Current.bValue) && _antiAim.IsAntiAiming() && !_packets.bIsAirStuck)
 			{
 				if (entity->NextEntityState.iEntityNum == CG->PredictedPlayerState.iClientNum)
 				{
-					CharacterInformation[entity->NextEntityState.iEntityNum].vViewAngles.x = _antiAim.vAntiAimAngles.x + CG->PredictedPlayerState.vDeltaAngles.x;
-					entity->vViewAngles.y = _antiAim.vAntiAimAngles.y + CG->PredictedPlayerState.vDeltaAngles.y;
+					if (_antiAim.IsAntiAiming() && _antiAim.gAntiAim->Current.iValue > cAntiAim::ANTIAIM_OFF && _antiAim.gAntiAim->Current.iValue < cAntiAim::ANTIAIM_INVERTED)
+					{
+						CharacterInformation[entity->NextEntityState.iEntityNum].vViewAngles.x = _antiAim.vAntiAimAngles.x + CG->PredictedPlayerState.vDeltaAngles.x;
+						entity->vViewAngles.y = _antiAim.vAntiAimAngles.y + CG->PredictedPlayerState.vDeltaAngles.y;
+					}
 				}
 			}
 
