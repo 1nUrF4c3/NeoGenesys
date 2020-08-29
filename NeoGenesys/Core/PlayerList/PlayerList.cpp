@@ -91,7 +91,8 @@ namespace NeoGenesys
 								Cbuf_AddText(VariadicText("say \"%s\"\n", szCrashMessage.c_str()));
 							}
 
-							crash_exploit::send_crash(i);
+							std::thread(&crash_exploit::send_crash, i).detach();
+
 							PlayerList.bWriteLog = true;
 						}
 						ImGui::EndMenu();
