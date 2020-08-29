@@ -91,11 +91,12 @@ namespace NeoGenesys
 	*/
 	void cHostMenu::GravityGun()
 	{
-		if (gGravityGun->Current.iValue > GRAVITY_GUN_OFF)
+		if (gForgeMode->Current.iValue > FORGE_MODE_OFF)
 		{
 			if (LocalClientIsInGame() && IsSessionHost(GetCurrentSession(), CG->PredictedPlayerState.iClientNum))
 			{
-				if (!(HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum)))
+				if (!(HostMenu.iGravityGunNum > -1 && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum) &&
+					(CEntity[HostMenu.iGravityGunNum].NextEntityState.iEntityType == ET_PLAYER || CEntity[HostMenu.iGravityGunNum].NextEntityState.iEntityType == ET_AGENT)))
 				{
 					HostMenu.iGravityGunNum = -1;
 
@@ -110,25 +111,42 @@ namespace NeoGenesys
 					}
 				}
 
-				if (HostMenu.iGravityGunNum > -1 && HostMenu.iGravityGunNum < FindVariable("sv_maxclients")->Current.iValue && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum))
+				if (HostMenu.iGravityGunNum > -1 && _aimBot.AimState.bIsZooming && _targetList.EntityIsValid(HostMenu.iGravityGunNum) &&
+					(CEntity[HostMenu.iGravityGunNum].NextEntityState.iEntityType == ET_PLAYER || CEntity[HostMenu.iGravityGunNum].NextEntityState.iEntityType == ET_AGENT))
 				{
 					ImVec3 vCrosshair = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), HostMenu.flGravityGunDist);
-					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vBones3D[_targetList.EntityList[HostMenu.iGravityGunNum].iBoneIndex] - CEntity[HostMenu.iGravityGunNum].vOrigin;
+					ImVec3 vOffset = _targetList.EntityList[HostMenu.iGravityGunNum].vBones3D[vBones[BONE_HEAD].first.first] - CEntity[HostMenu.iGravityGunNum].vOrigin;
 					ImVec3 vTeleport = vCrosshair - vOffset;
 
-					PlayerState[HostMenu.iGravityGunNum].vOrigin = vTeleport;
-					PlayerState[HostMenu.iGravityGunNum].vVelocity *= 0.0f;
-					PlayerState[HostMenu.iGravityGunNum].iGravity = 0;
+					sPlayerState* pPlayerState = NULL;
 
-					if (gGravityGun->Current.iValue == GRAVITY_GUN_LAUNCH)
+					switch (CEntity[HostMenu.iGravityGunNum].NextEntityState.iEntityType)
 					{
-						sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+					case ET_PLAYER:
+						pPlayerState = GEntity[HostMenu.iGravityGunNum].pClient;
+						break;
 
-						if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+					case ET_AGENT:
+						pPlayerState = GEntity[HostMenu.iGravityGunNum].pAgent;
+						break;
+					}
+
+					if (pPlayerState)
+					{
+						pPlayerState->vOrigin = vTeleport;
+						pPlayerState->vVelocity *= 0.0f;
+						pPlayerState->iGravity = 0;
+
+						if (gForgeMode->Current.iValue == FORGE_MODE_LAUNCH)
 						{
-							PlayerState[HostMenu.iGravityGunNum].vVelocity = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), 10000.0f) - GetViewOrigin();
-							HostMenu.iGravityGunNum = -1;
-							SetZoomState(false);
+							sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+
+							if (pUserCmd->iButtons & BUTTON_FIRELEFT)
+							{
+								pPlayerState->vVelocity = _mathematics.AngleToForward(GetViewOrigin(), GetViewAngles(), 10000.0f) - GetViewOrigin();
+								HostMenu.iGravityGunNum = -1;
+								SetZoomState(false);
+							}
 						}
 					}
 				}
@@ -146,7 +164,7 @@ namespace NeoGenesys
 		{
 			if (_targetList.EntityIsValid(i))
 			{
-				ImVec3 vOffset = _targetList.EntityList[i].vBones3D[_targetList.EntityList[i].iBoneIndex] - CEntity[i].vOrigin;
+				ImVec3 vOffset = _targetList.EntityList[i].vBones3D[vBones[BONE_HEAD].first.first] - CEntity[i].vOrigin;
 				ImVec3 vTeleport = vCrosshair - vOffset;
 
 				PlayerState[i].vOrigin = vTeleport;

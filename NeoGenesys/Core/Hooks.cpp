@@ -60,7 +60,7 @@ namespace NeoGenesys
 
 			CopyMemory(pNewCmd, pCurrentCmd, sizeof(sUserCmd));
 			++ClientActive->iCurrentCmd;
-			
+
 			pOldCmd->iViewAngles[0] = iBackupAngles[0];
 			pOldCmd->iViewAngles[1] = iBackupAngles[1];
 			pOldCmd->iViewAngles[2] = iBackupAngles[2];

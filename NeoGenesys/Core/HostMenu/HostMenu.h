@@ -12,12 +12,12 @@ namespace NeoGenesys
 	{
 	public:
 
-		enum eGravityGun
+		enum eForgeMode
 		{
-			GRAVITY_GUN_OFF,
-			GRAVITY_GUN_EXECUTE,
-			GRAVITY_GUN_LAUNCH,
-			GRAVITY_GUN_MAX
+			FORGE_MODE_OFF,
+			FORGE_MODE_EXECUTE,
+			FORGE_MODE_LAUNCH,
+			FORGE_MODE_MAX
 		};
 
 		enum eMassKill
@@ -30,7 +30,7 @@ namespace NeoGenesys
 		};
 
 		std::shared_ptr<sCvar> gHostMenu = std::make_shared<sCvar>("Host Menu", std::vector<std::string>(), false);
-		std::shared_ptr<sCvar> gGravityGun = std::make_shared<sCvar>("Gravity Gun", std::vector<std::string>({ "Off", "Execute", "Launch" }), GRAVITY_GUN_OFF, GRAVITY_GUN_OFF, GRAVITY_GUN_MAX - 1);
+		std::shared_ptr<sCvar> gForgeMode = std::make_shared<sCvar>("Forge Mode", std::vector<std::string>({ "Off", "Execute", "Launch" }), FORGE_MODE_OFF, FORGE_MODE_OFF, FORGE_MODE_MAX - 1);
 		std::shared_ptr<sCvar> gMassKill = std::make_shared<sCvar>("Masskill", std::vector<std::string>({ "Off", "Axis", "Allies", "All" }), MASSKILL_OFF, MASSKILL_OFF, MASSKILL_MAX - 1);
 
 		struct sHostMenu

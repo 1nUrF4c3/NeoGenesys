@@ -40,7 +40,7 @@ namespace NeoGenesys
 			vCommands.push_back("neo_host_autowall");
 			vCommands.push_back("neo_rapid_fire");
 			vCommands.push_back("neo_super_jump");
-			vCommands.push_back("neo_gravity_gun");
+			vCommands.push_back("neo_forge_mode");
 			vCommands.push_back("neo_mass_kill");
 			vCommands.push_back("neo_anti_leave");
 			vCommands.push_back("neo_bunny_hop");
@@ -144,7 +144,7 @@ namespace NeoGenesys
 			AddLog("7. neo_host_autowall <on|off>\n\t\tEnable/disable host autowall (as host).");
 			AddLog("8. neo_rapid_fire <on|off>\n\t\tEnable/disable rapidfire weapon rate (as host).");
 			AddLog("9. neo_super_jump <on|off>\n\t\tEnable/disable super high jump (as host).");
-			AddLog("10. neo_gravity_gun <off|execute|launch>\n\t\tEnable/disable gravity gun (as host).");
+			AddLog("10. neo_forge_mode <off|execute|launch>\n\t\tEnable/disable forge mode (as host).");
 			AddLog("11. neo_mass_kill <off|axis|allies|all>\n\t\tEnable/disable player masskill (as host).");
 			AddLog("12. neo_anti_leave <off|on>\n\t\tEnable/disable player antileave (as host).");
 			AddLog("13. neo_bunny_hop <on|off>\n\t\tEnable/disable auto bunny hop on jump.");
@@ -613,7 +613,7 @@ namespace NeoGenesys
 			}
 		}
 
-		else if (!Stricmp(CmdLine.szCmdName, "neo_gravity_gun"))
+		else if (!Stricmp(CmdLine.szCmdName, "neo_forge_mode"))
 		{
 			if (CmdLine.iArgNum > 0)
 			{
@@ -621,9 +621,9 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_OFF;
+					_hostMenu.gForgeMode->Current.iValue = cHostMenu::FORGE_MODE_OFF;
 
-					AddLog("Gravity gun has been disabled.");
+					AddLog("Forge mode has been disabled.");
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -631,9 +631,9 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_EXECUTE;
+					_hostMenu.gForgeMode->Current.iValue = cHostMenu::FORGE_MODE_EXECUTE;
 
-					AddLog("Gravity gun has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("Forge mode has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 
@@ -641,9 +641,9 @@ namespace NeoGenesys
 				{
 					AddLog("%s executing.", acut::ToLower(CmdLine.szCmdName).c_str());
 
-					_hostMenu.gGravityGun->Current.iValue = cHostMenu::GRAVITY_GUN_LAUNCH;
+					_hostMenu.gForgeMode->Current.iValue = cHostMenu::FORGE_MODE_LAUNCH;
 
-					AddLog("Gravity gun has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
+					AddLog("Forge mode has been set to %s.", acut::ToLower(CmdLine.szCmdArgs[0]));
 					AddLog("%s executed.", acut::ToLower(CmdLine.szCmdName).c_str());
 				}
 

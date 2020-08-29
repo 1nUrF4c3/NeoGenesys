@@ -932,9 +932,7 @@ namespace NeoGenesys
 	public:
 		int iOtherFlags;
 		int iLinkFlags;
-	private:
-		char _0x18[0x4];
-	public:
+		int iBobCycle;
 		ImVec3 vOrigin;
 		ImVec3 vVelocity;
 	private:
@@ -1124,6 +1122,19 @@ namespace NeoGenesys
 	/*
 	//=====================================================================================
 	*/
+	struct sEntityShared
+	{
+	private:
+		char _0x0[0x38];
+	public:
+		ImVec3 vCurrentOrigin;
+		ImVec3 vCurrentAngles;
+	private:
+		char _0x50[0x8];
+	};
+	/*
+	//=====================================================================================
+	*/
 	struct sCEntity
 	{
 	private:
@@ -1151,12 +1162,17 @@ namespace NeoGenesys
 	{
 	public:
 		sEntityState EntityState;
+		sEntityShared EntityShared;
 	private:
-		char _0x108[0x60];
+		char _0x160[0x8];
 	public:
-		sPlayerState* pPlayerState;
+		sPlayerState* pClient;
 	private:
-		char _0x170[0x50];
+		char _0x170[0x8];
+	public:
+		sPlayerState* pAgent;
+	private:
+		char _0x180[0x40];
 	public:
 		int iFlags;
 	private:
