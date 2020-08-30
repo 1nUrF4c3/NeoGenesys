@@ -158,9 +158,6 @@ namespace NeoGenesys
 					}
 				}
 			}
-
-			_mathematics.ApplyPositionPrediction(entity);
-			_mathematics.ApplyAnglePrediction(entity);
 		}
 	}
 	/*
