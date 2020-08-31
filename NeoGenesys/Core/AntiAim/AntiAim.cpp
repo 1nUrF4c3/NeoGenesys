@@ -51,7 +51,7 @@ namespace NeoGenesys
 
 			else
 			{
-				vAntiAimAngles.x = -40.0f - GetViewAngles().x;
+				vAntiAimAngles.x = -45.0f - GetViewAngles().x;
 
 				if (vAntiAimAngles.x > 85.0f) vAntiAimAngles.x = 85.0f;
 				if (vAntiAimAngles.x < -85.0f) vAntiAimAngles.x = -85.0f;

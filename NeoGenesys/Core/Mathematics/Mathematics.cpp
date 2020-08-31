@@ -252,7 +252,7 @@ namespace NeoGenesys
 
 		ClampAngles(angles);
 
-		angles.x = -40.0f - angles.x;
+		angles.x = -45.0f - angles.x;
 		angles.y = angles.y - 180.0f;
 
 		angles -= CG->PredictedPlayerState.vDeltaAngles;

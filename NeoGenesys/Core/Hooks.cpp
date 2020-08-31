@@ -108,34 +108,43 @@ namespace NeoGenesys
 			{
 				if (sourcenum == CG->PredictedPlayerState.iClientNum && (CEntity[targetnum].NextEntityState.iEntityType == ET_PLAYER || CEntity[targetnum].NextEntityState.iEntityType == ET_AGENT))
 				{
-					ImVec3 vTracerStart = GetViewOrigin();
+					cDrawing::sTracer Tracer;
+					ImVec3 vTracerStart;
 
-					sOrientation Orientation;
-					sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
-
-					if (GetTagOrientation((WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
+					if (IsThirdPersonMode(&CG->PredictedPlayerState))
 					{
-						cDrawing::sTracer Tracer;
+						LPVOID lpDObj = GetEntityDObj(sourcenum);
 
-						if (IsThirdPersonMode(&CG->PredictedPlayerState))
-							vTracerStart += (Orientation.vAxis[0] * 30.0f);
-						else
-							vTracerStart = Orientation.vOrigin;
+						if (!lpDObj)
+							return;
 
-						Tracer.iStartTime = Sys_Milliseconds();
-						Tracer.vStartPos3D = vTracerStart;
-						Tracer.vHitPos3D = position;
-
-						Tracer.cColorShadow = _drawing.gColorShadow->Current.cValue;
-						Tracer.cColorHitMarker = _drawing.gColorText->Current.cValue;
-						Tracer.cColorTracer = _drawing.gColorAccents->Current.cValue;
-
-						Tracer.flAlphaShadow = _drawing.gColorShadow->Current.cValue.w;
-						Tracer.flAlphaHitMarker = _drawing.gColorText->Current.cValue.w;
-						Tracer.flAlphaTracer = _drawing.gColorAccents->Current.cValue.w;
-
-						_drawing.vTracers.push_back(Tracer);
+						GetTagPosition(&CEntity[sourcenum], lpDObj, RegisterTag("tag_flash"), &vTracerStart);
 					}
+
+					else
+					{
+						sOrientation Orientation;
+						sUserCmd* pUserCmd = ClientActive->GetUserCmd(ClientActive->iCurrentCmd - !WeaponIsVehicle(GetViewmodelWeapon(&CG->PredictedPlayerState)));
+
+						if (!GetTagOrientation((WeaponIsDualWield(GetViewmodelWeapon(&CG->PredictedPlayerState)) && pUserCmd->iButtons & (IsGamePadEnabled() ? BUTTON_FIRERIGHT : BUTTON_FIRELEFT)) + 2048, RegisterTag("tag_flash"), &Orientation))
+							return;
+
+						vTracerStart = Orientation.vOrigin;
+					}
+
+					Tracer.iStartTime = Sys_Milliseconds();
+					Tracer.vStartPos3D = vTracerStart;
+					Tracer.vHitPos3D = position;
+
+					Tracer.cColorShadow = _drawing.gColorShadow->Current.cValue;
+					Tracer.cColorHitMarker = _drawing.gColorText->Current.cValue;
+					Tracer.cColorTracer = _drawing.gColorAccents->Current.cValue;
+
+					Tracer.flAlphaShadow = _drawing.gColorShadow->Current.cValue.w;
+					Tracer.flAlphaHitMarker = _drawing.gColorText->Current.cValue.w;
+					Tracer.flAlphaTracer = _drawing.gColorAccents->Current.cValue.w;
+
+					_drawing.vTracers.push_back(Tracer);
 				}
 			}
 		}
